@@ -1,4 +1,4 @@
-static int TIME_STEP_MS = 100;
+static int TIME_STEP_MS = 30;
 
 /**
  * Rotate lights to the right
@@ -42,28 +42,40 @@ void shiftLeft(double duration, int distance, uint32_t fillColor) {
   rotateOrShift(SHIFT_LEFT, duration, distance, fillColor);
 }
 
+int getNumTicks(int durationMS) {
+  return durationMS / TIME_STEP_MS;
+}
+
+int getNewStepSizeInMicroseconds(int durationMS, int numTicks) {
+  return 1000L * durationMS / numTicks;
+}
+
 /**
  * Fades from the current colors to the specified color.
  * 
  * @param duration
  * @param newColor
  */
-void fadeTo(double duration, uint32_t newColor) {
-  int numTicks = (int)(duration / (TIME_STEP_MS / 1000.0));
+void fadeTo(int durationMS, uint32_t newColor) {
+  // Each fade costs computation time, so subtract from duration budget.
+  durationMS = constrain(durationMS - 131, TIME_STEP_MS, 32767);
+  
+  int numTicks = getNumTicks(durationMS);
+  int newStepSizeMicroSec = getNewStepSizeInMicroseconds(durationMS, numTicks);
 
   uint32_t* oldColors = new uint32_t[strip.numPixels()];
   for (int i = 0; i < strip.numPixels(); i++) {
     oldColors[i] = strip.getPixelColor(i);
   }
-  
-  for (int i = 0; i <= numTicks; i++) {
+
+  for (int i = 1; i <= numTicks; i++) {
+    int ratio = 100 * i / numTicks;
     for (int light = 0; light < strip.numPixels(); light++) {
-      double ratio = (double)(i) / numTicks;
-      uint32_t stepColor = blend(oldColors[light], newColor, 100 * (double)(i) / numTicks);
+      uint32_t stepColor = blend(oldColors[light], newColor, ratio);
       strip.setPixelColor(light, stepColor);
     }
 
-    tick();
+    tick(newStepSizeMicroSec);
   }
 
   delete [] oldColors;
@@ -184,5 +196,14 @@ void rotateOrShift(RotateShiftOp op, float duration, int distance, uint32_t fill
 void tick() {
   strip.show();
   delay(TIME_STEP_MS);
+}
+
+void tick(int delayTime) {
+  strip.show();
+  while (delayTime > 16000) {
+    delayMicroseconds(16000);
+    delayTime -= 16000;
+  }
+  delayMicroseconds(delayTime);
 }
 

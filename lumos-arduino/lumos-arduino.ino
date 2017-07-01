@@ -1,4 +1,5 @@
 #include <Adafruit_NeoPixel.h>
+//#include <elpasedMillis.h>
 #ifdef __AVR__
   #include <avr/power.h>
 #endif
@@ -27,10 +28,12 @@ void setup() {
   Serial.begin(9600);
   
   strip.begin();
+  strip.setBrightness(64);
   strip.show(); // Initialize all pixels to 'off'
 }
 
 void loop() {
+  long startTime = millis();
   // Some example procedures showing how to display to the pixels:
 //  colorWipe(RED, 50);
 //  colorWipe(GREEN, 50);
@@ -44,27 +47,13 @@ void loop() {
 //  rainbowCycle(5);
 //  theaterChaseRainbow(50);
 
-//  setSolidColor(BLACK);
-//  setGradient(4, RED, GREEN, BLUE, RED);
-//  strip.show();
+  fadeTo(1000, RED);
+  fadeTo(1000, WHITE);
+  fadeTo(1000, BLUE);
+
+//  setGradient(3, RED, GREEN, BLUE);
 //  delay(2000);
-//
-//  fadeTo(3.0, WHITE);
-//
-//  setSolidColor(BLACK);
-//  setGradient(2, RED, GREEN);
-//  strip.show();
-//  delay(2000);
-//
-//  setSolidColor(BLACK);
-  fadeTo(1.0, GREEN);
-  fadeTo(1.0, YELLOW);
-  fadeTo(1.0, BLUE);
-  fadeTo(1.0, RED);
-  fadeTo(1.0, WHITE);
-  fadeTo(1.0, RED);
-  fadeTo(1.0, WHITE);
-  fadeTo(1.0, PURPLE);
+
 
 //  setSolidColor(BLACK);
 //  setGradient(3, RED, GREEN, BLUE);
@@ -83,6 +72,9 @@ void loop() {
 //
 //  setRainbow();
 //  johnDemo(15);
+    long stopTime = millis();
+    Serial.print("elapsed=");
+    Serial.println((stopTime - startTime)/1000.0, 3);
 }
 
 void johnDemo(int wait) {
@@ -205,5 +197,27 @@ uint32_t Wheel(byte WheelPos) {
   }
   WheelPos -= 170;
   return strip.Color(WheelPos * 3, 255 - WheelPos * 3, 0);
+}
+
+void printVar(char *name, int value, bool eol) {
+  Serial.print(name);
+  Serial.print("=");
+  Serial.print(value);
+  Serial.print(" ");
+
+  if (eol) {
+    Serial.println();
+  }
+}
+
+void printVar(char *name, float value, bool eol) {
+  Serial.print(name);
+  Serial.print("=");
+  Serial.print(value);
+  Serial.print(" ");
+
+  if (eol) {
+    Serial.println();
+  }
 }
 
