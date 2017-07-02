@@ -86,8 +86,7 @@ void loop() {
 //  setRainbow();
 //  johnDemo(15);
     long stopTime = millis();
-    Serial.print("elapsed=");
-    Serial.println((stopTime - startTime)/1000.0, 3);
+    printFloat((char*)"elapsed=", (stopTime - startTime)/1000.0, 3);
 }
 
 void johnDemo(int wait) {
