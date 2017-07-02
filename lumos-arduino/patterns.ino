@@ -55,3 +55,18 @@ void setGradient(Pixels pixels, int count, ...) {
   va_end(argList);
 }
 
+/*
+ * Set a sinusoidal wave color pattern, oscillating between the two provided colors.
+ * period  Period of the sine wave in pixels. May be shorter, same, or longer than the strip length.
+ * phase   Phase of the sine wave in pixels.
+ */
+
+void setSineWave(Pixels pixels, Color c1, Color c2, int period, int phase) { setSineWave(pixels, 0, strip.numPixels(), c1, c2, period, phase); }
+void setSineWave(Pixels pixels, int firstPixel, int lastPixel, Color c1, Color c2, int period, int phase) {
+  for (int i = firstPixel; i < lastPixel; i++) {
+    float const ratio = 0.5 * (1 + sin(2 * PI * (i + phase) / (float)period));
+    Color const newColor = blend(c1, c2, 100 * ratio);
+    pixels[i] = newColor;
+  }
+}
+

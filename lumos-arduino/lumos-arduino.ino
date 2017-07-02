@@ -54,13 +54,11 @@ void loop() {
   Pixels pixels;
 
   // TODO: Test setSolidColor()
-  setSolidColor(pixels, GREEN);
-  printHex((char*)"p[0]", pixels[0]);
+  setSineWave(pixels, BLACK, BLUE, 60, 0);
   applyPixels(pixels);
   strip.show();
-  delay(5000);
+  rotateRight(10000, 480);
 
-  // TODO: Test setGradient()
   setGradient(pixels, 7, RED, ORANGE, YELLOW, GREEN, BLUE, INDIGO, VIOLET);
   applyPixels(pixels);
   strip.show();
