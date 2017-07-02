@@ -39,56 +39,28 @@ void setup() {
 
 void loop() {
   long startTime = millis();
+
   // Some example procedures showing how to display to the pixels:
-//  colorWipe(RED, 50);
-//  colorWipe(GREEN, 50);
-//  colorWipe(BLUE, 50);
   // Send a theater pixel chase in...
 //  theaterChase(WHITE, 50);
-//  theaterChase(RED, 50);
-//  theaterChase(BLUE, 50);s
 
-//  rainbow(10);
-//  rainbowCycle(5);
-//  theaterChaseRainbow(50);
   Pixels pixels;
 
-  // TODO: Test setSolidColor()
-  setSineWave(pixels, BLACK, BLUE, 60, 0);
+  setSineWave(pixels, RED, BLUE, 60, 0);
   applyPixels(pixels);
   strip.show();
-  rotateRight(2400, 240);
+  rotateRight(2000, 30);
+  delay(100);
+  rotateLeft(250, 240);
+  delay(1000);
 
-  int delayMS = 300;
-  setGradient(pixels, 1, VIOLET);
-  applyPixels(pixels);
-  strip.show();
-  delay(delayMS);
-  setGradient(pixels, 2, VIOLET, INDIGO);
-  applyPixels(pixels);
-  strip.show();
-  delay(delayMS);
-  setGradient(pixels, 3, VIOLET, INDIGO, BLUE);
-  applyPixels(pixels);
-  strip.show();
-  delay(delayMS);
-  setGradient(pixels, 4, VIOLET, INDIGO, BLUE, GREEN);
-  applyPixels(pixels);
-  strip.show();
-  delay(delayMS);
-  setGradient(pixels, 5, VIOLET, INDIGO, BLUE, GREEN, YELLOW);
-  applyPixels(pixels);
-  strip.show();
-  delay(delayMS);
-  setGradient(pixels, 6, VIOLET, INDIGO, BLUE, GREEN, YELLOW, ORANGE);
-  applyPixels(pixels);
-  strip.show();
-  delay(delayMS);
   setGradient(pixels, 7, VIOLET, INDIGO, BLUE, GREEN, YELLOW, ORANGE, RED);
   applyPixels(pixels);
   strip.show();
-  delay(delayMS);
-  rotateRight(4000, 220);
+  rotateRight(2000, 30);
+  delay(100);
+  rotateLeft(250, 240);
+  delay(1000);
 
   fadeTo(1000, RED);
   fadeTo(1000, WHITE);
@@ -96,7 +68,6 @@ void loop() {
 
 //  setGradient(3, RED, GREEN, BLUE);
 //  delay(2000);
-
 
 //  setSolidColor(BLACK);
 //  setGradient(3, RED, GREEN, BLUE);

@@ -6,8 +6,8 @@ static int TIME_STEP_MS = 30;
  * @param duration durationMS of the action in milliseconds
  * @param distance the number of light positions to rotate
  */
-inline void rotateRight(double durationMS, int distance) {
-  rotateOrShift(ROTATE_RIGHT, durationMS, distance, BLACK);
+inline void rotateRight(float durationMS, int pixelsPerSecond) {
+  rotateOrShift(ROTATE_RIGHT, durationMS, pixelsPerSecond, BLACK);
 }
 
 /**
@@ -16,8 +16,8 @@ inline void rotateRight(double durationMS, int distance) {
  * @param duration durationMS of the action in milliseconds
  * @param distance the number of light positions to rotate
  */
-inline void rotateLeft(double durationMS, int distance) {
-  rotateOrShift(ROTATE_LEFT, durationMS, distance, BLACK);
+inline void rotateLeft(float durationMS, int pixelsPerSecond) {
+  rotateOrShift(ROTATE_LEFT, durationMS, pixelsPerSecond, BLACK);
 }
 
 /**
@@ -27,8 +27,8 @@ inline void rotateLeft(double durationMS, int distance) {
  * @param distance the number of light positions to shift
  * @param fillColor color to fill lights shift in from the left
  */
-inline void shiftRight(double durationMS, int distance, Color fillColor) {
-  rotateOrShift(SHIFT_RIGHT, durationMS, distance, fillColor);
+inline void shiftRight(float durationMS, int pixelsPerSecond, Color fillColor) {
+  rotateOrShift(SHIFT_RIGHT, durationMS, pixelsPerSecond, fillColor);
 }
 
 /**
@@ -38,16 +38,8 @@ inline void shiftRight(double durationMS, int distance, Color fillColor) {
  * @param distance the number of light positions to shift
  * @param fillColor color to fill lights shift in from the right
  */
-inline void shiftLeft(double durationMS, int distance, Color fillColor) {
-  rotateOrShift(SHIFT_LEFT, durationMS, distance, fillColor);
-}
-
-inline int getNumTicks(int durationMS) {
-  return durationMS / TIME_STEP_MS;
-}
-
-inline int getNewStepSizeInMicroseconds(int durationMS, int numTicks) {
-  return 1000L * durationMS / numTicks;
+inline void shiftLeft(float durationMS, int pixelsPerSecond, Color fillColor) {
+  rotateOrShift(SHIFT_LEFT, durationMS, pixelsPerSecond, fillColor);
 }
 
 /**
@@ -60,8 +52,8 @@ void fadeTo(int durationMS, Color newColor) {
   // Each fade costs computation time, so subtract from duration budget.
   durationMS = constrain(durationMS - 131, TIME_STEP_MS, 32767);
   
-  int numTicks = getNumTicks(durationMS);
-  int newStepSizeMicroSec = getNewStepSizeInMicroseconds(durationMS, numTicks);
+  int numTicks = durationMS / TIME_STEP_MS;
+  int newStepSizeMicrosec = 1000L * durationMS / numTicks;
 
   Color* oldColors = new Color[strip.numPixels()];
   for (int i = 0; i < strip.numPixels(); i++) {
@@ -75,7 +67,7 @@ void fadeTo(int durationMS, Color newColor) {
       strip.setPixelColor(light, stepColor);
     }
 
-    tick(newStepSizeMicroSec);
+    tickMicroseconds(newStepSizeMicrosec);
   }
 
   delete [] oldColors;
@@ -164,32 +156,35 @@ void fadeTo(int durationMS, Color newColor) {
 //        }
 //    }
 
-void rotateOrShift(RotateShiftOp op, float durationMS, int distance, Color fillColor) {
-  int numTicks = (int)(durationMS / TIME_STEP_MS);
+void rotateOrShift(RotateShiftOp op, int durationMS, int pixelsPerSecond, Color fillColor) {
+  float const secondsPerPixel = 1.0 / pixelsPerSecond;
+  int const numTicks = (int)(durationMS / 1000.0 / secondsPerPixel);
 
-  float rate = distance / durationMS;
-  int distanceSoFar = 0;
+  printFloat("sec/pixel", secondsPerPixel, 6);
+  printInt("numTicks", numTicks);
+  Serial.println();
+
+  unsigned long const startTimeMS = millis();
+  unsigned long const endTimeMS = startTimeMS + durationMS;
+  
   for (int i = 0; i <= numTicks; i++) {
-    int currentDistance = (int)round(i * rate * TIME_STEP_MS);
-    int delta = currentDistance - distanceSoFar;
-    distanceSoFar = currentDistance;
-
+//  while (millis() < endTimeMS) {
     switch (op) {
     case ROTATE_LEFT:
-      rotateLeft(delta);
+      rotateLeft(1);
       break;
     case ROTATE_RIGHT:
-      rotateRight(delta);
+      rotateRight(1);
       break;
     case SHIFT_LEFT:
-      shiftLeft(delta, fillColor);
+      shiftLeft(1, fillColor);
       break;
     case SHIFT_RIGHT:
-      shiftRight(delta, fillColor);
+      shiftRight(1, fillColor);
       break;
     }
 
-    tick();
+    tickMicroseconds(secondsPerPixel*1000*1000);
   }
 }
 
@@ -198,7 +193,7 @@ void tick() {
   delay(TIME_STEP_MS);
 }
 
-void tick(int delayTime) {
+void tickMicroseconds(float delayTime) {
   strip.show();
   while (delayTime > 16000) {
     delayMicroseconds(16000);
