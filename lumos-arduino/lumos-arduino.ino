@@ -1,5 +1,4 @@
 #include <Adafruit_NeoPixel.h>
-//#include <elpasedMillis.h>
 #ifdef __AVR__
   #include <avr/power.h>
 #endif
@@ -8,18 +7,21 @@ enum RotateShiftOp {
     ROTATE_LEFT, ROTATE_RIGHT, SHIFT_LEFT, SHIFT_RIGHT
 };
 
-int8_t PIN = 6;
-uint16_t NUM_PIXELS = 60;
-neoPixelType STRIP_FLAGS = (NEO_GRB + NEO_KHZ800);
+int8_t const PIN = 6;
+uint16_t const NUM_PIXELS = 60;
+neoPixelType const STRIP_FLAGS = (NEO_GRB + NEO_KHZ800);
 
-uint32_t const BLACK =  0x000000;
-uint32_t const BLUE =   0x0000FF;
-uint32_t const GREEN =  0x00FF00;
-uint32_t const CYAN =   0x00FFFF;
-uint32_t const RED =    0xFF0000;
-uint32_t const PURPLE = 0xFF00FF;
-uint32_t const YELLOW = 0xFFFF00;
-uint32_t const WHITE =  0xFFFFFF;
+typedef uint32_t Color;
+typedef uint32_t Pixels[NUM_PIXELS];
+
+Color const BLACK =  0x000000;
+Color const BLUE =   0x0000FF;
+Color const GREEN =  0x00FF00;
+Color const CYAN =   0x00FFFF;
+Color const RED =    0xFF0000;
+Color const PURPLE = 0xFF00FF;
+Color const YELLOW = 0xFFFF00;
+Color const WHITE =  0xFFFFFF;
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_PIXELS, PIN, STRIP_FLAGS);
 
@@ -97,7 +99,7 @@ void setRainbow() {
 }
 
 // Fill the dots one after the other with a color
-void colorWipe(uint32_t c, uint8_t wait) {
+void colorWipe(Color c, uint8_t wait) {
   for(uint16_t i=0; i<strip.numPixels(); i++) {
     strip.setPixelColor(i, c);
     strip.show();

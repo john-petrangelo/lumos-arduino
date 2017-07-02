@@ -4,7 +4,7 @@
  * @param distance the number of lights to shift by
  * @param fillColor the color to set to the newly vacated lights
  */
-void shiftLeft(int distance, uint32_t fillColor) {
+void shiftLeft(int distance, Color fillColor) {
     int effectiveDistance = strip.numPixels() - (distance % strip.numPixels());
     rotateLeft(distance);
     for (int i = effectiveDistance; i < strip.numPixels(); i++) {
@@ -18,7 +18,7 @@ void shiftLeft(int distance, uint32_t fillColor) {
  * @param distance the number of lights to shift by
  * @param fillColor the color to set to the newly vacated lights
  */
-void shiftRight(int distance, uint32_t fillColor) {
+void shiftRight(int distance, Color fillColor) {
     int effectiveDistance = distance % strip.numPixels();
     rotateRight(distance);
     for (int i = 0; i < effectiveDistance; i++) {
@@ -47,7 +47,7 @@ void rotateRight(int distance) {
  */
 void swapPartitions(int partition) {
     // Save the left side of the partition.
-    uint32_t* leftSide = new uint32_t[partition];
+    uint32_t* leftSide = new Color[partition];
     for (int i = 0; i < partition; ++i) {
       leftSide[i] = strip.getPixelColor(i);
     }

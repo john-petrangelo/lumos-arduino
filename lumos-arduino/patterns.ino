@@ -1,4 +1,4 @@
-void setSolidColor(uint32_t color) {
+inline void setSolidColor(Color color) {
   for (int i = 0; i < strip.numPixels(); ++i) {
     strip.setPixelColor(i, color);
   }
@@ -17,10 +17,10 @@ void setGradient(int count, ...) {
 
   int index = 0;
   
-  uint32_t prevColor = va_arg(argList, uint32_t);;
+  uint32_t prevColor = va_arg(argList, Color);
   count--;
   for (; count > 0; count--) {
-    uint32_t nextColor = va_arg(argList, uint32_t);
+    uint32_t nextColor = va_arg(argList, Color);
     for (int i = 0; i < segmentSize; i++) {
       strip.setPixelColor(index++, blend(prevColor, nextColor, 100 * i / (segmentSize - 1)));
     }

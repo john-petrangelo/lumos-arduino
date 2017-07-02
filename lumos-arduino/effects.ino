@@ -56,7 +56,7 @@ int getNewStepSizeInMicroseconds(int durationMS, int numTicks) {
  * @param duration
  * @param newColor
  */
-void fadeTo(int durationMS, uint32_t newColor) {
+void fadeTo(int durationMS, Color newColor) {
   // Each fade costs computation time, so subtract from duration budget.
   durationMS = constrain(durationMS - 131, TIME_STEP_MS, 32767);
   
@@ -164,7 +164,7 @@ void fadeTo(int durationMS, uint32_t newColor) {
 //        }
 //    }
 
-void rotateOrShift(RotateShiftOp op, float duration, int distance, uint32_t fillColor) {
+void rotateOrShift(RotateShiftOp op, float duration, int distance, Color fillColor) {
   int numTicks = (int)(duration / TIME_STEP_MS);
 
   double rate = distance / duration;
