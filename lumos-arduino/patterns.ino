@@ -1,10 +1,34 @@
-inline void setSolidColor(Color color) {
-  for (int i = 0; i < strip.numPixels(); ++i) {
-    strip.setPixelColor(i, color);
+/*
+ * Apply the provided pixels array (pattern) to the light strip.
+ */
+inline void applyPixels(Pixels pixels) { applyPixels(pixels, 0, strip.numPixels()); }
+void applyPixels(Pixels pixels, int firstPixel, int lastPixel) {
+  for (int i = firstPixel; i < lastPixel; i++) {
+    strip.setPixelColor(i, pixels[i]);
   }
 }
 
-void setGradient(int count, ...) {
+/*
+ * Set a solid color pattern.
+ * 
+ * color        Color to set
+ * firstPixel   First pixel in range, inclusive
+ * lastPixel    Last pixel in range, exclusive
+ */
+inline void setSolidColor(Pixels pixels, Color color) { setSolidColor(pixels, 0, strip.numPixels(), color); }
+void setSolidColor(Pixels pixels, int firstPixel, int lastPixel, Color color) {
+  for (int i = firstPixel; i < lastPixel; ++i) {
+    pixels[i] = color;
+  }
+}
+
+/*
+ * Set a gradient color pattern. The number of defined color points is variable.
+ * 
+ * Example: to run a gradient from red to yellow to blue:
+ *     setGradient(pixels, 3, RED, YELLOW, BLUE);
+ */
+void setGradient(Pixels pixels, int count, ...) {
   if (count < 2 || count > 20) {
     return;
   }
@@ -22,10 +46,9 @@ void setGradient(int count, ...) {
   for (; count > 0; count--) {
     uint32_t nextColor = va_arg(argList, Color);
     for (int i = 0; i < segmentSize; i++) {
-      strip.setPixelColor(index++, blend(prevColor, nextColor, 100 * i / (segmentSize - 1)));
+      pixels[index++] = blend(prevColor, nextColor, 100 * i / (segmentSize - 1));
     }
 
-    strip.show();
     prevColor = nextColor;
   }
 

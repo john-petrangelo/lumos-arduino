@@ -43,11 +43,22 @@ void loop() {
   // Send a theater pixel chase in...
 //  theaterChase(WHITE, 50);
 //  theaterChase(RED, 50);
-//  theaterChase(BLUE, 50);
+//  theaterChase(BLUE, 50);s
 
 //  rainbow(10);
 //  rainbowCycle(5);
 //  theaterChaseRainbow(50);
+  Pixels pixels;
+
+  // TODO: Test setSolidColor()
+  setSolidColor(pixels, GREEN);
+  applyPixels(pixels);
+  delay(5000);
+
+  // TODO: Test setGradient()
+  setGradient(pixels, 3, RED, GREEN, BLUE);
+  applyPixels(pixels);
+  delay(5000);
 
   fadeTo(1000, RED);
   fadeTo(1000, WHITE);
