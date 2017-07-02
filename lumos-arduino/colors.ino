@@ -13,7 +13,7 @@
  * @param b Second color
  * @param ratio Ratio of the blend between a and b. 0.0 all a, 1.0 means all b, 0.5 means 50% of each.
  */
-uint32_t blend(Color a, Color b, int ratio) {
+Color blend(Color a, Color b, int ratio) {
     uint8_t red = blend(getRed(a), getRed(b), ratio);
     uint8_t green = blend(getGreen(a), getGreen(b), ratio);
     uint8_t blue = blend(getBlue(a), getBlue(b), ratio);

@@ -47,7 +47,7 @@ void rotateRight(int distance) {
  */
 void swapPartitions(int partition) {
     // Save the left side of the partition.
-    uint32_t* leftSide = new Color[partition];
+    Color* leftSide = new Color[partition];
     for (int i = 0; i < partition; ++i) {
       leftSide[i] = strip.getPixelColor(i);
     }

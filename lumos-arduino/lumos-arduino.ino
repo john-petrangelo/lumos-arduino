@@ -12,7 +12,7 @@ uint16_t const NUM_PIXELS = 60;
 neoPixelType const STRIP_FLAGS = (NEO_GRB + NEO_KHZ800);
 
 typedef uint32_t Color;
-typedef uint32_t Pixels[NUM_PIXELS];
+typedef Color Pixels[NUM_PIXELS];
 
 Color const BLACK =  0x000000;
 Color const BLUE =   0x0000FF;

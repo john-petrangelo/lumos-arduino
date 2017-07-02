@@ -27,7 +27,7 @@ void rotateLeft(double duration, int distance) {
  * @param distance the number of light positions to shift
  * @param fillColor color to fill lights shift in from the left
  */
-void shiftRight(double duration, int distance, uint32_t fillColor) {
+void shiftRight(double duration, int distance, Color fillColor) {
   rotateOrShift(SHIFT_RIGHT, duration, distance, fillColor);
 }
 
@@ -38,7 +38,7 @@ void shiftRight(double duration, int distance, uint32_t fillColor) {
  * @param distance the number of light positions to shift
  * @param fillColor color to fill lights shift in from the right
  */
-void shiftLeft(double duration, int distance, uint32_t fillColor) {
+void shiftLeft(double duration, int distance, Color fillColor) {
   rotateOrShift(SHIFT_LEFT, duration, distance, fillColor);
 }
 
@@ -63,7 +63,7 @@ void fadeTo(int durationMS, Color newColor) {
   int numTicks = getNumTicks(durationMS);
   int newStepSizeMicroSec = getNewStepSizeInMicroseconds(durationMS, numTicks);
 
-  uint32_t* oldColors = new uint32_t[strip.numPixels()];
+  Color* oldColors = new Color[strip.numPixels()];
   for (int i = 0; i < strip.numPixels(); i++) {
     oldColors[i] = strip.getPixelColor(i);
   }
@@ -71,7 +71,7 @@ void fadeTo(int durationMS, Color newColor) {
   for (int i = 1; i <= numTicks; i++) {
     int ratio = 100 * i / numTicks;
     for (int light = 0; light < strip.numPixels(); light++) {
-      uint32_t stepColor = blend(oldColors[light], newColor, ratio);
+      Color stepColor = blend(oldColors[light], newColor, ratio);
       strip.setPixelColor(light, stepColor);
     }
 
