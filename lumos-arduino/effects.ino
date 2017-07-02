@@ -3,7 +3,7 @@ static int TIME_STEP_MS = 30;
 /**
  * Rotate lights to the right
  * 
- * @param duration duration of the action in milliseconds
+ * @param duration durationMS of the action in milliseconds
  * @param distance the number of light positions to rotate
  */
 inline void rotateRight(double durationMS, int distance) {
@@ -13,7 +13,7 @@ inline void rotateRight(double durationMS, int distance) {
 /**
  * Rotate lights to the left
  * 
- * @param duration duration of the action in milliseconds
+ * @param duration durationMS of the action in milliseconds
  * @param distance the number of light positions to rotate
  */
 inline void rotateLeft(double durationMS, int distance) {
@@ -23,7 +23,7 @@ inline void rotateLeft(double durationMS, int distance) {
 /**
  * Shift lights to the right
  * 
- * @param duration duration of the action in milliseconds
+ * @param durationMS duration of the action in milliseconds
  * @param distance the number of light positions to shift
  * @param fillColor color to fill lights shift in from the left
  */
@@ -34,7 +34,7 @@ inline void shiftRight(double durationMS, int distance, Color fillColor) {
 /**
  * Shift lights to the left
  * 
- * @param duration duration of the action in milliseconds
+ * @param durationMS duration of the action in milliseconds
  * @param distance the number of light positions to shift
  * @param fillColor color to fill lights shift in from the right
  */
@@ -53,7 +53,7 @@ inline int getNewStepSizeInMicroseconds(int durationMS, int numTicks) {
 /**
  * Fades from the current colors to the specified color.
  * 
- * @param duration
+ * @param durationMS
  * @param newColor
  */
 void fadeTo(int durationMS, Color newColor) {
@@ -164,10 +164,10 @@ void fadeTo(int durationMS, Color newColor) {
 //        }
 //    }
 
-void rotateOrShift(RotateShiftOp op, float duration, int distance, Color fillColor) {
-  int numTicks = (int)(duration / TIME_STEP_MS);
+void rotateOrShift(RotateShiftOp op, float durationMS, int distance, Color fillColor) {
+  int numTicks = (int)(durationMS / TIME_STEP_MS);
 
-  double rate = distance / duration;
+  float rate = distance / durationMS;
   int distanceSoFar = 0;
   for (int i = 0; i <= numTicks; i++) {
     int currentDistance = (int)round(i * rate * TIME_STEP_MS);

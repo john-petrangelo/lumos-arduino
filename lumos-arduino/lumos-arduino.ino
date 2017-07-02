@@ -24,7 +24,7 @@ Color const YELLOW = 0xFFFF00;
 Color const WHITE =  0xFFFFFF;
 Color const ORANGE = 0xFF7F00;
 Color const INDIGO = 0x4B0082;
-Color const VIOLET = 0x9400D3;
+Color const VIOLET = 0x8F00FF;
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_PIXELS, PIN, STRIP_FLAGS);
 
@@ -33,7 +33,7 @@ void setup() {
   Serial.begin(9600);
   
   strip.begin();
-  strip.setBrightness(64);
+  strip.setBrightness(255);
   strip.show(); // Initialize all pixels to 'off'
 }
 
@@ -57,12 +57,38 @@ void loop() {
   setSineWave(pixels, BLACK, BLUE, 60, 0);
   applyPixels(pixels);
   strip.show();
-  rotateRight(10000, 480);
+  rotateRight(2400, 240);
 
-  setGradient(pixels, 7, RED, ORANGE, YELLOW, GREEN, BLUE, INDIGO, VIOLET);
+  int delayMS = 300;
+  setGradient(pixels, 1, VIOLET);
   applyPixels(pixels);
   strip.show();
-  delay(5000);
+  delay(delayMS);
+  setGradient(pixels, 2, VIOLET, INDIGO);
+  applyPixels(pixels);
+  strip.show();
+  delay(delayMS);
+  setGradient(pixels, 3, VIOLET, INDIGO, BLUE);
+  applyPixels(pixels);
+  strip.show();
+  delay(delayMS);
+  setGradient(pixels, 4, VIOLET, INDIGO, BLUE, GREEN);
+  applyPixels(pixels);
+  strip.show();
+  delay(delayMS);
+  setGradient(pixels, 5, VIOLET, INDIGO, BLUE, GREEN, YELLOW);
+  applyPixels(pixels);
+  strip.show();
+  delay(delayMS);
+  setGradient(pixels, 6, VIOLET, INDIGO, BLUE, GREEN, YELLOW, ORANGE);
+  applyPixels(pixels);
+  strip.show();
+  delay(delayMS);
+  setGradient(pixels, 7, VIOLET, INDIGO, BLUE, GREEN, YELLOW, ORANGE, RED);
+  applyPixels(pixels);
+  strip.show();
+  delay(delayMS);
+  rotateRight(4000, 220);
 
   fadeTo(1000, RED);
   fadeTo(1000, WHITE);
