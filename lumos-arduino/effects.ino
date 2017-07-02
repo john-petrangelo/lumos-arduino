@@ -3,50 +3,50 @@ static int TIME_STEP_MS = 30;
 /**
  * Rotate lights to the right
  * 
- * @param duration duration of the action in seconds
+ * @param duration duration of the action in milliseconds
  * @param distance the number of light positions to rotate
  */
-void rotateRight(double duration, int distance) {
-  rotateOrShift(ROTATE_RIGHT, duration, distance, BLACK);
+inline void rotateRight(double durationMS, int distance) {
+  rotateOrShift(ROTATE_RIGHT, durationMS, distance, BLACK);
 }
 
 /**
  * Rotate lights to the left
  * 
- * @param duration duration of the action in seconds
+ * @param duration duration of the action in milliseconds
  * @param distance the number of light positions to rotate
  */
-void rotateLeft(double duration, int distance) {
-  rotateOrShift(ROTATE_LEFT, duration, distance, BLACK);
+inline void rotateLeft(double durationMS, int distance) {
+  rotateOrShift(ROTATE_LEFT, durationMS, distance, BLACK);
 }
 
 /**
  * Shift lights to the right
  * 
- * @param duration duration of the action in seconds
+ * @param duration duration of the action in milliseconds
  * @param distance the number of light positions to shift
  * @param fillColor color to fill lights shift in from the left
  */
-void shiftRight(double duration, int distance, Color fillColor) {
-  rotateOrShift(SHIFT_RIGHT, duration, distance, fillColor);
+inline void shiftRight(double durationMS, int distance, Color fillColor) {
+  rotateOrShift(SHIFT_RIGHT, durationMS, distance, fillColor);
 }
 
 /**
  * Shift lights to the left
  * 
- * @param duration duration of the action in seconds
+ * @param duration duration of the action in milliseconds
  * @param distance the number of light positions to shift
  * @param fillColor color to fill lights shift in from the right
  */
-void shiftLeft(double duration, int distance, Color fillColor) {
-  rotateOrShift(SHIFT_LEFT, duration, distance, fillColor);
+inline void shiftLeft(double durationMS, int distance, Color fillColor) {
+  rotateOrShift(SHIFT_LEFT, durationMS, distance, fillColor);
 }
 
-int getNumTicks(int durationMS) {
+inline int getNumTicks(int durationMS) {
   return durationMS / TIME_STEP_MS;
 }
 
-int getNewStepSizeInMicroseconds(int durationMS, int numTicks) {
+inline int getNewStepSizeInMicroseconds(int durationMS, int numTicks) {
   return 1000L * durationMS / numTicks;
 }
 
