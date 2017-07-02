@@ -160,15 +160,10 @@ void rotateOrShift(RotateShiftOp op, int durationMS, int pixelsPerSecond, Color 
   float const secondsPerPixel = 1.0 / pixelsPerSecond;
   int const numTicks = (int)(durationMS / 1000.0 / secondsPerPixel);
 
-  printFloat("sec/pixel", secondsPerPixel, 6);
-  printInt("numTicks", numTicks);
-  Serial.println();
-
   unsigned long const startTimeMS = millis();
   unsigned long const endTimeMS = startTimeMS + durationMS;
   
   for (int i = 0; i <= numTicks; i++) {
-//  while (millis() < endTimeMS) {
     switch (op) {
     case ROTATE_LEFT:
       rotateLeft(1);
