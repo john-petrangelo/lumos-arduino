@@ -9,6 +9,46 @@ void applyPixels(Pixels pixels, int firstPixel, int lastPixel) {
 }
 
 /*
+ * Add two patterns together.
+ */
+inline void addPatterns(Pixels out, Pixels p1, Pixels p2) { addPatterns(out, 0, strip.numPixels(), p1, p2); }
+void addPatterns(Pixels out, int firstPixel, int lastPixel, Pixels p1, Pixels p2) {
+  for (int i = firstPixel; i < lastPixel; i++) {
+    uint16_t red1 = getRed(p1[i]);
+    uint16_t red2 = getRed(p2[i]);
+    uint16_t green1 = getGreen(p1[i]);
+    uint16_t green2 = getGreen(p2[i]);
+    uint16_t blue1 = getBlue(p1[i]);
+    uint16_t blue2 = getBlue(p2[i]);
+
+    out[i] = strip.Color(
+      constrain(red1 + red2, 0, 255), 
+      constrain(green1 + green2, 0, 255),
+      constrain(blue1 + blue2, 0, 255));
+  }
+}
+
+/*
+ * Blend two patterns together.
+ */
+inline void blendPatterns(Pixels out, Pixels p1, Pixels p2, int ratio) { blendPatterns(out, 0, strip.numPixels(), p1, p2, ratio); }
+void blendPatterns(Pixels out, int firstPixel, int lastPixel, Pixels p1, Pixels p2, int ratio) {
+  for (int i = firstPixel; i < lastPixel; i++) {
+    out[i] = blend(p1[i], p2[i], ratio);
+  }
+}
+
+/*
+ * Reverse a pattern.
+ */
+inline void reversePattern(Pixels out, Pixels in) { reversePattern(out, in, 0, strip.numPixels()); }
+void reversePattern(Pixels out, Pixels in, int firstPixel, int lastPixel) {
+  for (int i = firstPixel; i < lastPixel; i++) {
+    out[i] = in[lastPixel - i - 1];
+  }
+}
+
+/*
  * Set a solid color pattern.
  * 
  * color        Color to set

@@ -45,26 +45,48 @@ void loop() {
 //  theaterChase(WHITE, 50);
 
   Pixels pixels;
+  Pixels pixels2;
+  Pixels pixels3;
 
-  setSineWave(pixels, RED, BLUE, 60, 0);
-  applyPixels(pixels);
-  strip.show();
-  rotateRight(2000, 30);
+  setGradient(pixels2, 7, VIOLET, INDIGO, BLUE, GREEN, YELLOW, ORANGE, RED);
+//  setGradient(pixels2, 2, BLACK, BLUE);
+  reversePattern(pixels3, pixels2);
+  for (int ratio = 0; ratio <= 100; ratio += 3) {
+    blendPatterns(pixels, pixels2, pixels3, ratio);
+    applyPixels(pixels);
+    strip.show();
+    delay(20);
+  }
   delay(100);
-  rotateLeft(250, 240);
-  delay(1000);
-
-  setGradient(pixels, 7, VIOLET, INDIGO, BLUE, GREEN, YELLOW, ORANGE, RED);
-  applyPixels(pixels);
-  strip.show();
-  rotateRight(2000, 30);
+  for (int ratio = 0; ratio <= 100; ratio += 3) {
+    blendPatterns(pixels, pixels3, pixels2, ratio);
+    applyPixels(pixels);
+    strip.show();
+    delay(20);
+  }
   delay(100);
-  rotateLeft(250, 240);
-  delay(1000);
+  rotateRight(2000, 60);
+  rotateLeft(500, 240);
 
-  fadeTo(1000, RED);
-  fadeTo(1000, WHITE);
-  fadeTo(1000, BLUE);
+//  setSineWave(pixels, RED, BLUE, 60, 0);
+//  applyPixels(pixels);
+//  strip.show();
+//  rotateRight(2000, 30);
+//  delay(100);
+//  rotateLeft(250, 240);
+//  delay(1000);
+
+//  setGradient(pixels, 7, VIOLET, INDIGO, BLUE, GREEN, YELLOW, ORANGE, RED);
+//  applyPixels(pixels);
+//  strip.show();
+//  rotateRight(2000, 30);
+//  delay(100);
+//  rotateLeft(250, 240);
+//  delay(1000);
+
+//  fadeTo(1000, RED);
+//  fadeTo(1000, WHITE);
+//  fadeTo(1000, BLUE);
 
 //  setGradient(3, RED, GREEN, BLUE);
 //  delay(2000);
