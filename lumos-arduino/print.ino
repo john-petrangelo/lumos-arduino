@@ -1,25 +1,25 @@
-void printInt(char *name, int value) {
+void printInt(char const *name, int value) {
   Serial.print(name);
   Serial.print("=");
   Serial.print(value);
   Serial.print(" ");
 }
 
-void printLong(char *name, long value) {
+void printLong(char const *name, long value) {
   Serial.print(name);
   Serial.print("=");
   Serial.print(value);
   Serial.print(" ");
 }
 
-void printHex(char *name, long value) {
+void printHex(char const *name, long value) {
   Serial.print(name);
   Serial.print("=");
   Serial.print(value, HEX);
   Serial.print(" ");
 }
 
-void printFloat(char *name, float value, int precision) {
+void printFloat(char const *name, float value, int precision) {
   Serial.print(name);
   Serial.print("=");
   Serial.print(value, precision);
