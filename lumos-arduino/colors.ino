@@ -11,7 +11,7 @@
  * 
  * @param a First color
  * @param b Second color
- * @param ratio Ratio of the blend between a and b. 0.0 all a, 1.0 means all b, 0.5 means 50% of each.
+ * @param ratio Ratio of the blend between a and b. 0 means all a, 100 means all b, 50 means 50% of each.
  */
 Color blend(Color a, Color b, int ratio) {
     uint8_t red = blend(getRed(a), getRed(b), ratio);
