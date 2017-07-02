@@ -22,6 +22,9 @@ Color const RED =    0xFF0000;
 Color const PURPLE = 0xFF00FF;
 Color const YELLOW = 0xFFFF00;
 Color const WHITE =  0xFFFFFF;
+Color const ORANGE = 0xFF7F00;
+Color const INDIGO = 0x4B0082;
+Color const VIOLET = 0x9400D3;
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_PIXELS, PIN, STRIP_FLAGS);
 
@@ -52,12 +55,15 @@ void loop() {
 
   // TODO: Test setSolidColor()
   setSolidColor(pixels, GREEN);
+  printHex((char*)"p[0]", pixels[0]);
   applyPixels(pixels);
+  strip.show();
   delay(5000);
 
   // TODO: Test setGradient()
-  setGradient(pixels, 3, RED, GREEN, BLUE);
+  setGradient(pixels, 7, RED, ORANGE, YELLOW, GREEN, BLUE, INDIGO, VIOLET);
   applyPixels(pixels);
+  strip.show();
   delay(5000);
 
   fadeTo(1000, RED);
@@ -87,6 +93,7 @@ void loop() {
 //  johnDemo(15);
     long stopTime = millis();
     printFloat((char*)"elapsed=", (stopTime - startTime)/1000.0, 3);
+    Serial.println();
 }
 
 void johnDemo(int wait) {
