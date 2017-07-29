@@ -14,6 +14,8 @@
  * @param ratio Ratio of the blend between a and b. 0 means all a, 100 means all b, 50 means 50% of each.
  */
 Color blend(Color a, Color b, int ratio) {
+    Color x = ColorsX::blend(YELLOW, BLUE, 50);
+
     uint8_t red = blend(getRed(a), getRed(b), ratio);
     uint8_t green = blend(getGreen(a), getGreen(b), ratio);
     uint8_t blue = blend(getBlue(a), getBlue(b), ratio);
@@ -21,19 +23,23 @@ Color blend(Color a, Color b, int ratio) {
     return strip.Color(red, green, blue);
 }
 
-uint8_t blend(uint8_t a, uint8_t b, int ratio) {
+inline uint8_t blend(uint8_t a, uint8_t b, int ratio) {
   return a + (b - a) * ratio / 100;
 }
 
-uint8_t getRed(Color color) {
+inline uint8_t getRed(Color color) {
   return (color & R_MASK) >> R_SHIFT;
 }
 
-uint8_t getGreen(Color color) {
+inline uint8_t getGreen(Color color) {
   return (color & G_MASK) >> G_SHIFT;
 }
 
-uint8_t getBlue(Color color) {
+inline uint8_t getBlue(Color color) {
   return (color & B_MASK) >> B_SHIFT;
+}
+
+inline Color fade(Color c, int ratio) {
+  return blend(BLACK, c, ratio);
 }
 

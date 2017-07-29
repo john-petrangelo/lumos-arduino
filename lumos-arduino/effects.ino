@@ -73,6 +73,36 @@ void fadeTo(int durationMS, Color newColor) {
   delete [] oldColors;
 }
 
+void sparklePixel(int durationMS, int pos, Color color) {
+  int numTicks = durationMS / TIME_STEP_MS;
+  long stopTime = millis() + durationMS;
+
+  while (millis() < stopTime) {
+    Color nowColor = fade(color, random(20, 101));
+      strip.setPixelColor(pos, nowColor);
+    strip.show();
+    delay(50 /*ms*/);
+  }
+}
+
+inline void fuse(int durationMS, Color fuseColor, Color burnColor) { fuse(durationMS, fuseColor, burnColor, strip.numPixels()); }
+void fuse(int durationMS, Color fuseColor, Color burnColor, int length) {
+  // Initialize the length to half brightness.
+  for (int i = 0; i < length; i++) {
+    strip.setPixelColor(i, fuseColor);
+  }
+
+  int stepDuration = durationMS / length;
+  int currentPixel = length;
+  while (currentPixel-- > 0) {
+    printLong("numTicks", currentPixel);
+    sparklePixel(stepDuration, currentPixel, burnColor);
+    Serial.println();
+    strip.setPixelColor(currentPixel, BLACK);
+  }
+  strip.show();
+}
+
 //    /**
 //     * Sweeps lights like K.I.T.T. from Knight Rider from right to left.
 //     * 
