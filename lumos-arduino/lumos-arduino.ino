@@ -1,37 +1,19 @@
-#include <Adafruit_NeoPixel.h>
-#ifdef __AVR__
-#include <avr/power.h>
-#endif
-
-enum RotateShiftOp {
-  ROTATE_LEFT, ROTATE_RIGHT, SHIFT_LEFT, SHIFT_RIGHT
-};
+#include "defs.h"
+#include "Colors.h"
+#include "Effects.h"
+#include "Log.h"
+#include "ShiftRotateUtils.h"
 
 int8_t const PIN = 13;
-uint16_t const NUM_PIXELS = 60;
 neoPixelType const STRIP_FLAGS = (NEO_GRB + NEO_KHZ800);
-
-typedef uint32_t Color;
-typedef Color Pixels[NUM_PIXELS];
-
-Color const BLACK =  0x000000;
-Color const BLUE =   0x0000FF;
-Color const GREEN =  0x00FF00;
-Color const CYAN =   0x00FFFF;
-Color const RED =    0xFF0000;
-Color const PURPLE = 0xFF00FF;
-Color const YELLOW = 0xFFFF00;
-Color const WHITE =  0xFFFFFF;
-Color const ORANGE = 0xFF7F00;
-Color const INDIGO = 0x4B0082;
-Color const VIOLET = 0x8F00FF;
-
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_PIXELS, PIN, STRIP_FLAGS);
+Adafruit_NeoPixel strip;
 
 void setup() {
   //Initiate Serial communication.
   Serial.begin(9600);
 
+  // Initialize the LED strip.
+  strip = Adafruit_NeoPixel(NUM_PIXELS, PIN, STRIP_FLAGS);
   strip.begin();
   strip.setBrightness(255);
   strip.show(); // Initialize all pixels to 'off'
@@ -40,15 +22,11 @@ void setup() {
 void loop() {
   long startTime = millis();
 
-  // Some example procedures showing how to display to the pixels:
-  // Send a theater pixel chase in...
-  //  theaterChase(WHITE, 50);
-
   Pixels pixels;
   Pixels pixels2;
   Pixels pixels3;
 
-  fuse(10000, fade(WHITE, 3), ORANGE);
+  Effects::fuse(30000, Colors::fade(WHITE, 3), ORANGE);
 
 //  setGradient(pixels2, 7, VIOLET, INDIGO, BLUE, GREEN, YELLOW, ORANGE, RED);
 //  //  setGradient(pixels2, 2, BLACK, BLUE);
@@ -114,8 +92,8 @@ void loop() {
 //  //  setRainbow();
 //  //  johnDemo(15);
   long stopTime = millis();
-  printFloat((char*)"elapsed=", (stopTime - startTime) / 1000.0, 3);
-  Serial.println();
+  Log::printFloat((char*)"elapsed=", (stopTime - startTime) / 1000.0, 3);
+  Log::println();
 }
 
 void johnDemo(int wait) {
@@ -125,7 +103,7 @@ void johnDemo(int wait) {
   //    delay(wait);
   //  }
   for (int i = 0; i < 60; ++i) {
-    rotateRight(1);
+    ShiftRotateUtils::rotateRight(1);
     strip.show();
     delay(wait);
   }

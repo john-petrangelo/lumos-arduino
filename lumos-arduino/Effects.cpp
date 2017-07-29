@@ -1,4 +1,6 @@
-static int TIME_STEP_MS = 30;
+#include "Colors.h"
+#include "Effects.h"
+#include "ShiftRotateUtils.h"
 
 /**
  * Rotate lights to the right
@@ -6,7 +8,7 @@ static int TIME_STEP_MS = 30;
  * @param duration durationMS of the action in milliseconds
  * @param distance the number of light positions to rotate
  */
-inline void rotateRight(float durationMS, int pixelsPerSecond) {
+void Effects::rotateRight(float durationMS, int pixelsPerSecond) {
   rotateOrShift(ROTATE_RIGHT, durationMS, pixelsPerSecond, BLACK);
 }
 
@@ -16,7 +18,7 @@ inline void rotateRight(float durationMS, int pixelsPerSecond) {
  * @param duration durationMS of the action in milliseconds
  * @param distance the number of light positions to rotate
  */
-inline void rotateLeft(float durationMS, int pixelsPerSecond) {
+void Effects::rotateLeft(float durationMS, int pixelsPerSecond) {
   rotateOrShift(ROTATE_LEFT, durationMS, pixelsPerSecond, BLACK);
 }
 
@@ -27,7 +29,7 @@ inline void rotateLeft(float durationMS, int pixelsPerSecond) {
  * @param distance the number of light positions to shift
  * @param fillColor color to fill lights shift in from the left
  */
-inline void shiftRight(float durationMS, int pixelsPerSecond, Color fillColor) {
+void Effects::shiftRight(float durationMS, int pixelsPerSecond, Color fillColor) {
   rotateOrShift(SHIFT_RIGHT, durationMS, pixelsPerSecond, fillColor);
 }
 
@@ -38,7 +40,7 @@ inline void shiftRight(float durationMS, int pixelsPerSecond, Color fillColor) {
  * @param distance the number of light positions to shift
  * @param fillColor color to fill lights shift in from the right
  */
-inline void shiftLeft(float durationMS, int pixelsPerSecond, Color fillColor) {
+void Effects::shiftLeft(float durationMS, int pixelsPerSecond, Color fillColor) {
   rotateOrShift(SHIFT_LEFT, durationMS, pixelsPerSecond, fillColor);
 }
 
@@ -48,7 +50,7 @@ inline void shiftLeft(float durationMS, int pixelsPerSecond, Color fillColor) {
  * @param durationMS
  * @param newColor
  */
-void fadeTo(int durationMS, Color newColor) {
+void Effects::fadeTo(int durationMS, Color newColor) {
   // Each fade costs computation time, so subtract from duration budget.
   durationMS = constrain(durationMS - 131, TIME_STEP_MS, 32767);
   
@@ -63,7 +65,7 @@ void fadeTo(int durationMS, Color newColor) {
   for (int i = 1; i <= numTicks; i++) {
     int ratio = 100 * i / numTicks;
     for (int light = 0; light < strip.numPixels(); light++) {
-      Color stepColor = blend(oldColors[light], newColor, ratio);
+      Color stepColor = Colors::blend(oldColors[light], newColor, ratio);
       strip.setPixelColor(light, stepColor);
     }
 
@@ -73,20 +75,21 @@ void fadeTo(int durationMS, Color newColor) {
   delete [] oldColors;
 }
 
-void sparklePixel(int durationMS, int pos, Color color) {
-  int numTicks = durationMS / TIME_STEP_MS;
+void Effects::sparklePixel(int durationMS, int pos, Color color) {
   long stopTime = millis() + durationMS;
 
   while (millis() < stopTime) {
-    Color nowColor = fade(color, random(20, 101));
-      strip.setPixelColor(pos, nowColor);
+    Color nowColor = Colors::fade(color, random(20, 101));
+    strip.setPixelColor(pos, nowColor);
     strip.show();
-    delay(50 /*ms*/);
+
+    // Randomize the sleep time a bit.
+    delay(60 + random(0, 40) /*ms*/);
   }
 }
 
-inline void fuse(int durationMS, Color fuseColor, Color burnColor) { fuse(durationMS, fuseColor, burnColor, strip.numPixels()); }
-void fuse(int durationMS, Color fuseColor, Color burnColor, int length) {
+void Effects::fuse(int durationMS, Color fuseColor, Color burnColor) { fuse(durationMS, fuseColor, burnColor, strip.numPixels()); }
+void Effects::fuse(int durationMS, Color fuseColor, Color burnColor, int length) {
   // Initialize the length to half brightness.
   for (int i = 0; i < length; i++) {
     strip.setPixelColor(i, fuseColor);
@@ -95,9 +98,8 @@ void fuse(int durationMS, Color fuseColor, Color burnColor, int length) {
   int stepDuration = durationMS / length;
   int currentPixel = length;
   while (currentPixel-- > 0) {
-    printLong("numTicks", currentPixel);
+//    printLong("numTicks", currentPixel);
     sparklePixel(stepDuration, currentPixel, burnColor);
-    Serial.println();
     strip.setPixelColor(currentPixel, BLACK);
   }
   strip.show();
@@ -186,7 +188,7 @@ void fuse(int durationMS, Color fuseColor, Color burnColor, int length) {
 //        }
 //    }
 
-void rotateOrShift(RotateShiftOp op, int durationMS, int pixelsPerSecond, Color fillColor) {
+void Effects::rotateOrShift(RotateShiftOp op, int durationMS, int pixelsPerSecond, Color fillColor) {
   float const secondsPerPixel = 1.0 / pixelsPerSecond;
   int const numTicks = (int)(durationMS / 1000.0 / secondsPerPixel);
 
@@ -196,16 +198,16 @@ void rotateOrShift(RotateShiftOp op, int durationMS, int pixelsPerSecond, Color 
   for (int i = 0; i <= numTicks; i++) {
     switch (op) {
     case ROTATE_LEFT:
-      rotateLeft(1);
+      ShiftRotateUtils::rotateLeft(1);
       break;
     case ROTATE_RIGHT:
-      rotateRight(1);
+      ShiftRotateUtils::rotateRight(1);
       break;
     case SHIFT_LEFT:
-      shiftLeft(1, fillColor);
+      ShiftRotateUtils::shiftLeft(1, fillColor);
       break;
     case SHIFT_RIGHT:
-      shiftRight(1, fillColor);
+      ShiftRotateUtils::shiftRight(1, fillColor);
       break;
     }
 
@@ -213,12 +215,12 @@ void rotateOrShift(RotateShiftOp op, int durationMS, int pixelsPerSecond, Color 
   }
 }
 
-void tick() {
+void Effects::tick() {
   strip.show();
   delay(TIME_STEP_MS);
 }
 
-void tickMicroseconds(float delayTime) {
+void Effects::tickMicroseconds(float delayTime) {
   strip.show();
   while (delayTime > 16000) {
     delayMicroseconds(16000);
