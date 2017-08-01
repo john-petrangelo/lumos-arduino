@@ -17,3 +17,4 @@ class Colors {
 };
 
 #endif // _COLORS_H_
+

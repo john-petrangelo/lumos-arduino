@@ -1,18 +1,15 @@
-#ifndef _LOG_H_
-#define _LOG_H_
-
-#include <hardwareSerial.h>
-#include "defs.h"
-
 class Log {
   public:
-    static void printInt(char const *name, int value);
-    static void printLong(char const *name, long value);
-    static void printColor(char const *name, Color value);
-    static void printFloat(char const *name, float value, int precision);
+    static void logInt(char const *name, int value);
+    static void logMsg(char const *msg);
+    static void logMsgLn(char const *msg);
+    static void logLong(char const *name, long value);
+    static void logColor(char const *name, Color value);
+    static void logFloat(char const *name, float value, int precision);
+    static void logLn();
+    static void logAvailableMemory();
 
-    static inline void println() { Serial.println(); }
+  private:
+    static void logName(char const *name);
 };
-
-#endif // _LOG_H_
 

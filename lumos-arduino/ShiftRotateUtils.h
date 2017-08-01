@@ -16,3 +16,4 @@ class ShiftRotateUtils {
 
 #endif // _SHIFT_ROTATE_UTILS_H_
 
+

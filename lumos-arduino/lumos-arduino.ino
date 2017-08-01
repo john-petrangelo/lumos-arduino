@@ -1,4 +1,5 @@
 #include "defs.h"
+#include "Action.h"
 #include "Colors.h"
 #include "Effects.h"
 #include "Log.h"
@@ -9,7 +10,7 @@ neoPixelType const STRIP_FLAGS = (NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel strip;
 
 void setup() {
-  //Initiate Serial communication.
+  // Initiate Serial communication.
   Serial.begin(9600);
 
   // Initialize the LED strip.
@@ -19,14 +20,16 @@ void setup() {
   strip.show(); // Initialize all pixels to 'off'
 }
 
+PixelsArray pixels1;
+PixelsArray pixels2;
+PixelsArray pixels3;
+
 void loop() {
   long startTime = millis();
 
-  Pixels pixels;
-  Pixels pixels2;
-  Pixels pixels3;
-
-  Effects::fuse(30000, Colors::fade(WHITE, 3), ORANGE);
+  testBlink();
+  
+  Effects::fuse(10000, Colors::fade(WHITE, 3), ORANGE);
 
 //  setGradient(pixels2, 7, VIOLET, INDIGO, BLUE, GREEN, YELLOW, ORANGE, RED);
 //  //  setGradient(pixels2, 2, BLACK, BLUE);
@@ -90,22 +93,20 @@ void loop() {
 //  //  delay(2000);
 //  //
 //  //  setRainbow();
-//  //  johnDemo(15);
   long stopTime = millis();
-  Log::printFloat((char*)"elapsed=", (stopTime - startTime) / 1000.0, 3);
-  Log::println();
+  Log::logFloat((char*)"elapsed=", (stopTime - startTime) / 1000.0, 3);
+  Log::logLn();
 }
 
-void johnDemo(int wait) {
-  //  for (int i = 0; i < 40; ++i) {
-  //    shiftLeft(1, GREEN);
-  //    strip.show();
-  //    delay(wait);
-  //  }
-  for (int i = 0; i < 60; ++i) {
-    ShiftRotateUtils::rotateRight(1);
-    strip.show();
-    delay(wait);
-  }
+void testBlink() {
+  // Operator new doesn't work right with virtual methods, use this workaround instead.
+  // NOTE: Don't try to delete this object.
+  Blink blink1(pixels1, 2000, PURPLE, ORANGE);
+  Action *blink = &blink1;
+
+  blink->setup();
+
+  ActionRunner runner(blink);
+  runner.runForDurationMS(10000);
 }
 

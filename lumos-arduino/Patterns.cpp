@@ -1,6 +1,5 @@
 #include "Colors.h"
 #include "Patterns.h"
-#include "Log.h"
 
 /*
  * Apply the provided pixels array (pattern) to the light strip.

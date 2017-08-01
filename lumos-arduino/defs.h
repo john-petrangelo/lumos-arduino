@@ -14,7 +14,8 @@ enum RotateShiftOp {
 
 uint16_t const NUM_PIXELS = 60;
 typedef uint32_t Color;
-typedef Color Pixels[NUM_PIXELS];
+typedef Color* Pixels;
+typedef Color PixelsArray[60];
 
 Color const BLACK =  0x000000;
 Color const BLUE =   0x0000FF;
@@ -31,3 +32,4 @@ Color const VIOLET = 0x8F00FF;
 extern Adafruit_NeoPixel strip;
 
 #endif // _DEFS_H_
+
