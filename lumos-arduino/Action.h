@@ -24,14 +24,16 @@ class ActionRunner {
 // An Action that alternates between two colors with the given period.
 class Blink : public Action {
   private:
-    Pixels pixels;
+    Pixels const pixels;
     int const periodMS;
+    int const firstPixel;
+    int const lastPixel;
     Color colors[2];
     long nextBlinkTimeMS;
     int colorIndex;
 
   public:
-    Blink(Pixels pixels, int periodMS, Color c1, Color c2);
+    Blink(Pixels pixels, int periodMS, int firstPixel, int lastPixel, Color c1, Color c2);
     void setup();
     void loop();
 

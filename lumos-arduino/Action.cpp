@@ -20,10 +20,11 @@ void ActionRunner::runForDurationMS(long durationMS) {
   }
 }
 
-Blink::Blink(Pixels pixels, int periodMS, Color c1, Color c2) : periodMS(periodMS) {
-  this->pixels = pixels;
-  colors[0] = c1;
-  colors[1] = c2;
+Blink::Blink(Pixels pixels, int periodMS, int firstPixel, int lastPixel, Color c1, Color c2)
+  : pixels(pixels), periodMS(periodMS), firstPixel(firstPixel), lastPixel(lastPixel)
+{
+  this->colors[0] = c1;
+  this->colors[1] = c2;
 }
 
 void Blink::setup() {
@@ -41,8 +42,8 @@ void Blink::loop() {
 }
 
 void Blink::paint() {
-  Patterns::setSolidColor(pixels, colors[colorIndex]);
-  Patterns::applyPixels(pixels);
+  Patterns::setSolidColor(pixels, firstPixel, lastPixel, colors[colorIndex]);
+  Patterns::applyPixels(pixels, firstPixel, lastPixel);
   strip.show();
 }
 

@@ -101,12 +101,21 @@ void loop() {
 void testBlink() {
   // Operator new doesn't work right with virtual methods, use this workaround instead.
   // NOTE: Don't try to delete this object.
-  Blink blink1(pixels1, 2000, PURPLE, ORANGE);
-  Action *blink = &blink1;
+  Blink blink1(pixels1, 2000, 0, 20, PURPLE, ORANGE);
+  Action *action1 = &blink1;
 
-  blink->setup();
+  Blink blink2(pixels1, 2200, 40, 60, RED, GREEN);
+  Action *action2 = &blink2;
 
-  ActionRunner runner(blink);
-  runner.runForDurationMS(10000);
+  action1->setup();
+  action2->setup();
+
+//  ActionRunner runner(blink);
+//  runner.runForDurationMS(10000);
+  while (1) {
+    action1->loop();
+    action2->loop();
+  }
+
 }
 
