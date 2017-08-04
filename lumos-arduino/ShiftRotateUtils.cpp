@@ -48,25 +48,40 @@ void ShiftRotateUtils::rotateRight(int distance) {
  * Swap left-half partition with right-half partition at the specified pivot point.
  */
 void ShiftRotateUtils::swapPartitions(int partition) {
-    // Save the left side of the partition.
-    Color* leftSide = new Color[partition];
-    for (int i = 0; i < partition; ++i) {
-      leftSide[i] = strip.getPixelColor(i);
-    }
+  // Save the left side of the partition.
+  Color* leftSide = new Color[partition];
+  for (int i = 0; i < partition; ++i) {
+    leftSide[i] = strip.getPixelColor(i);
+  }
 
-    // Copy the right side to the left side.
-    int destIndex = 0;
-    for (int i = partition; i < strip.numPixels(); ++i, ++destIndex) {
-      strip.setPixelColor(destIndex, strip.getPixelColor(i));
-    }
+  // Copy the right side to the left side.
+  int destIndex = 0;
+  for (int i = partition; i < strip.numPixels(); ++i, ++destIndex) {
+    strip.setPixelColor(destIndex, strip.getPixelColor(i));
+  }
 
-    // Copy the left side to the right side.
-    int oldIndex = 0;
-    for (;destIndex < strip.numPixels(); ++destIndex, ++oldIndex) {
-      strip.setPixelColor(destIndex, leftSide[oldIndex]);
-    }
+  // Copy the left side to the right side.
+  int oldIndex = 0;
+  for (;destIndex < strip.numPixels(); ++destIndex, ++oldIndex) {
+    strip.setPixelColor(destIndex, leftSide[oldIndex]);
+  }
 
   delete [] leftSide;
 }
 
+void ShiftRotateUtils::rotateLeft1() {
+  Color c0 = strip.getPixelColor(0);
+  for (int i = 0; i < strip.numPixels() - 1; i++) {
+    strip.setPixelColor(i, strip.getPixelColor(i + 1));
+  }
+  strip.setPixelColor(strip.numPixels()-1, c0);
+}
+
+void ShiftRotateUtils::rotateRight1() {
+  Color c_last = strip.getPixelColor(strip.numPixels() - 1);
+  for (int i = strip.numPixels() - 1; i > 0; i--) {
+    strip.setPixelColor(i, strip.getPixelColor(i - 1));
+  }
+  strip.setPixelColor(0, c_last);
+}
 

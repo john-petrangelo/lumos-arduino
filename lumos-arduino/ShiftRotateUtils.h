@@ -10,6 +10,9 @@ class ShiftRotateUtils {
     static void rotateLeft(int distance);
     static void rotateRight(int distance);
 
+    static void rotateLeft1();
+    static void rotateRight1();
+  
   private:
     static void swapPartitions(int partition);
 };

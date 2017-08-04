@@ -2,6 +2,7 @@
 
 #include "Action.h"
 #include "Patterns.h"
+#include "ShiftRotateUtils.h"
 
 ActionRunner::ActionRunner(Action *action) {
   this->action = action;
@@ -47,4 +48,45 @@ void Blink::paint() {
   strip.show();
 }
 
+RotateLeft::RotateLeft(int pixelsPerSecond) : pixelsPerSecond(pixelsPerSecond) { }
+
+void RotateLeft::setup() {
+  nextTimeMS = millis() + 1000.0 / pixelsPerSecond; 
+}
+
+void RotateLeft::loop() {
+  
+  if (millis() > nextTimeMS) {
+    ShiftRotateUtils::rotateLeft1();
+
+    nextTimeMS = millis() + 1000.0 / pixelsPerSecond; 
+    strip.show();
+  }
+}
+
+DualAction::DualAction(Action *a1, Action *a2) : action1(a1), action2(a2) { }
+
+void DualAction::setup() {
+  action1->setup();
+  action2->setup();
+}
+
+void DualAction::loop() {
+  action1->loop();
+  action2->loop();
+}
+
+TripleAction::TripleAction(Action *a1, Action *a2, Action *a3) : action1(a1), action2(a2), action3(a3) { }
+
+void TripleAction::setup() {
+  action1->setup();
+  action2->setup();
+  action3->setup();
+}
+
+void TripleAction::loop() {
+  action1->loop();
+  action2->loop();
+  action3->loop();
+}
 

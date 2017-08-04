@@ -41,3 +41,36 @@ class Blink : public Action {
     void paint();
 };
 
+// An action that rotate lights to the left
+class RotateLeft : public Action {
+  private:
+    int const pixelsPerSecond;
+    long nextTimeMS;
+    
+  public:
+    RotateLeft(int pixelsPerSecond);
+    void setup();
+    void loop();
+};
+
+// DualAction
+class DualAction : public Action {
+  Action * const action1;
+  Action * const action2;
+  public:
+    DualAction(Action *a1, Action *a2);
+    void setup();
+    void loop();
+};
+
+// TripleAction
+class TripleAction : public Action {
+  Action * const action1;
+  Action * const action2;
+  Action * const action3;
+  public:
+    TripleAction(Action *a1, Action *a2, Action *a3);
+    void setup();
+    void loop();
+};
+

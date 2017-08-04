@@ -57,7 +57,8 @@ void Effects::fadeTo(int durationMS, Color newColor) {
   int numTicks = durationMS / TIME_STEP_MS;
   int newStepSizeMicrosec = 1000L * durationMS / numTicks;
 
-  Color* oldColors = new Color[strip.numPixels()];
+//  Color* oldColors = new Color[strip.numPixels()];
+  Color oldColors[strip.numPixels()];
   for (int i = 0; i < strip.numPixels(); i++) {
     oldColors[i] = strip.getPixelColor(i);
   }
@@ -72,7 +73,7 @@ void Effects::fadeTo(int durationMS, Color newColor) {
     tickMicroseconds(newStepSizeMicrosec);
   }
 
-  delete [] oldColors;
+//  delete [] oldColors;
 }
 
 void Effects::sparklePixel(int durationMS, int pos, Color color) {
@@ -228,4 +229,5 @@ void Effects::tickMicroseconds(float delayTime) {
   }
   delayMicroseconds(delayTime);
 }
+
 

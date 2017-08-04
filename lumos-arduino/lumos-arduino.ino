@@ -21,15 +21,15 @@ void setup() {
 }
 
 PixelsArray pixels1;
-PixelsArray pixels2;
-PixelsArray pixels3;
+//PixelsArray pixels2;
+//PixelsArray pixels3;
 
 void loop() {
   long startTime = millis();
 
   testBlink();
   
-  Effects::fuse(10000, Colors::fade(WHITE, 3), ORANGE);
+  Effects::fuse(5000, Colors::fade(WHITE, 3), ORANGE);
 
 //  setGradient(pixels2, 7, VIOLET, INDIGO, BLUE, GREEN, YELLOW, ORANGE, RED);
 //  //  setGradient(pixels2, 2, BLACK, BLUE);
@@ -91,8 +91,7 @@ void loop() {
 //  //  setGradient(13, YELLOW, BLUE, YELLOW, RED, YELLOW, BLUE, YELLOW, RED, YELLOW, BLUE, YELLOW, RED, YELLOW);
 //  //  strip.show();
 //  //  delay(2000);
-//  //
-//  //  setRainbow();
+
   long stopTime = millis();
   Log::logFloat((char*)"elapsed=", (stopTime - startTime) / 1000.0, 3);
   Log::logLn();
@@ -101,21 +100,23 @@ void loop() {
 void testBlink() {
   // Operator new doesn't work right with virtual methods, use this workaround instead.
   // NOTE: Don't try to delete this object.
-  Blink blink1(pixels1, 2000, 0, 20, PURPLE, ORANGE);
-  Action *action1 = &blink1;
+  Blink blink1(pixels1, 1000, 20, 25, PURPLE, CYAN);
+  Action *blinkAction = &blink1;
 
-  Blink blink2(pixels1, 2200, 40, 60, RED, GREEN);
-  Action *action2 = &blink2;
+  Blink blink2(pixels1, 1000, 40, 45, RED, ORANGE);
+  Action *blinkAction2 = &blink2;
 
-  action1->setup();
-  action2->setup();
+  Patterns::setGradient(pixels1, 3, RED, GREEN, BLUE);
+  Patterns::applyPixels(pixels1);
+  strip.show();
 
-//  ActionRunner runner(blink);
-//  runner.runForDurationMS(10000);
-  while (1) {
-    action1->loop();
-    action2->loop();
-  }
+  RotateLeft rotateLeft(20);
+  Action *rotateLeftAction = &rotateLeft;
 
+  TripleAction tripleAction(blinkAction, blinkAction2, rotateLeftAction);
+  tripleAction.setup();
+
+  ActionRunner runner(&tripleAction);
+  runner.runForDurationMS(10000);
 }
 
