@@ -2,7 +2,6 @@
 
 #include "Action.h"
 #include "Patterns.h"
-#include "ShiftRotateUtils.h"
 
 ActionRunner::ActionRunner(Action *action) {
   this->action = action;
@@ -29,16 +28,16 @@ Blink::Blink(Pixels pixels, int periodMS, int firstPixel, int lastPixel, Color c
 }
 
 void Blink::setup() {
-  nextBlinkTimeMS = millis() + periodMS / 2;
+  nextUpdateMS = millis() + periodMS / 2;
   colorIndex = 0;
   paint();
 }
 
 void Blink::loop() {
-  if (millis() > nextBlinkTimeMS) {
+  if (millis() > nextUpdateMS) {
     colorIndex = (colorIndex + 1) % 2;
     paint();
-    nextBlinkTimeMS = millis() + periodMS / 2;
+    nextUpdateMS = millis() + periodMS / 2;
   }
 }
 
@@ -48,28 +47,41 @@ void Blink::paint() {
   strip.show();
 }
 
-RotateLeft::RotateLeft(int pixelsPerSecond) : pixelsPerSecond(pixelsPerSecond) { }
+Rotate::Rotate(int pixelsPerSecond, Direction op) : pixelsPerSecond(pixelsPerSecond), op(op) { }
 
-void RotateLeft::setup() {
-  nextTimeMS = millis() + 1000.0 / pixelsPerSecond; 
+void Rotate::setup() {
+  nextUpdateMS = millis() + 1000.0 / pixelsPerSecond;
 }
 
-void RotateLeft::loop() {
-  
-  if (millis() > nextTimeMS) {
-    ShiftRotateUtils::rotateLeft1();
+void Rotate::loop() {
+  if (millis() > nextUpdateMS) {
+    rotate();
 
-    nextTimeMS = millis() + 1000.0 / pixelsPerSecond; 
+    nextUpdateMS = millis() + 1000.0 / pixelsPerSecond; 
     strip.show();
   }
 }
 
-DualAction::DualAction(Action *a1, Action *a2) : action1(a1), action2(a2) { }
-
-void DualAction::setup() {
-  action1->setup();
-  action2->setup();
+void Rotate::rotate() {
+  Color c0 = strip.getPixelColor(0);
+  Color c_last = strip.getPixelColor(strip.numPixels() - 1);
+  switch (op) {
+    case  LEFT:
+      for (int i = 0; i < strip.numPixels() - 1; i++) {
+        strip.setPixelColor(i, strip.getPixelColor(i + 1));
+      }
+      strip.setPixelColor(strip.numPixels()-1, c0);
+      break;
+    case RIGHT:
+      for (int i = strip.numPixels() - 1; i > 0; i--) {
+        strip.setPixelColor(i, strip.getPixelColor(i - 1));
+      }
+      strip.setPixelColor(0, c_last);
+      break;
+  }
 }
+
+DualAction::DualAction(Action *a1, Action *a2) : action1(a1), action2(a2) { }
 
 void DualAction::loop() {
   action1->loop();
@@ -77,12 +89,6 @@ void DualAction::loop() {
 }
 
 TripleAction::TripleAction(Action *a1, Action *a2, Action *a3) : action1(a1), action2(a2), action3(a3) { }
-
-void TripleAction::setup() {
-  action1->setup();
-  action2->setup();
-  action3->setup();
-}
 
 void TripleAction::loop() {
   action1->loop();

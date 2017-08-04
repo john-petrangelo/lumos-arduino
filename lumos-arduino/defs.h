@@ -8,8 +8,8 @@
 
 #include <stdint.h>
 
-enum RotateShiftOp {
-  ROTATE_LEFT, ROTATE_RIGHT, SHIFT_LEFT, SHIFT_RIGHT
+enum Direction {
+  LEFT, RIGHT
 };
 
 uint16_t const NUM_PIXELS = 60;

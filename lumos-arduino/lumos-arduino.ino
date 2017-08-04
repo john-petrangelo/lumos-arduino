@@ -3,7 +3,6 @@
 #include "Colors.h"
 #include "Effects.h"
 #include "Log.h"
-#include "ShiftRotateUtils.h"
 
 int8_t const PIN = 13;
 neoPixelType const STRIP_FLAGS = (NEO_GRB + NEO_KHZ800);
@@ -101,20 +100,19 @@ void testBlink() {
   // Operator new doesn't work right with virtual methods, use this workaround instead.
   // NOTE: Don't try to delete this object.
   Blink blink1(pixels1, 1000, 20, 25, PURPLE, CYAN);
-  Action *blinkAction = &blink1;
+  blink1.setup();
 
   Blink blink2(pixels1, 1000, 40, 45, RED, ORANGE);
-  Action *blinkAction2 = &blink2;
+  blink2.setup();
 
   Patterns::setGradient(pixels1, 3, RED, GREEN, BLUE);
   Patterns::applyPixels(pixels1);
   strip.show();
 
-  RotateLeft rotateLeft(20);
-  Action *rotateLeftAction = &rotateLeft;
+  Rotate rotate(20, RIGHT);
+  rotate.setup();
 
-  TripleAction tripleAction(blinkAction, blinkAction2, rotateLeftAction);
-  tripleAction.setup();
+  TripleAction tripleAction(&blink1, &blink2, &rotate);
 
   ActionRunner runner(&tripleAction);
   runner.runForDurationMS(10000);

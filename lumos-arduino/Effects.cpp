@@ -1,48 +1,5 @@
 #include "Colors.h"
 #include "Effects.h"
-#include "ShiftRotateUtils.h"
-
-/**
- * Rotate lights to the right
- * 
- * @param duration durationMS of the action in milliseconds
- * @param distance the number of light positions to rotate
- */
-void Effects::rotateRight(float durationMS, int pixelsPerSecond) {
-  rotateOrShift(ROTATE_RIGHT, durationMS, pixelsPerSecond, BLACK);
-}
-
-/**
- * Rotate lights to the left
- * 
- * @param duration durationMS of the action in milliseconds
- * @param distance the number of light positions to rotate
- */
-void Effects::rotateLeft(float durationMS, int pixelsPerSecond) {
-  rotateOrShift(ROTATE_LEFT, durationMS, pixelsPerSecond, BLACK);
-}
-
-/**
- * Shift lights to the right
- * 
- * @param durationMS duration of the action in milliseconds
- * @param distance the number of light positions to shift
- * @param fillColor color to fill lights shift in from the left
- */
-void Effects::shiftRight(float durationMS, int pixelsPerSecond, Color fillColor) {
-  rotateOrShift(SHIFT_RIGHT, durationMS, pixelsPerSecond, fillColor);
-}
-
-/**
- * Shift lights to the left
- * 
- * @param durationMS duration of the action in milliseconds
- * @param distance the number of light positions to shift
- * @param fillColor color to fill lights shift in from the right
- */
-void Effects::shiftLeft(float durationMS, int pixelsPerSecond, Color fillColor) {
-  rotateOrShift(SHIFT_LEFT, durationMS, pixelsPerSecond, fillColor);
-}
 
 /**
  * Fades from the current colors to the specified color.
@@ -188,33 +145,6 @@ void Effects::fuse(int durationMS, Color fuseColor, Color burnColor, int length)
 //            glowHistory.add(i, color);
 //        }
 //    }
-
-void Effects::rotateOrShift(RotateShiftOp op, int durationMS, int pixelsPerSecond, Color fillColor) {
-  float const secondsPerPixel = 1.0 / pixelsPerSecond;
-  int const numTicks = (int)(durationMS / 1000.0 / secondsPerPixel);
-
-  unsigned long const startTimeMS = millis();
-  unsigned long const endTimeMS = startTimeMS + durationMS;
-  
-  for (int i = 0; i <= numTicks; i++) {
-    switch (op) {
-    case ROTATE_LEFT:
-      ShiftRotateUtils::rotateLeft(1);
-      break;
-    case ROTATE_RIGHT:
-      ShiftRotateUtils::rotateRight(1);
-      break;
-    case SHIFT_LEFT:
-      ShiftRotateUtils::shiftLeft(1, fillColor);
-      break;
-    case SHIFT_RIGHT:
-      ShiftRotateUtils::shiftRight(1, fillColor);
-      break;
-    }
-
-    tickMicroseconds(secondsPerPixel*1000*1000);
-  }
-}
 
 void Effects::tick() {
   strip.show();

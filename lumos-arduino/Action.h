@@ -5,7 +5,6 @@
 // Actions have no inherent "done" state -- things that finish are called "effects."
 class Action {
   public:
-    virtual void setup() {}
     virtual void loop() {}
 };
 
@@ -29,7 +28,7 @@ class Blink : public Action {
     int const firstPixel;
     int const lastPixel;
     Color colors[2];
-    long nextBlinkTimeMS;
+    long nextUpdateMS;
     int colorIndex;
 
   public:
@@ -41,16 +40,18 @@ class Blink : public Action {
     void paint();
 };
 
-// An action that rotate lights to the left
-class RotateLeft : public Action {
+// An action that rotates or shifts lights to the left or right.
+class Rotate : public Action {
   private:
     int const pixelsPerSecond;
-    long nextTimeMS;
+    Direction const op;
+    long nextUpdateMS;
     
   public:
-    RotateLeft(int pixelsPerSecond);
+    Rotate(int pixelsPerSecond, Direction op);
     void setup();
     void loop();
+    void rotate();
 };
 
 // DualAction
