@@ -38,13 +38,17 @@ class Blink : public Action {
 // An action that rotates or shifts lights to the left or right.
 class Rotate : public Action {
   private:
+    int firstPixel;
+    int lastPixel;
     int const pixelsPerSecond;
     Direction const op;
     
     void rotate();
 
   public:
-    Rotate(int pixelsPerSecond, Direction op) : pixelsPerSecond(pixelsPerSecond), op(op) { }
+    Rotate(int pixelsPerSecond, Direction op) : Rotate(0, strip.numPixels(), pixelsPerSecond, op) { }
+    Rotate(int firstPixel, int lastPixel, int pixelsPerSecond, Direction op)
+        : firstPixel(firstPixel), lastPixel(lastPixel), pixelsPerSecond(pixelsPerSecond), op(op) { }
     void setup();
     void loop();
 };

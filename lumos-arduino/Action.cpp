@@ -62,20 +62,20 @@ void Rotate::loop() {
 }
 
 void Rotate::rotate() {
-  Color c0 = strip.getPixelColor(0);
-  Color c_last = strip.getPixelColor(strip.numPixels() - 1);
+  Color firstColor = strip.getPixelColor(firstPixel);
+  Color lastColor = strip.getPixelColor(lastPixel - 1);
   switch (op) {
     case  LEFT:
-      for (int i = 0; i < strip.numPixels() - 1; i++) {
+      for (int i = firstPixel; i < lastPixel - 1; i++) {
         strip.setPixelColor(i, strip.getPixelColor(i + 1));
       }
-      strip.setPixelColor(strip.numPixels()-1, c0);
+      strip.setPixelColor(lastPixel - 1, firstColor);
       break;
     case RIGHT:
-      for (int i = strip.numPixels() - 1; i > 0; i--) {
+      for (int i = lastPixel - 1; i >= firstPixel; i--) {
         strip.setPixelColor(i, strip.getPixelColor(i - 1));
       }
-      strip.setPixelColor(0, c_last);
+      strip.setPixelColor(firstPixel, lastColor);
       break;
   }
 }
