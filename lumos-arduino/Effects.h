@@ -1,6 +1,7 @@
 #ifndef _EFFECTS_H_
 #define _EFFECTS_H_
 
+#include "Action.h"
 #include "Colors.h"
 
 class Effects {
@@ -18,5 +19,4 @@ class Effects {
 };
 
 #endif // _EFFECTS_H_
-
 

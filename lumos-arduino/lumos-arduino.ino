@@ -1,6 +1,7 @@
 #include "defs.h"
 #include "Action.h"
 #include "Colors.h"
+#include "Effect.h"
 #include "Effects.h"
 #include "Log.h"
 
@@ -100,21 +101,23 @@ void testBlink() {
   // Operator new doesn't work right with virtual methods, use this workaround instead.
   // NOTE: Don't try to delete this object.
   Blink blink1(pixels1, 1000, 20, 25, PURPLE, CYAN);
-  blink1.setup();
 
-  Blink blink2(pixels1, 1000, 40, 45, RED, ORANGE);
-  blink2.setup();
+//  Blink blink2(pixels1, 1000, 40, 45, RED, ORANGE);
+//  blink2.setup();
 
+  FadeTo fader(pixels1, 5000, 0, 10, BLUE);
   Patterns::setGradient(pixels1, 3, RED, GREEN, BLUE);
   Patterns::applyPixels(pixels1);
   strip.show();
 
-  Rotate rotate(20, RIGHT);
-  rotate.setup();
+//  Rotate rotate(20, RIGHT);
+//  rotate.setup();
 
-  TripleAction tripleAction(&blink1, &blink2, &rotate);
+  DualAction multiAction(&fader, &blink1);
 
-  ActionRunner runner(&tripleAction);
+  fader.setup();
+  blink1.setup();
+  ActionRunner runner(&multiAction);
   runner.runForDurationMS(10000);
 }
 

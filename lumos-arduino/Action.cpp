@@ -37,7 +37,7 @@ void Blink::loop() {
   if (millis() > nextUpdateMS) {
     colorIndex = (colorIndex + 1) % 2;
     paint();
-    nextUpdateMS = millis() + periodMS / 2;
+    setNextUpdateMS(millis() + periodMS / 2);
   }
 }
 
@@ -47,17 +47,14 @@ void Blink::paint() {
   strip.show();
 }
 
-Rotate::Rotate(int pixelsPerSecond, Direction op) : pixelsPerSecond(pixelsPerSecond), op(op) { }
-
 void Rotate::setup() {
-  nextUpdateMS = millis() + 1000.0 / pixelsPerSecond;
+  setNextUpdateMS(millis() + 1000.0 / pixelsPerSecond);
 }
 
 void Rotate::loop() {
   if (millis() > nextUpdateMS) {
     rotate();
-
-    nextUpdateMS = millis() + 1000.0 / pixelsPerSecond; 
+    setNextUpdateMS(millis() + 1000.0 / pixelsPerSecond);
     strip.show();
   }
 }
@@ -81,14 +78,10 @@ void Rotate::rotate() {
   }
 }
 
-DualAction::DualAction(Action *a1, Action *a2) : action1(a1), action2(a2) { }
-
 void DualAction::loop() {
   action1->loop();
   action2->loop();
 }
-
-TripleAction::TripleAction(Action *a1, Action *a2, Action *a3) : action1(a1), action2(a2), action3(a3) { }
 
 void TripleAction::loop() {
   action1->loop();
