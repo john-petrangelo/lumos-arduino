@@ -5,6 +5,13 @@
 
 long const TIME_STEP_MS = 30;
 
+void Effect::loop() {
+  if (!isDone() && millis() > getNextUpdateMS()) {
+    paint();
+    strip.show();
+  }
+}
+
 FadeTo::FadeTo(Pixels pixels, int durationMS, int firstPixel, int lastPixel, Color c)
     : pixels(pixels), durationMS(durationMS), firstPixel(firstPixel), lastPixel(lastPixel), newColor(c) {
   long adjustedDurationMS = constrain(durationMS - 131, TIME_STEP_MS, 32767);
@@ -18,17 +25,15 @@ void FadeTo::setup() {
   setNextUpdateMS(millis() + updateIntervalMS);
 }
 
-void FadeTo::loop() {
-  if (!isDone() && millis() > getNextUpdateMS()) {
-    for (int pixel = firstPixel; pixel < lastPixel; pixel++) {
-      Color stepColor = Colors::blend(pixels[pixel], newColor, currentPercent);
-      strip.setPixelColor(pixel, stepColor);
-    }
-
-    currentPercent++;
-    setNextUpdateMS(millis() + updateIntervalMS);
-    strip.show();
+void FadeTo::paint() {
+  Log::logLn();
+  for (int pixel = firstPixel; pixel < lastPixel; pixel++) {
+    Color stepColor = Colors::blend(pixels[pixel], newColor, currentPercent);
+    strip.setPixelColor(pixel, stepColor);
   }
+
+  currentPercent++;
+  setNextUpdateMS(millis() + updateIntervalMS);
 }
 
 Fuse::Fuse(int pixelsPerSecond, int firstPixel, int lastPixel, Color fuseColor, Color burnColor)
@@ -46,14 +51,11 @@ void Fuse::setup() {
   strip.show();
 }
 
-void Fuse::loop() {
-  if (!isDone() && millis() > getNextUpdateMS()) {
-    setNextUpdateMS(millis() + updateIntervalMS);
-    Flicker flicker(currentPixel, burnColor);
-    Runner::runForDurationMS(updateIntervalMS, &flicker);
-    strip.setPixelColor(currentPixel, BLACK);
-    strip.show();
-    currentPixel--;
-  }
+void Fuse::paint() {
+  setNextUpdateMS(millis() + updateIntervalMS);
+  Flicker flicker(currentPixel, burnColor);
+  Runner::runForDurationMS(updateIntervalMS, &flicker);
+  strip.setPixelColor(currentPixel, BLACK);
+  currentPixel--;
 }
 
