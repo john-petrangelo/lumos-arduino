@@ -28,5 +28,23 @@ class FadeTo : public Effect {
     bool isDone() { return currentPercent >100; }
 };
 
+class Fuse : public Effect {
+  private:
+    int const pixelsPerSecond;
+    int const firstPixel;
+    Color const fuseColor;
+    Color const burnColor;
+    long updateIntervalMS;
+    int currentPixel;
+    
+  public:
+    Fuse(int pixelsPerSecond) : Fuse(pixelsPerSecond, 0, strip.numPixels(), Colors::fade(WHITE, 3), ORANGE) { }
+    Fuse(int pixelsPerSecond, Color fuseColor, Color burnColor) : Fuse(pixelsPerSecond, 0, strip.numPixels(), fuseColor, burnColor) { }
+    Fuse(int pixelsPerSecond, int firstPixel, int lastPixel, Color fuseColor, Color burnColor);
+    void setup();
+    void loop();
+    bool isDone() { return currentPixel < 0; }
+};
+
 #endif // _EFFECT_H_
 

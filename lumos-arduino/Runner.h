@@ -6,11 +6,13 @@
 
 // Runner provides convenience methods for running Actions and EFfects.
 class Runner {
-  public:
+  private:
     Runner() { }
-    void runForever(Action *action);
-    void runForDurationMS(long durationMS, Action *action);
-    void runUntilDone(Effect *effect);
+    
+  public:
+    static void runForever(Action *action);
+    static void runForDurationMS(long durationMS, Action *action);
+    static void runUntilDone(Effect *effect);
 };
 
 #endif // _RUNNER_

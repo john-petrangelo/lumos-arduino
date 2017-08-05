@@ -2,7 +2,6 @@
 #include "Action.h"
 #include "Colors.h"
 #include "Effect.h"
-#include "Effects.h"
 #include "Log.h"
 #include "Runner.h"
 
@@ -30,8 +29,6 @@ void loop() {
 
   testBlink();
   
-  Effects::fuse(5000, Colors::fade(WHITE, 3), ORANGE);
-
 //  setGradient(pixels2, 7, VIOLET, INDIGO, BLUE, GREEN, YELLOW, ORANGE, RED);
 //  //  setGradient(pixels2, 2, BLACK, BLUE);
 //  reversePattern(pixels3, pixels2);
@@ -105,21 +102,23 @@ void testBlink() {
   Blink blink2(pixels1, 1000, 40, 45, RED, ORANGE);
   FadeTo fader(pixels1, 5000, 0, 10, BLUE);
   Flicker flicker(Colors::blend(WHITE, YELLOW, 80));
+  Fuse fuse(12);
+  Rotate rotate(20, RIGHT);
 
   Patterns::setGradient(pixels1, 3, RED, GREEN, BLUE);
   Patterns::applyPixels(pixels1);
   strip.show();
 
-//  Rotate rotate(20, RIGHT);
-//  rotate.setup();
 
   DualAction multiAction(&flicker, &blink1);
 
   fader.setup();
-  blink1.setup();
-  Runner runner;
-  runner.runForDurationMS(2000, &flicker);
-//  runner.runForever(&blink1);
-//  runner.runUntilDone(&fader);
+//  blink1.setup();
+//  rotate.setup();
+  fuse.setup();
+//  Runner::runForDurationMS(2000, &flicker);
+//  Runner::runForever(&blink1);
+  Runner::runUntilDone(&fuse);
+//  Runner::runUntilDone(&fader);
 }
 

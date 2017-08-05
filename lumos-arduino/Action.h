@@ -4,8 +4,6 @@
 #include "Patterns.h"
 
 // A generic superclass for actions.
-// Actions need to be setup once then need loop() to be called periodically to update the strip.
-// Actions have no inherent "done" state -- things that finish are called "effects."
 class Action {
   private:
     long nextUpdateMS = 0;
