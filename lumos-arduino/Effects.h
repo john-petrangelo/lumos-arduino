@@ -6,7 +6,6 @@
 
 class Effects {
   public:
-    static void fadeTo(int durationMS, Color newColor);
     static void sparklePixel(int durationMS, int pos, Color color);
     static void fuse(int durationMS, Color fuseColor, Color burnColor);
     static void fuse(int durationMS, Color fuseColor, Color burnColor, int length);

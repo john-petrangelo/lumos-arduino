@@ -1,38 +1,6 @@
 #include "Colors.h"
 #include "Effects.h"
 
-/**
- * Fades from the current colors to the specified color.
- * 
- * @param durationMS
- * @param newColor
- */
-void Effects::fadeTo(int durationMS, Color newColor) {
-  // Each fade costs computation time, so subtract from duration budget.
-  durationMS = constrain(durationMS - 131, TIME_STEP_MS, 32767);
-  
-  int numTicks = durationMS / TIME_STEP_MS;
-  int newStepSizeMicrosec = 1000L * durationMS / numTicks;
-
-//  Color* oldColors = new Color[strip.numPixels()];
-  Color oldColors[strip.numPixels()];
-  for (int i = 0; i < strip.numPixels(); i++) {
-    oldColors[i] = strip.getPixelColor(i);
-  }
-
-  for (int i = 1; i <= numTicks; i++) {
-    int ratio = 100 * i / numTicks;
-    for (int light = 0; light < strip.numPixels(); light++) {
-      Color stepColor = Colors::blend(oldColors[light], newColor, ratio);
-      strip.setPixelColor(light, stepColor);
-    }
-
-    tickMicroseconds(newStepSizeMicrosec);
-  }
-
-//  delete [] oldColors;
-}
-
 void Effects::sparklePixel(int durationMS, int pos, Color color) {
   long stopTime = millis() + durationMS;
 
