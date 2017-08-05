@@ -1,24 +1,9 @@
 #include "defs.h"
 
 #include "Action.h"
+#include "Colors.h"
+#include "Log.h"
 #include "Patterns.h"
-
-ActionRunner::ActionRunner(Action *action) {
-  this->action = action;
-}
-
-void ActionRunner::runForever() {
-  while (1) {
-    action->loop();
-  }
-}
-
-void ActionRunner::runForDurationMS(long durationMS) {
-  long endTime = millis() + durationMS;
-  while (millis() < endTime) {
-    action->loop();
-  }
-}
 
 Blink::Blink(Pixels pixels, int periodMS, int firstPixel, int lastPixel, Color c1, Color c2)
   : pixels(pixels), periodMS(periodMS), firstPixel(firstPixel), lastPixel(lastPixel)
@@ -28,13 +13,13 @@ Blink::Blink(Pixels pixels, int periodMS, int firstPixel, int lastPixel, Color c
 }
 
 void Blink::setup() {
-  nextUpdateMS = millis() + periodMS / 2;
+  setNextUpdateMS(millis() + periodMS / 2);
   colorIndex = 0;
   paint();
 }
 
 void Blink::loop() {
-  if (millis() > nextUpdateMS) {
+  if (millis() > getNextUpdateMS()) {
     colorIndex = (colorIndex + 1) % 2;
     paint();
     setNextUpdateMS(millis() + periodMS / 2);
@@ -47,12 +32,29 @@ void Blink::paint() {
   strip.show();
 }
 
+void Flicker::setup() {
+  setNextUpdateMS(100);
+}
+
+void Flicker::loop() {
+  if (millis() > getNextUpdateMS()) {
+    Color const nowColor = Colors::fade(color, random(20, 101));
+    for (int pixel = firstPixel; pixel < lastPixel; pixel++) {
+      strip.setPixelColor(pixel, nowColor);
+    }
+    strip.show();
+
+    // Randomize the sleep time a bit.
+    setNextUpdateMS(millis() + 60 + random(0, 40));
+  }
+}
+
 void Rotate::setup() {
   setNextUpdateMS(millis() + 1000.0 / pixelsPerSecond);
 }
 
 void Rotate::loop() {
-  if (millis() > nextUpdateMS) {
+  if (millis() > getNextUpdateMS()) {
     rotate();
     setNextUpdateMS(millis() + 1000.0 / pixelsPerSecond);
     strip.show();

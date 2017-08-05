@@ -7,25 +7,15 @@
 // Actions need to be setup once then need loop() to be called periodically to update the strip.
 // Actions have no inherent "done" state -- things that finish are called "effects."
 class Action {
-  protected:
-    long nextUpdateMS;
+  private:
+    long nextUpdateMS = 0;
 
+  protected:
+    long getNextUpdateMS() { return nextUpdateMS; }
     void setNextUpdateMS(long val) { nextUpdateMS = val; }
 
   public:
     virtual void loop() = 0;
-};
-
-// ActionRunner provides convenience methods for running Actions.
-class ActionRunner {
-  private:
-    Action *action;
-  
-  public:
-    ActionRunner(Action *action);
-    void setAction(Action *action) { this->action = action; }
-    void runForever();
-    void runForDurationMS(long durationMS);
 };
 
 // An Action that alternates between two colors with the given period.
@@ -53,11 +43,26 @@ class Rotate : public Action {
     int const pixelsPerSecond;
     Direction const op;
     
+    void rotate();
+
   public:
     Rotate(int pixelsPerSecond, Direction op) : pixelsPerSecond(pixelsPerSecond), op(op) { }
     void setup();
     void loop();
-    void rotate();
+};
+
+class Flicker : public Action {
+  private:
+    int firstPixel;
+    int lastPixel;
+    Color color;
+  
+  public:
+    Flicker(int firstPixel, int lastPixel, Color color) : firstPixel(firstPixel), lastPixel(lastPixel), color(color) { }
+    Flicker(int pixel, Color color) : Flicker(pixel, pixel + 1, color) { }
+    Flicker(Color color) : Flicker(0, strip.numPixels(), color) { }
+    void setup();
+    void loop();
 };
 
 // DualAction

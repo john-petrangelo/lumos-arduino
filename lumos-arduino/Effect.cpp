@@ -18,7 +18,7 @@ void FadeTo::setup() {
 }
 
 void FadeTo::loop() {
-  if (!isDone() && millis() > nextUpdateMS) {
+  if (!isDone() && millis() > getNextUpdateMS()) {
     for (int pixel = firstPixel; pixel < lastPixel; pixel++) {
       Color stepColor = Colors::blend(pixels[pixel], newColor, currentPercent);
       strip.setPixelColor(pixel, stepColor);
