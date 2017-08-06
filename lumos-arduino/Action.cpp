@@ -12,6 +12,11 @@ void Action::loop() {
   }
 }
 
+void DelayedStart::reset() {
+  action->reset();
+  setNextUpdateMS(millis() + delayMS);
+}
+
 Blink::Blink(Pixels pixels, int periodMS, int firstPixel, int lastPixel, Color c1, Color c2)
   : pixels(pixels), periodMS(periodMS), firstPixel(firstPixel), lastPixel(lastPixel)
 {

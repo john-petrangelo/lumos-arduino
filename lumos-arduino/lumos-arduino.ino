@@ -104,6 +104,7 @@ Fuse fuse1(30, 0, 29, Colors::fade(WHITE, 3), ORANGE);
 Fuse fuse2(30, 31, 60, Colors::fade(WHITE, 3), ORANGE);
 Rotate rotateLeft(40, 55, 53, LEFT);
 Rotate rotateRight(5, 25, 60, RIGHT);
+DelayedStart delayedFuse1(1000, &fuse1);
 
 void testActions() {
   // Operator new doesn't work right with virtual methods, use this workaround instead.
@@ -113,7 +114,7 @@ void testActions() {
   Patterns::applyPixels(pixels1);
   strip.show();
 
-  TripleAction multiAction(&fuse1, &flicker, &fuse2);
+  TripleAction multiAction(&delayedFuse1, &flicker, &nullAction);
 
   Runner::runForDurationMS(10000, &multiAction);
 //  Runner::runForever(&blink1);
