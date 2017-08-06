@@ -12,18 +12,22 @@ class Action {
     long getNextUpdateMS() { return nextUpdateMS; }
     void setNextUpdateMS(long val) { nextUpdateMS = val; }
 
-    // Paint will be called by loop() when its time to make a change to the lights.
+    // Update will be called by loop() when its time to make a change to the lights.
     // Implementations should set pixel colors but should not call strip.show().
-    // Implementations mmust update nextUpdateMS to indicate when paint() should be called again.
-    virtual void paint() = 0;
+    // Implementations mmust update nextUpdateMS to indicate when update() should be called again.
+    virtual void update() = 0;
   public:
-    // Action runners should call loop periodically.
+    // Runners should call reset once before looping.
+    virtual void reset() = 0;
+    
+    // Runners should call loop periodically.
     virtual void loop();
 };
 
 class NullAction : public Action {
   private:
-    void paint() { }
+    void update() { }
+    void reset() { }
 };
 
 // An Action that alternates between two colors with the given period.
@@ -36,11 +40,11 @@ class Blink : public Action {
     Color colors[2];
     int colorIndex;
 
-    void paint();
+    void update();
 
   public:
     Blink(Pixels pixels, int periodMS, int firstPixel, int lastPixel, Color c1, Color c2);
-    void setup();
+    void reset();
 };
 
 // An action that rotates or shifts lights to the left or right.
@@ -51,12 +55,13 @@ class Rotate : public Action {
     int const pixelsPerSecond;
     Direction const op;
     
-    void paint();
+    void update();
 
   public:
     Rotate(int pixelsPerSecond, Direction op) : Rotate(0, strip.numPixels(), pixelsPerSecond, op) { }
     Rotate(int firstPixel, int lastPixel, int pixelsPerSecond, Direction op)
         : firstPixel(firstPixel), lastPixel(lastPixel), pixelsPerSecond(pixelsPerSecond), op(op) { }
+    void reset() { }
 };
 
 class Flicker : public Action {
@@ -65,13 +70,13 @@ class Flicker : public Action {
     int lastPixel;
     Color color;
 
-    void paint();
+    void update();
   
   public:
     Flicker(int firstPixel, int lastPixel, Color color) : firstPixel(firstPixel), lastPixel(lastPixel), color(color) { }
     Flicker(int pixel, Color color) : Flicker(pixel, pixel + 1, color) { }
     Flicker(Color color) : Flicker(0, strip.numPixels(), color) { }
-    void setup();
+    void reset();
 };
 
 // DualAction
@@ -80,10 +85,11 @@ class DualAction : public Action {
     Action * const action1;
     Action * const action2;
   
-    void paint() {}
+    void update() {}
     
   public:
     DualAction(Action *a1, Action *a2) : action1(a1), action2(a2) { }
+    void reset();
     void loop();
 };
 
@@ -94,10 +100,11 @@ class TripleAction : public Action {
     Action * const action2;
     Action * const action3;
 
-    void paint() {}
+    void update() { }
     
   public:
     TripleAction(Action *a1, Action *a2, Action *a3) : action1(a1), action2(a2), action3(a3) { }
+    void reset();
     void loop();
 };
 

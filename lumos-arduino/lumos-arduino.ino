@@ -95,28 +95,26 @@ void loop() {
   Log::logLn();
 }
 
+NullAction nullAction;
+Blink blink1(pixels1, 1000, 20, 25, PURPLE, CYAN);
+Blink blink2(pixels1, 1000, 40, 45, RED, ORANGE);
+FadeTo fader(pixels1, 5000, 0, 10, BLUE);
+Flicker flicker(29, 31, CYAN);
+Fuse fuse1(30, 0, 29, Colors::fade(WHITE, 3), ORANGE);
+Fuse fuse2(30, 31, 60, Colors::fade(WHITE, 3), ORANGE);
+Rotate rotateLeft(40, 55, 53, LEFT);
+Rotate rotateRight(5, 25, 60, RIGHT);
+
 void testActions() {
   // Operator new doesn't work right with virtual methods, use this workaround instead.
   // NOTE: Don't try to delete this object.
-  NullAction nullAction;
-  Blink blink1(pixels1, 1000, 20, 25, PURPLE, CYAN);
-  Blink blink2(pixels1, 1000, 40, 45, RED, ORANGE);
-  FadeTo fader(pixels1, 5000, 0, 10, BLUE);
-  Flicker flicker(29, 31, CYAN);
-  Fuse fuse(2, 29, 30, Colors::fade(WHITE, 3), ORANGE);
-  Rotate rotateLeft(31, 60, 53, LEFT);
-  Rotate rotateRight(0, 29, 60, RIGHT);
 
   Patterns::setGradient(pixels1, 7, RED, GREEN, ORANGE, RED, ORANGE, GREEN, RED);
   Patterns::applyPixels(pixels1);
   strip.show();
 
-  TripleAction multiAction(&rotateLeft, &flicker, &rotateRight);
+  TripleAction multiAction(&fuse1, &flicker, &fuse2);
 
-//  fader.setup();
-//  blink1.setup();
-  fuse.setup();
-  flicker.setup();
   Runner::runForDurationMS(10000, &multiAction);
 //  Runner::runForever(&blink1);
 //  Runner::runUntilDone(&fuse);

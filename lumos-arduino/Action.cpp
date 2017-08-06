@@ -7,7 +7,7 @@
 
 void Action::loop() {
   if (millis() > getNextUpdateMS()) {
-    paint();
+    update();
     strip.show();
   }
 }
@@ -19,24 +19,24 @@ Blink::Blink(Pixels pixels, int periodMS, int firstPixel, int lastPixel, Color c
   this->colors[1] = c2;
 }
 
-void Blink::setup() {
+void Blink::reset() {
   setNextUpdateMS(millis() + periodMS / 2);
   colorIndex = 0;
-  paint();
+  update();
 }
 
-void Blink::paint() {
+void Blink::update() {
   colorIndex = (colorIndex + 1) % 2;
   Patterns::setSolidColor(pixels, firstPixel, lastPixel, colors[colorIndex]);
   Patterns::applyPixels(pixels, firstPixel, lastPixel);
   setNextUpdateMS(millis() + periodMS / 2);
 }
 
-void Flicker::setup() {
+void Flicker::reset() {
   setNextUpdateMS(100);
 }
 
-void Flicker::paint() {
+void Flicker::update() {
   Color const nowColor = Colors::fade(color, random(20, 101));
   for (int i = firstPixel; i < lastPixel; i++) {
     strip.setPixelColor(i, nowColor);
@@ -46,7 +46,7 @@ void Flicker::paint() {
   setNextUpdateMS(millis() + 60 + random(0, 40));
 }
 
-void Rotate::paint() {
+void Rotate::update() {
   Color firstColor = strip.getPixelColor(firstPixel);
   Color lastColor = strip.getPixelColor(lastPixel - 1);
   switch (op) {
@@ -67,10 +67,21 @@ void Rotate::paint() {
   setNextUpdateMS(millis() + 1000.0 / pixelsPerSecond);
 }
 
+void DualAction::reset() {
+  action1->reset();
+  action2->reset();
+}
+
 void DualAction::loop() {
   // TODO Can be modified to only strip.show() once after all actions loop.
   action1->loop();
   action2->loop();
+}
+
+void TripleAction::reset() {
+  action1->reset();
+  action2->reset();
+  action3->reset();
 }
 
 void TripleAction::loop() {
