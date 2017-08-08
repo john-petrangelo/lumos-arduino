@@ -1,3 +1,6 @@
+#ifndef _LOG_H_
+#define _LOG_H_
+
 class Log {
   public:
     static void logInt(char const *name, int value);
@@ -13,3 +16,4 @@ class Log {
     static void logName(char const *name);
 };
 
+#endif // _LOG_H_

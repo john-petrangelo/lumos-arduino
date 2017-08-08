@@ -5,7 +5,7 @@
 
 // A generic superclass for actions.
 class Action {
-  private:
+  protected:
     long nextUpdateMS = 0;
 
   public:
@@ -20,25 +20,8 @@ class Action {
     // Runners should call loop periodically.
     virtual void loop();
 
-    long getNextUpdateMS() { return nextUpdateMS; }
+    virtual long getNextUpdateMS() { return nextUpdateMS; }
     void setNextUpdateMS(long val) { nextUpdateMS = val; }
-};
-
-class NullAction : public Action {
-  public:
-    void reset() { }
-    void update() { }
-};
-
-class DelayedStart : public Action {
-  private:
-    long delayMS;
-    Action *action;
-
-  public:
-    DelayedStart(long delayMS, Action *action) : delayMS(delayMS), action(action) { }
-    void reset();
-    void update() { action->update(); }
 };
 
 // An Action that alternates between two colors with the given period.
@@ -86,33 +69,6 @@ class Flicker : public Action {
     Flicker(Color color) : Flicker(0, strip.numPixels(), color) { }
     void reset();
     void update();
-};
-
-// DualAction
-class DualAction : public Action {
-  private:
-    Action * const action1;
-    Action * const action2;
-  
-  public:
-    DualAction(Action *a1, Action *a2) : action1(a1), action2(a2) { }
-    void reset();
-    void loop();
-    void update() {}
-};
-
-// TripleAction
-class TripleAction : public Action {
-  private:
-    Action * const action1;
-    Action * const action2;
-    Action * const action3;
-
-  public:
-    TripleAction(Action *a1, Action *a2, Action *a3) : action1(a1), action2(a2), action3(a3) { }
-    void reset();
-    void loop();
-    void update() { }
 };
 
 #endif // _ACTION_H_

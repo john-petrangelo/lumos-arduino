@@ -38,9 +38,7 @@ void FadeTo::update() {
 
 Fuse::Fuse(int pixelsPerSecond, int firstPixel, int lastPixel, Color fuseColor, Color burnColor)
     : pixelsPerSecond(pixelsPerSecond), firstPixel(firstPixel), lastPixel(lastPixel), fuseColor(fuseColor), burnColor(burnColor)
-{
-  updateIntervalMS = 1000 / pixelsPerSecond;
-}
+{ }
 
 void Fuse::reset() {
   // Initialize the length to fuseColor.
@@ -50,7 +48,7 @@ void Fuse::reset() {
   strip.show();
 
   currentPixel = lastPixel - 1;
-  setNextUpdateMS(millis() + updateIntervalMS);
+  setNextUpdateMS(millis() + 1000 / pixelsPerSecond);
 }
 
 void Fuse::update() {
@@ -58,6 +56,59 @@ void Fuse::update() {
   Runner::runForDurationMS(updateIntervalMS, &flicker);
   strip.setPixelColor(currentPixel, BLACK);
   currentPixel--;
-  setNextUpdateMS(millis() + updateIntervalMS);
+  setNextUpdateMS(millis() + 1000 / pixelsPerSecond);
+}
+
+GrowLeft::GrowLeft(int pixelsPerSecond, int firstPixel, int lastPixel, Color color)
+    : pixelsPerSecond(pixelsPerSecond), firstPixel(firstPixel), lastPixel(lastPixel), color(color)
+{ }
+
+void GrowLeft::reset() {
+  currentPixel = 0;
+  setNextUpdateMS(millis() + 1000 / pixelsPerSecond);
+}
+
+void GrowLeft::update() {
+  strip.setPixelColor(currentPixel, color);
+  currentPixel++;
+  setNextUpdateMS(millis() + 1000 / pixelsPerSecond);
+}
+
+void DelayedStart::reset() {
+  isStarted = false;
+  effect->reset();
+  setNextUpdateMS(millis() + delayMS);
+}
+
+void DualAction::reset() {
+  effect1->reset();
+  effect2->reset();
+}
+
+void DualAction::loop() {
+  // TODO Can be modified to only strip.show() once after all actions loop.
+  effect1->loop();
+  effect2->loop();
+}
+
+bool DualAction::isDone() {
+  return effect1->isDone() && effect2->isDone();
+}
+
+void TripleAction::reset() {
+  effect1->reset();
+  effect2->reset();
+  effect3->reset();
+}
+
+void TripleAction::loop() {
+  // TODO Can be modified to only strip.show() once after all actions loop.
+  effect1->loop();
+  effect2->loop();
+  effect3->loop();
+}
+
+bool TripleAction::isDone() {
+  return effect1->isDone() && effect2->isDone() && effect3->isDone();
 }
 

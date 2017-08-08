@@ -95,7 +95,7 @@ void loop() {
   Log::logLn();
 }
 
-NullAction nullAction;
+NullEffect nullEffect;
 Blink blink1(pixels1, 1000, 20, 25, PURPLE, CYAN);
 Blink blink2(pixels1, 1000, 40, 45, RED, ORANGE);
 FadeTo fader(pixels1, 5000, 0, 10, BLUE);
@@ -104,20 +104,30 @@ Fuse fuse1(30, 0, 29, Colors::fade(WHITE, 3), ORANGE);
 Fuse fuse2(30, 31, 60, Colors::fade(WHITE, 3), ORANGE);
 Rotate rotateLeft(40, 55, 53, LEFT);
 Rotate rotateRight(5, 25, 60, RIGHT);
-DelayedStart delayedFuse1(1000, &fuse1);
+GrowLeft growLeft1(12, 0, 60, RED);
+GrowLeft growLeft2(16, 0, 60, GREEN);
+GrowLeft growLeft3(26, 0, 60, BLUE);
+//GrowLeft growLeft4(20, 0, 60, WHITE);
+DelayedStart delayed2(1500, &growLeft2);
+DelayedStart delayed3(3000, &growLeft3);
+//DelayedStart delayed4(9000, &growLeft4);
 
 void testActions() {
   // Operator new doesn't work right with virtual methods, use this workaround instead.
   // NOTE: Don't try to delete this object.
 
-  Patterns::setGradient(pixels1, 7, RED, GREEN, ORANGE, RED, ORANGE, GREEN, RED);
+//  Patterns::setGradient(pixels1, 7, RED, GREEN, ORANGE, RED, ORANGE, GREEN, RED);
+//  Patterns::applyPixels(pixels1);
+//  strip.show();
+
+  Patterns::setSolidColor(pixels1, BLACK);
   Patterns::applyPixels(pixels1);
   strip.show();
 
-  TripleAction multiAction(&delayedFuse1, &flicker, &nullAction);
+  TripleAction multiAction(&growLeft1, &delayed2, &delayed3);
 
-  Runner::runForDurationMS(10000, &multiAction);
+//  Runner::runForDurationMS(10000, &growLeft);
 //  Runner::runForever(&blink1);
-//  Runner::runUntilDone(&fuse);
+  Runner::runUntilDone(&multiAction);
 }
 

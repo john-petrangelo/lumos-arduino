@@ -7,14 +7,10 @@
 
 void Action::loop() {
   if (millis() > getNextUpdateMS()) {
+    Log::logMsg("Action::loop");
     update();
     strip.show();
   }
-}
-
-void DelayedStart::reset() {
-  action->reset();
-  setNextUpdateMS(millis() + delayMS);
 }
 
 Blink::Blink(Pixels pixels, int periodMS, int firstPixel, int lastPixel, Color c1, Color c2)
@@ -70,29 +66,5 @@ void Rotate::update() {
   }
 
   setNextUpdateMS(millis() + 1000.0 / pixelsPerSecond);
-}
-
-void DualAction::reset() {
-  action1->reset();
-  action2->reset();
-}
-
-void DualAction::loop() {
-  // TODO Can be modified to only strip.show() once after all actions loop.
-  action1->loop();
-  action2->loop();
-}
-
-void TripleAction::reset() {
-  action1->reset();
-  action2->reset();
-  action3->reset();
-}
-
-void TripleAction::loop() {
-  // TODO Can be modified to only strip.show() once after all actions loop.
-  action1->loop();
-  action2->loop();
-  action3->loop();
 }
 
