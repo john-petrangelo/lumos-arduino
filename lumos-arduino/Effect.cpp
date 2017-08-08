@@ -80,35 +80,38 @@ void DelayedStart::reset() {
   setNextUpdateMS(millis() + delayMS);
 }
 
-void DualAction::reset() {
-  effect1->reset();
-  effect2->reset();
+EffectGroup::EffectGroup(int count, ...) : numEffects(min(count, MAX_EFFECTS)) {
+  // Declare a va_list macro and initialize it with va_start.
+  va_list argList;
+  va_start(argList, count);
+
+  // Copy all of the input Effects.
+  int i = 0;
+  while (count-- > 0) {
+    effects[i++] = va_arg(argList, Effect*);
+  }
 }
 
-void DualAction::loop() {
+void EffectGroup::reset() {
+  for (int i = 0; i < numEffects; i++) {
+    effects[i]->reset();
+  }
+}
+
+void EffectGroup::loop() {
   // TODO Can be modified to only strip.show() once after all actions loop.
-  effect1->loop();
-  effect2->loop();
+  for (int i = 0; i < numEffects; i++) {
+    effects[i]->loop();
+  }
 }
 
-bool DualAction::isDone() {
-  return effect1->isDone() && effect2->isDone();
-}
+bool EffectGroup::isDone() {
+  for (int i = 0; i < numEffects; i++) {
+    if (!effects[i]->isDone()) {
+      return false;
+    }
+  }
 
-void TripleAction::reset() {
-  effect1->reset();
-  effect2->reset();
-  effect3->reset();
-}
-
-void TripleAction::loop() {
-  // TODO Can be modified to only strip.show() once after all actions loop.
-  effect1->loop();
-  effect2->loop();
-  effect3->loop();
-}
-
-bool TripleAction::isDone() {
-  return effect1->isDone() && effect2->isDone() && effect3->isDone();
+  return true;
 }
 

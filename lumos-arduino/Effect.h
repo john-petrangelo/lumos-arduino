@@ -89,27 +89,14 @@ class DelayedStart : public Effect {
     bool isDone() { return isStarted && effect->isDone(); }
 };
 
-class DualAction : public Effect {
+class EffectGroup : public Effect {
   private:
-    Effect * const effect1;
-    Effect * const effect2;
-  
-  public:
-    DualAction(Effect *e1, Effect *e2) : effect1(e1), effect2(e2) { }
-    void reset();
-    void loop();
-    void update() {}
-    bool isDone();
-};
-
-class TripleAction : public Effect {
-  private:
-    Effect * const effect1;
-    Effect * const effect2;
-    Effect * const effect3;
+    static int const MAX_EFFECTS = 5;
+    Effect *effects[MAX_EFFECTS];
+    int const numEffects;
 
   public:
-    TripleAction(Effect *e1, Effect *e2, Effect *e3) : effect1(e1), effect2(e2), effect3(e3) { }
+    EffectGroup(int count, ...);
     void reset();
     void loop();
     void update() { }

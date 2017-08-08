@@ -124,10 +124,10 @@ void testActions() {
   Patterns::applyPixels(pixels1);
   strip.show();
 
-  TripleAction multiAction(&grow1, &delayed2, &delayed3);
+  EffectGroup effectGroup(3, &grow1, &delayed2, &delayed3);
 
 //  Runner::runForDurationMS(10000, &grow);
 //  Runner::runForever(&blink1);
-  Runner::runUntilDone(&multiAction);
+  Runner::runUntilDone(&effectGroup);
 }
 
