@@ -59,13 +59,35 @@ class Grow : public Effect {
     int currentPixel;
 
   public:
-//    Grow(int pixelsPerSecond, Color color) : Grow(pixelsPerSecond, 0, strip.numPixels(), color) { }
+    Grow(int pixelsPerSecond, Color color) : Grow(pixelsPerSecond, 0, strip.numPixels(), color) { }
     Grow(int pixelsPerSecond, int firstPixel, int lastPixel, Color color);
     void reset();
     void update();
     bool isDone() { return currentPixel >= lastPixel; }
-    Grow* setPixelsPerSecond(int pixelsPerSecond) { this->pixelsPerSecond = pixelsPerSecond; return this; }
-    Grow* setColor(Color color) { this->color = color; return this; }
+};
+
+class Lightning : public Effect {
+  private:
+    int const firstPixel;
+    int const lastPixel;
+    Color const color;
+    long patternMS[6] = {
+      400, /*on*/
+      300, /*off*/
+      200, /*on*/
+      175, /*off*/
+      150,  /*on*/
+      0 /* final off */
+    };
+    int index;
+    bool pixelsOn;
+
+  public:
+    Lightning(Color color) : Lightning(0, strip.numPixels(), color) { }
+    Lightning(int firstPixel, int lastPixel, Color color);
+    void reset();
+    void update();
+    bool isDone() { return index >= sizeof(patternMS)/sizeof(long); }
 };
 
 class NullEffect : public Effect {

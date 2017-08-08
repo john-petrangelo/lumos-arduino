@@ -59,6 +59,40 @@ void Fuse::update() {
   setNextUpdateMS(millis() + 1000 / pixelsPerSecond);
 }
 
+Lightning::Lightning(int firstPixel, int lastPixel, Color color)
+    : firstPixel(firstPixel), lastPixel(lastPixel), color(color) { }
+
+void Lightning::reset() {
+  index = 0;
+  for (int i = firstPixel; i < lastPixel; i++) {
+    strip.setPixelColor(i, BLACK);
+  }
+  strip.show();
+  pixelsOn = false;
+  setNextUpdateMS(millis());
+}
+
+void Lightning::update() {
+  Color newColor = pixelsOn ? BLACK : color;
+  for (int i = firstPixel; i < lastPixel; i++) {
+    strip.setPixelColor(i, newColor);
+  }
+  pixelsOn = !pixelsOn;
+
+  setNextUpdateMS(millis() + patternMS[index++]);
+}
+
+//    long patternMS[5] = {
+//      1000, /*on*/
+//      1000, /*off*/
+//      1000, /*on*/
+//      1000, /*off*/
+//      1000  /*on*/
+
+//    };
+
+// bool isDone() { return index >= sizeof(patternMS)/sizeof(long); }
+
 Grow::Grow(int pixelsPerSecond, int firstPixel, int lastPixel, Color color)
     : pixelsPerSecond(pixelsPerSecond), firstPixel(firstPixel), lastPixel(lastPixel), color(color)
 { }

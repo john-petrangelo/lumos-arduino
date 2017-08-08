@@ -27,7 +27,9 @@ PixelsArray pixels1;
 void loop() {
   long startTime = millis();
 
-  testActions();
+  demo_quadGrow();
+  delay(750);
+  demo_lightning();
   
 //  setGradient(pixels2, 7, VIOLET, INDIGO, BLUE, GREEN, YELLOW, ORANGE, RED);
 //  //  setGradient(pixels2, 2, BLACK, BLUE);
@@ -104,13 +106,6 @@ Fuse fuse1(30, 0, 29, Colors::fade(WHITE, 3), ORANGE);
 Fuse fuse2(30, 31, 60, Colors::fade(WHITE, 3), ORANGE);
 Rotate rotateLeft(40, 55, 53, LEFT);
 Rotate rotateRight(5, 25, 60, RIGHT);
-Grow grow1(12, 0, 60, RED);
-Grow grow2(16, 0, 60, GREEN);
-Grow grow3(26, 0, 60, BLUE);
-//Grow grow4(20, 0, 60, WHITE);
-DelayedStart delayed2(1500, &grow2);
-DelayedStart delayed3(3000, &grow3);
-//DelayedStart delayed4(4500, &grow4);
 
 void testActions() {
   // Operator new doesn't work right with virtual methods, use this workaround instead.
@@ -124,10 +119,32 @@ void testActions() {
   Patterns::applyPixels(pixels1);
   strip.show();
 
-  EffectGroup effectGroup(3, &grow1, &delayed2, &delayed3);
+//  EffectGroup effectGroup(4, &grow1, &delayed2, &delayed3, &delayed4);
 
 //  Runner::runForDurationMS(10000, &grow);
 //  Runner::runForever(&blink1);
+//  Runner::runUntilDone(&effectGroup);
+}
+
+void demo_quadGrow() {
+  Grow grow1(12, 0, 60, RED);
+  Grow grow2(16, 0, 60, GREEN);
+  Grow grow3(26, 0, 60, BLUE);
+  Grow grow4(44, 0, 60, WHITE);
+  DelayedStart delayed2(1500, &grow2);
+  DelayedStart delayed3(3000, &grow3);
+  DelayedStart delayed4(4000, &grow4);
+
+  Patterns::setSolidColor(pixels1, BLACK);
+  Patterns::applyPixels(pixels1);
+  strip.show();
+
+  EffectGroup effectGroup(4, &grow1, &delayed2, &delayed3, &delayed4);
   Runner::runUntilDone(&effectGroup);
+}
+
+void demo_lightning() {
+  Lightning lightning(WHITE);
+  Runner::runUntilDone(&lightning);
 }
 
