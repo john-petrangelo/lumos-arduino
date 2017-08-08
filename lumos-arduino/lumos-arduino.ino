@@ -104,13 +104,13 @@ Fuse fuse1(30, 0, 29, Colors::fade(WHITE, 3), ORANGE);
 Fuse fuse2(30, 31, 60, Colors::fade(WHITE, 3), ORANGE);
 Rotate rotateLeft(40, 55, 53, LEFT);
 Rotate rotateRight(5, 25, 60, RIGHT);
-GrowLeft growLeft1(12, 0, 60, RED);
-GrowLeft growLeft2(16, 0, 60, GREEN);
-GrowLeft growLeft3(26, 0, 60, BLUE);
-//GrowLeft growLeft4(20, 0, 60, WHITE);
-DelayedStart delayed2(1500, &growLeft2);
-DelayedStart delayed3(3000, &growLeft3);
-//DelayedStart delayed4(9000, &growLeft4);
+Grow grow1(12, 0, 60, RED);
+Grow grow2(16, 0, 60, GREEN);
+Grow grow3(26, 0, 60, BLUE);
+//Grow grow4(20, 0, 60, WHITE);
+DelayedStart delayed2(1500, &grow2);
+DelayedStart delayed3(3000, &grow3);
+//DelayedStart delayed4(4500, &grow4);
 
 void testActions() {
   // Operator new doesn't work right with virtual methods, use this workaround instead.
@@ -124,9 +124,9 @@ void testActions() {
   Patterns::applyPixels(pixels1);
   strip.show();
 
-  TripleAction multiAction(&growLeft1, &delayed2, &delayed3);
+  TripleAction multiAction(&grow1, &delayed2, &delayed3);
 
-//  Runner::runForDurationMS(10000, &growLeft);
+//  Runner::runForDurationMS(10000, &grow);
 //  Runner::runForever(&blink1);
   Runner::runUntilDone(&multiAction);
 }

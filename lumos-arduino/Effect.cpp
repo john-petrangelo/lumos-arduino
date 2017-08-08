@@ -59,16 +59,16 @@ void Fuse::update() {
   setNextUpdateMS(millis() + 1000 / pixelsPerSecond);
 }
 
-GrowLeft::GrowLeft(int pixelsPerSecond, int firstPixel, int lastPixel, Color color)
+Grow::Grow(int pixelsPerSecond, int firstPixel, int lastPixel, Color color)
     : pixelsPerSecond(pixelsPerSecond), firstPixel(firstPixel), lastPixel(lastPixel), color(color)
 { }
 
-void GrowLeft::reset() {
+void Grow::reset() {
   currentPixel = 0;
   setNextUpdateMS(millis() + 1000 / pixelsPerSecond);
 }
 
-void GrowLeft::update() {
+void Grow::update() {
   strip.setPixelColor(currentPixel, color);
   currentPixel++;
   setNextUpdateMS(millis() + 1000 / pixelsPerSecond);

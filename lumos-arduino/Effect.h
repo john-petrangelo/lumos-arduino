@@ -50,7 +50,7 @@ class Fuse : public Effect {
     bool isDone() { return currentPixel < firstPixel; }
 };
 
-class GrowLeft : public Effect {
+class Grow : public Effect {
   private:
     int pixelsPerSecond;
     int const firstPixel;
@@ -59,13 +59,13 @@ class GrowLeft : public Effect {
     int currentPixel;
 
   public:
-//    GrowLeft(int pixelsPerSecond, Color color) : GrowLeft(pixelsPerSecond, 0, strip.numPixels(), color) { }
-    GrowLeft(int pixelsPerSecond, int firstPixel, int lastPixel, Color color);
+//    Grow(int pixelsPerSecond, Color color) : Grow(pixelsPerSecond, 0, strip.numPixels(), color) { }
+    Grow(int pixelsPerSecond, int firstPixel, int lastPixel, Color color);
     void reset();
     void update();
     bool isDone() { return currentPixel >= lastPixel; }
-    GrowLeft* setPixelsPerSecond(int pixelsPerSecond) { this->pixelsPerSecond = pixelsPerSecond; return this; }
-    GrowLeft* setColor(Color color) { this->color = color; return this; }
+    Grow* setPixelsPerSecond(int pixelsPerSecond) { this->pixelsPerSecond = pixelsPerSecond; return this; }
+    Grow* setColor(Color color) { this->color = color; return this; }
 };
 
 class NullEffect : public Effect {
