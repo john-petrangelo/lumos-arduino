@@ -12,28 +12,27 @@ void Effect::loop() {
   }
 }
 
-FadeTo::FadeTo(Pixels pixels, int durationMS, int firstPixel, int lastPixel, Color c)
-    : pixels(pixels), durationMS(durationMS), firstPixel(firstPixel), lastPixel(lastPixel), newColor(c) {
-  long adjustedDurationMS = constrain(durationMS - 131, TIME_STEP_MS, 32767);
-  updateIntervalMS = adjustedDurationMS / 100;
-}
+FadeTo::FadeTo(Pixels pixels, long durationMS, int firstPixel, int lastPixel, Color c)
+    : pixels(pixels), durationMS(durationMS), firstPixel(firstPixel), lastPixel(lastPixel), newColor(c) { }
 
 void FadeTo::reset() {
-  for (int i = 0; i < strip.numPixels(); i++) {
+  for (int i = firstPixel; i < lastPixel; i++) {
     pixels[i] = strip.getPixelColor(i);
   }
-  setNextUpdateMS(millis() + updateIntervalMS);
+  currentPercent = 0;
+  setNextUpdateMS(millis() + durationMS / 100);
 }
 
 void FadeTo::update() {
-  Log::logLn();
+  currentPercent += 1 + (millis() - getNextUpdateMS()) / (durationMS / 100.0);
+  int clippedPercent = min(100, currentPercent);
+  
   for (int pixel = firstPixel; pixel < lastPixel; pixel++) {
-    Color stepColor = Colors::blend(pixels[pixel], newColor, currentPercent);
+    Color stepColor = Colors::blend(pixels[pixel], newColor, clippedPercent);
     strip.setPixelColor(pixel, stepColor);
   }
 
-  currentPercent++;
-  setNextUpdateMS(millis() + updateIntervalMS);
+  setNextUpdateMS(millis() + durationMS / 100);
 }
 
 Fuse::Fuse(int pixelsPerSecond, int firstPixel, int lastPixel, Color fuseColor, Color burnColor)
@@ -53,10 +52,10 @@ void Fuse::reset() {
 
 void Fuse::update() {
   Flicker flicker(currentPixel, burnColor);
-  Runner::runForDurationMS(updateIntervalMS, &flicker);
+  Runner::runForDurationMS(1000 / pixelsPerSecond, &flicker);
   strip.setPixelColor(currentPixel, BLACK);
   currentPixel--;
-  setNextUpdateMS(millis() + 1000 / pixelsPerSecond);
+  setNextUpdateMS(millis());
 }
 
 Lightning::Lightning(int firstPixel, int lastPixel, Color color)

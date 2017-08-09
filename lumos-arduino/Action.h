@@ -46,8 +46,8 @@ class Rotate : public Action {
   private:
     int firstPixel;
     int lastPixel;
-    int const pixelsPerSecond;
-    Direction const op;
+    int pixelsPerSecond;
+    Direction op;
     
   public:
     Rotate(int pixelsPerSecond, Direction op) : Rotate(0, strip.numPixels(), pixelsPerSecond, op) { }
@@ -55,6 +55,9 @@ class Rotate : public Action {
         : firstPixel(firstPixel), lastPixel(lastPixel), pixelsPerSecond(pixelsPerSecond), op(op) { }
     void reset() { }
     void update();
+
+    void setPixelsPerSecond(int pixelsPerSecond) { this->pixelsPerSecond = pixelsPerSecond; }
+    void setDirection(Direction op) { this->op = op; }
 };
 
 class Flicker : public Action {
@@ -67,6 +70,21 @@ class Flicker : public Action {
     Flicker(int firstPixel, int lastPixel, Color color) : firstPixel(firstPixel), lastPixel(lastPixel), color(color) { }
     Flicker(int pixel, Color color) : Flicker(pixel, pixel + 1, color) { }
     Flicker(Color color) : Flicker(0, strip.numPixels(), color) { }
+    void reset();
+    void update();
+};
+
+
+class Noise : public Action {
+  private:
+    int firstPixel;
+    int lastPixel;
+    Color color;
+
+  public:
+    Noise(int firstPixel, int lastPixel, Color color) : firstPixel(firstPixel), lastPixel(lastPixel), color(color) { }
+    Noise(Color color) : Noise(0, strip.numPixels(), color) { }
+    Noise() : Noise(0, strip.numPixels(), WHITE) { }
     void reset();
     void update();
 };

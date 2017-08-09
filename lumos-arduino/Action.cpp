@@ -7,7 +7,6 @@
 
 void Action::loop() {
   if (millis() > getNextUpdateMS()) {
-    Log::logMsg("Action::loop");
     update();
     strip.show();
   }
@@ -34,7 +33,7 @@ void Blink::update() {
 }
 
 void Flicker::reset() {
-  setNextUpdateMS(100);
+  setNextUpdateMS(0);
 }
 
 void Flicker::update() {
@@ -45,6 +44,19 @@ void Flicker::update() {
 
   // Randomize the sleep time a bit.
   setNextUpdateMS(millis() + 60 + random(0, 40));
+}
+
+void Noise::reset() {
+  setNextUpdateMS(0);
+}
+
+void Noise::update() {
+  Color const nowColor = Colors::fade(color, random(20, 101));
+  for (int i = firstPixel; i < lastPixel; i++) {
+    strip.setPixelColor(i, Colors::fade(color, random(25, 101)));
+  }
+
+  setNextUpdateMS(millis() + 30);
 }
 
 void Rotate::update() {

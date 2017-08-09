@@ -15,20 +15,22 @@ class Effect : public Action {
 class FadeTo : public Effect {
   private:
     Pixels const pixels;
-    long const durationMS;
-    int const firstPixel;
-    int const lastPixel;
-    Color const newColor;
-    long updateIntervalMS;
+    long durationMS;
+    int firstPixel;
+    int lastPixel;
+    Color newColor;
     long currentPercent = 0;
     
-    void update();
-
   public:
-    FadeTo(Pixels pixels, int durationMS, int firstPixel, int lastPixel, Color c);
-    FadeTo(Pixels pixels, int durationMS, Color c) : FadeTo(pixels, durationMS, 0, strip.numPixels(), c) { }
+    FadeTo(Pixels pixels, long durationMS, int firstPixel, int lastPixel, Color c);
+    FadeTo(Pixels pixels, long durationMS, Color c) : FadeTo(pixels, durationMS, 0, strip.numPixels(), c) { }
     void reset();
-    bool isDone() { return currentPercent >100; }
+    void update();
+    bool isDone() { return currentPercent > 100; }
+
+    void setDurationMS(long durationMS) { this->durationMS = durationMS; }
+    void setColor(Color newColor) { this->newColor = newColor; }
+    void setRange(int firstPixel, int lastPixel) { this->firstPixel = firstPixel; this->lastPixel = lastPixel; }
 };
 
 class Fuse : public Effect {
@@ -38,7 +40,6 @@ class Fuse : public Effect {
     int const lastPixel;
     Color const fuseColor;
     Color const burnColor;
-    long updateIntervalMS;
     int currentPixel;
 
   public:

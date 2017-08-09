@@ -21,116 +21,127 @@ void setup() {
 }
 
 PixelsArray pixels1;
-//PixelsArray pixels2;
-//PixelsArray pixels3;
+PixelsArray pixels2;
+PixelsArray pixels3;
 
 void loop() {
   long startTime = millis();
 
+  // Start with a little white noise.
+  demo_noise();
+
+  delay(2000);
+
+  // Four growing snakes.
   demo_quadGrow();
-  delay(750);
-  demo_lightning();
+
+  // Fade to white.
+  FadeTo fadeWhite(pixels1, 4000, WHITE);
+  Runner::runUntilDone(&fadeWhite);
+
+  delay(500);
+
+  // Fade in to RGB bands.
+  FadeTo fade1(pixels1, 2000, 0, 20, RED);
+  FadeTo fade2(pixels2, 2000, 20, 40, GREEN);
+  FadeTo fade3(pixels3, 2000, 40, 60, BLUE);
+  EffectGroup fades(3, &fade1, &fade2, &fade3);
+  Runner::runUntilDone(&fades);
+
+  delay(500);
+
+  // Rotate RGB.
+  Rotate rotate(20, LEFT);
+  Runner::runForDurationMS(2000, &rotate);
+  rotate.setDirection(RIGHT);
+  Runner::runForDurationMS(2000, &rotate);
+  rotate.setDirection(LEFT);
+  Runner::runForDurationMS(750, &rotate);
+  rotate.setDirection(RIGHT);
+  Runner::runForDurationMS(3750, &rotate);
+
+  delay(500);
+
+  // Fuse.
+  Fuse fuse(12);
+  Runner::runUntilDone(&fuse);
+
+  // Lightning
+  Lightning lightning(WHITE);
+  Runner::runUntilDone(&lightning);
+
+  delay(1000);
   
-//  setGradient(pixels2, 7, VIOLET, INDIGO, BLUE, GREEN, YELLOW, ORANGE, RED);
-//  //  setGradient(pixels2, 2, BLACK, BLUE);
-//  reversePattern(pixels3, pixels2);
-//  for (int ratio = 0; ratio <= 100; ratio += 3) {
-//    blendPatterns(pixels, pixels2, pixels3, ratio);
-//    applyPixels(pixels);
-//    strip.show();
-//    delay(20);
-//  }
-//  delay(1000);
-//  for (int ratio = 0; ratio <= 100; ratio += 3) {
-//    blendPatterns(pixels, pixels3, pixels2, ratio);
-//    applyPixels(pixels);
-//    strip.show();
-//    delay(20);
-//  }
-//  delay(100);
-//  rotateRight(3000, 20);
-//  rotateLeft(250, 240);
-//  delay(2000);
-//
-//    setSineWave(pixels, RED, BLUE, 60, 0);
-//    applyPixels(pixels);
-//    strip.show();
-//    rotateRight(2000, 30);
-//    delay(100);
-//    rotateLeft(250, 240);
-//    delay(1000);
-//
-//    setGradient(pixels, 7, VIOLET, INDIGO, BLUE, GREEN, YELLOW, ORANGE, RED);
-//    applyPixels(pixels);
-//    strip.show();
-//    rotateRight(2000, 30);
-//    delay(100);
-//    rotateLeft(250, 240);
-//    delay(1000);
-//
-//    fadeTo(1000, RED);
-//    fadeTo(1000, WHITE);
-//    fadeTo(1000, BLUE);
-//
-////    setGradient(3, RED, GREEN, BLUE);
-////    delay(2000);
-//
-//    setSolidColor(pixels, BLACK);
-//    setGradient(pixels, 3, RED, GREEN, BLUE);
-//    applyPixels(pixels);
-//    strip.show();
-//    delay(2000);
-//  
-//    setSolidColor(pixels, BLACK);
-//    setGradient(pixels, 3, RED, GREEN, RED);
-//    applyPixels(pixels);
-//    strip.show();
-//    delay(2000);
-//  
-//  //  setSolidColor(BLACK);
-//  //  setGradient(13, YELLOW, BLUE, YELLOW, RED, YELLOW, BLUE, YELLOW, RED, YELLOW, BLUE, YELLOW, RED, YELLOW);
-//  //  strip.show();
-//  //  delay(2000);
+  // Show rainbow.
+  Patterns::setGradient(pixels1, 7, VIOLET, INDIGO, BLUE, GREEN, YELLOW, ORANGE, RED);
+  Patterns::applyPixels(pixels1);
+  strip.show();
+
+  delay(2000);
+
+  // Rotate rainbow.
+  rotate.setPixelsPerSecond(15);
+  Runner::runForDurationMS(6000, &rotate);
+  rotate.setPixelsPerSecond(30);
+  Runner::runForDurationMS(3000, &rotate);
+  rotate.setPixelsPerSecond(60);
+  Runner::runForDurationMS(3000, &rotate);
+
+  // Double rotate rainbow.
+  Rotate rotateLeft(0, 30, 60, RIGHT);
+  Rotate rotateRight(30, 60, 60, LEFT);
+  EffectGroup rotateGroup(2, &rotateLeft, &rotateRight);
+  Runner::runForDurationMS(3000, &rotateGroup);
+  rotateLeft.setDirection(LEFT);
+  rotateRight.setDirection(RIGHT);
+  Runner::runForDurationMS(3000, &rotateGroup);
+  rotateLeft.setPixelsPerSecond(120);
+  rotateRight.setPixelsPerSecond(120);
+  Runner::runForDurationMS(3000, &rotateGroup);
+
+  // Fade through rainbow of colors.
+  demo_fade(&fade1);
+
+  delay(5000);
 
   long stopTime = millis();
   Log::logFloat((char*)"elapsed=", (stopTime - startTime) / 1000.0, 3);
   Log::logLn();
 }
 
-NullEffect nullEffect;
-Blink blink1(pixels1, 1000, 20, 25, PURPLE, CYAN);
-Blink blink2(pixels1, 1000, 40, 45, RED, ORANGE);
-FadeTo fader(pixels1, 5000, 0, 10, BLUE);
-Flicker flicker(29, 31, CYAN);
-Fuse fuse1(30, 0, 29, Colors::fade(WHITE, 3), ORANGE);
-Fuse fuse2(30, 31, 60, Colors::fade(WHITE, 3), ORANGE);
-Rotate rotateLeft(40, 55, 53, LEFT);
-Rotate rotateRight(5, 25, 60, RIGHT);
-
-void testActions() {
-  // Operator new doesn't work right with virtual methods, use this workaround instead.
-  // NOTE: Don't try to delete this object.
-
-//  Patterns::setGradient(pixels1, 7, RED, GREEN, ORANGE, RED, ORANGE, GREEN, RED);
-//  Patterns::applyPixels(pixels1);
-//  strip.show();
-
+void demo_noise() {
+  Noise noise(Colors::fade(WHITE, 10));
   Patterns::setSolidColor(pixels1, BLACK);
+
+  Runner::runForDurationMS(3000, &noise);
+
   Patterns::applyPixels(pixels1);
   strip.show();
+  delay(500);
 
-//  EffectGroup effectGroup(4, &grow1, &delayed2, &delayed3, &delayed4);
+  Runner::runForDurationMS(800, &noise);
 
-//  Runner::runForDurationMS(10000, &grow);
-//  Runner::runForever(&blink1);
-//  Runner::runUntilDone(&effectGroup);
+  Patterns::applyPixels(pixels1);
+  strip.show();
+  delay(800);
+
+  Runner::runForDurationMS(300, &noise);
+
+  Patterns::applyPixels(pixels1);
+  strip.show();
+  delay(700);
+
+  Runner::runForDurationMS(300, &noise);
+
+  Patterns::applyPixels(pixels1);
+  strip.show();
 }
 
 void demo_quadGrow() {
-  Grow grow1(12, 0, 60, RED);
-  Grow grow2(16, 0, 60, GREEN);
-  Grow grow3(26, 0, 60, BLUE);
-  Grow grow4(44, 0, 60, WHITE);
+  Grow grow1(12, 0, 60, Colors::fade(RED, 10));
+  Grow grow2(16, 0, 60, Colors::fade(GREEN, 10));
+  Grow grow3(26, 0, 60, Colors::fade(BLUE, 10));
+  Grow grow4(44, 0, 60, Colors::fade(WHITE, 10));
   DelayedStart delayed2(1500, &grow2);
   DelayedStart delayed3(3000, &grow3);
   DelayedStart delayed4(4000, &grow4);
@@ -143,8 +154,36 @@ void demo_quadGrow() {
   Runner::runUntilDone(&effectGroup);
 }
 
-void demo_lightning() {
-  Lightning lightning(WHITE);
-  Runner::runUntilDone(&lightning);
+void demo_fade(FadeTo *fade) {
+  fade->setDurationMS(500);
+  
+  fade->setRange(0, 20);
+  fade->setColor(VIOLET);
+  Runner::runUntilDone(fade);
+
+  fade->setRange(20, 40);
+  fade->setColor(BLUE);
+  Runner::runUntilDone(fade);
+
+  fade->setRange(40, 60);
+  fade->setColor(GREEN);
+  Runner::runUntilDone(fade);
+
+  fade->setRange(0, 20);
+  fade->setColor(YELLOW);
+  Runner::runUntilDone(fade);
+
+  fade->setRange(20, 40);
+  fade->setColor(ORANGE);
+  Runner::runUntilDone(fade);
+
+  fade->setRange(40, 60);
+  fade->setColor(RED);
+  Runner::runUntilDone(fade);
+
+  fade->setDurationMS(2000);
+  fade->setRange(0, 60);
+  fade->setColor(BLACK);
+  Runner::runUntilDone(fade);
 }
 
