@@ -13,7 +13,7 @@ void Action::loop() {
 }
 
 Blink::Blink(Pixels pixels, int periodMS, int firstPixel, int lastPixel, Color c1, Color c2)
-  : pixels(pixels), periodMS(periodMS), firstPixel(firstPixel), lastPixel(lastPixel)
+  : Action(firstPixel, lastPixel), pixels(pixels), periodMS(periodMS)
 {
   this->colors[0] = c1;
   this->colors[1] = c2;

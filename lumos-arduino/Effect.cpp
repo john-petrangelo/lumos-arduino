@@ -113,7 +113,7 @@ void DelayedStart::reset() {
   setNextUpdateMS(millis() + delayMS);
 }
 
-EffectGroup::EffectGroup(int count, ...) : numEffects(min(count, MAX_EFFECTS)) {
+EffectGroup::EffectGroup(int count, ...) : Effect(0, strip.numPixels()), numEffects(min(count, MAX_EFFECTS)) {
   // Declare a va_list macro and initialize it with va_start.
   va_list argList;
   va_start(argList, count);

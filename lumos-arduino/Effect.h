@@ -7,6 +7,9 @@
 
 class Effect : public Action {
   public:
+    Effect(int firstPixel, int lastPixel) : Action(firstPixel, lastPixel) { }
+    Effect() : Action() { }
+  
     void loop();
     virtual bool isDone() = 0;
 };
@@ -30,7 +33,6 @@ class FadeTo : public Effect {
 
     void setDurationMS(long durationMS) { this->durationMS = durationMS; }
     void setColor(Color newColor) { this->newColor = newColor; }
-    void setRange(int firstPixel, int lastPixel) { this->firstPixel = firstPixel; this->lastPixel = lastPixel; }
 };
 
 class Fuse : public Effect {
