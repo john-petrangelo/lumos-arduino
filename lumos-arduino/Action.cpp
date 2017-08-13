@@ -80,3 +80,21 @@ void Rotate::update() {
   setNextUpdateMS(millis() + 1000.0 / pixelsPerSecond);
 }
 
+void Flame::update() {
+  int const delayMS = 120;
+
+  // Paint the background all black.
+  Patterns::setSolidColor(pixels, firstPixel, lastPixel, BLACK);
+  Patterns::applyPixels(pixels, firstPixel, lastPixel);
+
+  int const range = lastPixel - firstPixel;
+  int const myFirstPixel = firstPixel + random(0, range / 5);
+  int const myLastPixel = lastPixel - random(0, range / 5);
+  Color const FIRE_RED = Colors::blend(RED, YELLOW, 10);
+  Color const FIRE_RED2 = Colors::blend(RED, YELLOW, 20);
+  Patterns::setGradient(pixels, myFirstPixel, myLastPixel, 7, BLACK, FIRE_RED, FIRE_RED2, ORANGE, FIRE_RED2, FIRE_RED, BLACK);
+  Patterns::applyPixels(pixels, myFirstPixel, myLastPixel);
+
+  setNextUpdateMS(millis() + 110);
+}
+

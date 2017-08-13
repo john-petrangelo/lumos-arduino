@@ -73,7 +73,7 @@ void loop() {
   delay(1000);
   
   // Show rainbow.
-  Patterns::setGradient(pixels1, 7, VIOLET, INDIGO, BLUE, GREEN, YELLOW, ORANGE, RED);
+  Patterns::setGradient(pixels1, 0, strip.numPixels(), 7, VIOLET, INDIGO, BLUE, GREEN, YELLOW, ORANGE, RED);
   Patterns::applyPixels(pixels1);
   strip.show();
 

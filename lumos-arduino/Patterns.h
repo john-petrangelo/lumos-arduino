@@ -15,7 +15,7 @@ class Patterns {
     static void reversePattern(Pixels out, Pixels in) { reversePattern(out, in, 0, strip.numPixels()); }
     static void setSolidColor(Pixels pixels, int firstPixel, int lastPixel, Color color);
     static void setSolidColor(Pixels pixels, Color color) { setSolidColor(pixels, 0, strip.numPixels(), color); }
-    static void setGradient(Pixels pixels, int count, ...);
+    static void setGradient(Pixels pixels, int firstPixel, int lastPixel, int count, ...);
     static void setSineWave(Pixels pixels, int firstPixel, int lastPixel, Color c1, Color c2, int period, int phase);
     static void setSineWave(Pixels pixels, Color c1, Color c2, int period, int phase) { setSineWave(pixels, 0, strip.numPixels(), c1, c2, period, phase); }
 };

@@ -1,4 +1,5 @@
 #include "Colors.h"
+#include "Log.h"
 #include "Patterns.h"
 
 /*
@@ -54,33 +55,36 @@ void Patterns::setSolidColor(Pixels pixels, int firstPixel, int lastPixel, Color
  * Set a gradient color pattern. The number of defined color points is variable.
  * 
  * Example: to run a gradient from red to yellow to blue:
- *     setGradient(pixels, 3, RED, YELLOW, BLUE);
+ *     setGradient(pixels, 0, strip.numPixels(), 3, RED, YELLOW, BLUE);
  */
-void Patterns::setGradient(Pixels pixels, int count, ...) {
-  if (count < 2 || count > 20) {
+void Patterns::setGradient(Pixels pixels, int firstPixel, int lastPixel, int count, ...) {
+  int const MAX_COLORS = 10;
+  
+  if (count < 2 || count > MAX_COLORS) {
     return;
   }
   
-  int segmentSize = strip.numPixels() / (count - 1);
-
   // Declare a va_list macro and initialize it with va_start.
+  // Copy all of the colors from varargs to array.
   va_list argList;
+  Color colors[MAX_COLORS];
   va_start(argList, count);
-
-  int index = 0;
-  
-  Color prevColor = va_arg(argList, Color);
-  count--;
-  for (; count > 0; count--) {
-    Color nextColor = va_arg(argList, Color);
-    for (int i = 0; i < segmentSize; i++) {
-      pixels[index++] = Colors::blend(prevColor, nextColor, 100 * i / (segmentSize - 1));
-    }
-
-    prevColor = nextColor;
+  for (int i = 0; i < count; i++) {
+    colors[i] = va_arg(argList, Color);
   }
-
   va_end(argList);
+
+  int const range = lastPixel - firstPixel - 1;
+  int const numSegments = count - 1;
+  float const segmentSize = (float) range / numSegments;
+
+  // Paint each pixel in the range.
+  for (int i = 0; i <= range; i++) {
+    int const whichSegment = i / segmentSize;
+    float const ratio = 100.0 * (i - (whichSegment * segmentSize)) / segmentSize;
+    Color const newColor = Colors::blend(colors[whichSegment], colors[whichSegment+1], ratio);
+    pixels[i + firstPixel] = newColor;
+  }
 }
 
 /*

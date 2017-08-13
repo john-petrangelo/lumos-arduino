@@ -90,4 +90,15 @@ class Noise : public Action {
     void update();
 };
 
+class Flame : public Action {
+  private:
+    Pixels const pixels;
+
+  public:
+    Flame(Pixels pixels, int firstPixel, int lastPixel) : Action(firstPixel, lastPixel), pixels(pixels) { }
+    Flame(Pixels pixels) : Flame(pixels, 0, strip.numPixels()) { }
+    void reset() { }
+    void update();
+};
+
 #endif // _ACTION_H_
