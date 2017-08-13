@@ -36,7 +36,7 @@ void loop() {
   demo_quadGrow();
 
   // Fade to white.
-  FadeTo fadeWhite(pixels1, 4000, WHITE);
+  FadeTo fadeWhite(pixels1, 3000, WHITE);
   Runner::runUntilDone(&fadeWhite);
 
   delay(500);

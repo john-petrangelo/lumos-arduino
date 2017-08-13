@@ -53,7 +53,7 @@ void Noise::reset() {
 void Noise::update() {
   Color const nowColor = Colors::fade(color, random(20, 101));
   for (int i = firstPixel; i < lastPixel; i++) {
-    strip.setPixelColor(i, Colors::fade(color, random(25, 101)));
+    strip.setPixelColor(i, Colors::fade(color, random(25, 150)));
   }
 
   setNextUpdateMS(millis() + 30);
