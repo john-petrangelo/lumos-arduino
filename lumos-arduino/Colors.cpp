@@ -29,14 +29,14 @@ uint8_t Colors::blend(uint8_t a, uint8_t b, int ratio) {
 }
 
 Color Colors::fade(Color c, int ratio) {
-  return Colors::blend(BLACK, c, ratio);
+  return blend(BLACK, c, ratio);
 }
 
 Color Colors::add(Color a, Color b) {
   return strip.Color(
-      constrain(Colors::getRed(a)   + Colors::getRed(b),  0, 255), 
-      constrain(Colors::getGreen(a) + Colors::getGreen(b), 0, 255), 
-      constrain(Colors::getBlue(a)  + Colors::getBlue(b),  0, 255));
+      constrain(getRed(a)   + getRed(b),  0, 255), 
+      constrain(getGreen(a) + getGreen(b), 0, 255), 
+      constrain(getBlue(a)  + getBlue(b),  0, 255));
 }
 
 uint8_t Colors::getRed(Color color) {
