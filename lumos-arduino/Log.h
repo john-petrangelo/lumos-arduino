@@ -1,6 +1,8 @@
 #ifndef _LOG_H_
 #define _LOG_H_
 
+#include "Colors.h"
+
 class Log {
   public:
     static void logInt(char const *name, int value);

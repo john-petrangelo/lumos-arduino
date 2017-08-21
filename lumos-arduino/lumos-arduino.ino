@@ -2,6 +2,7 @@
 #include "Action.h"
 #include "Colors.h"
 #include "Effect.h"
+#include "IO.h"
 #include "Log.h"
 #include "Runner.h"
 
@@ -12,6 +13,7 @@ Adafruit_NeoPixel strip;
 void setup() {
   // Initiate Serial communication.
   Serial.begin(9600);
+  Serial.setTimeout(500);
 
   // Initialize the LED strip.
   strip = Adafruit_NeoPixel(NUM_PIXELS, PIN, STRIP_FLAGS);
@@ -25,6 +27,11 @@ PixelsArray pixels2;
 PixelsArray pixels3;
 
 void loop() {
+  IO io;
+  io.getCmd();
+}
+
+void old_loop() {
   long startTime = millis();
 
   // Start with a little white noise.

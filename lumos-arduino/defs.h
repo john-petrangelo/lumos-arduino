@@ -29,6 +29,13 @@ Color const ORANGE = 0xFF7F00;
 Color const INDIGO = 0x4B0082;
 Color const VIOLET = 0x8F00FF;
 
+class Range {
+  public:
+    int first;
+    int last;
+    Range(int first, int last) : first(first), last(last) { }
+};
+
 extern Adafruit_NeoPixel strip;
 
 #endif // _DEFS_H_
