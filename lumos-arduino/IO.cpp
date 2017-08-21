@@ -42,6 +42,13 @@ void IO::getCmd() {
         Patterns::applyPixels(pixels1, range.first, range.last);
         break;
       case SET_GRADIENT:
+        range = readRange();
+        color1 = readColor();
+        color2 = readColor();
+        writeCmd(cmd, range, color1, color2);
+        Patterns::setGradient(pixels1, range.first, range.last, 2, color1, color2);
+        Patterns::applyPixels(pixels1, range.first, range.last);
+        break;
       case SET_SINE_WAVE:
       case PAUSE:
       case RESUME:
@@ -114,6 +121,14 @@ void IO::writeCmd(CommandType cmd, Range range, Color color) {
   Log::logInt("cmd", cmd);
   writeRange(range);
   writeColor(color);
+  Serial.println();
+}
+
+void IO::writeCmd(CommandType cmd, Range range, Color color1, Color color2) {
+  Log::logInt("cmd", cmd);
+  writeRange(range);
+  writeColor(color1);
+  writeColor(color2);
   Serial.println();
 }
 

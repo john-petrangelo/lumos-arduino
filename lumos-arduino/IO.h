@@ -30,6 +30,7 @@ private:
     void writeNotYetImplemented();
     void writeInvalidCmd();
     void writeCmd(CommandType cmd, Range range, Color color);
+    void writeCmd(CommandType cmd, Range range, Color color1, Color color2);
     void writeRange(Range range);
     void writeColor(Color color);
 };
