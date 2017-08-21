@@ -5,7 +5,7 @@
 #include "Log.h"
 
 class IO {
-
+private:
   enum CommandType {
     BLINK, ROTATE, FLICKER, NOISE, FLAME,
     FADE_TO, FUSE, GROW, LIGHTNING,
@@ -13,7 +13,12 @@ class IO {
     PAUSE, RESUME,
     NONE
   };
-  
+
+  PixelsArray pixels1;
+
+  NullEffect nullEffect;
+  Action *currentAction = &nullEffect;
+
   public:
     void getCmd();
 
@@ -24,6 +29,7 @@ class IO {
 
     void writeNotYetImplemented();
     void writeInvalidCmd();
+    void writeCmd(CommandType cmd, Range range, Color color);
     void writeRange(Range range);
     void writeColor(Color color);
 };

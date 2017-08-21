@@ -1,7 +1,10 @@
 #include <hardwareSerial.h>
 
+#include "Action.h"
 #include "Colors.h"
+#include "Effect.h"
 #include "IO.h"
+#include "Patterns.h"
 
 char buffer[64];
 
@@ -9,7 +12,9 @@ void IO::getCmd() {
   Serial.println("RDY");
   
   // Wait for someting to arrive on the Serial bus.
-  while (!Serial.available()) ;
+  while (!Serial.available()) {
+    currentAction->update();
+  }
 
   // Keep looping while there is more to read.
   while (Serial.available()) {
@@ -32,10 +37,9 @@ void IO::getCmd() {
       case SET_SOLID_COLOR:
         range = readRange();
         color1 = readColor();
-        Log::logInt("cmd", cmd);
-        writeRange(range);
-        writeColor(color1);
-        Serial.println();
+        writeCmd(cmd, range, color1);
+        Patterns::setSolidColor(pixels1, range.first, range.last, color1);
+        Patterns::applyPixels(pixels1, range.first, range.last);
         break;
       case SET_GRADIENT:
       case SET_SINE_WAVE:
@@ -49,6 +53,8 @@ void IO::getCmd() {
         break;
     }
   }
+
+  strip.show();
 }
 
 IO::CommandType IO::readCommand() {
@@ -104,6 +110,13 @@ void IO::writeInvalidCmd() {
   Serial.println("\nCmd invalid");
 }
 
+void IO::writeCmd(CommandType cmd, Range range, Color color) {
+  Log::logInt("cmd", cmd);
+  writeRange(range);
+  writeColor(color);
+  Serial.println();
+}
+
 void IO::writeRange(Range range) {
   Serial.print('(');
   Serial.print(range.first);
@@ -114,6 +127,7 @@ void IO::writeRange(Range range) {
 }
 
 void IO::writeColor(Color color) {
+  Serial.print("0x");
   Serial.print(color, HEX);
   Serial.print(' ');
 }
