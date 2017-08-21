@@ -17,22 +17,30 @@ private:
   PixelsArray pixels1;
 
   NullEffect nullEffect;
+  Rotate rotate;
   Action *currentAction = &nullEffect;
 
   public:
+    IO() : rotate(1, CLOCKWISE) { }
+  
     void getCmd();
 
   private:
     CommandType readCommand();
     Range readRange();
     Color readColor();
+    Direction readDirection();
+
+    void skipWhitespace();
 
     void writeNotYetImplemented();
     void writeInvalidCmd();
     void writeCmd(CommandType cmd, Range range, Color color);
     void writeCmd(CommandType cmd, Range range, Color color1, Color color2);
+    void writeCmd(CommandType cmd, Range range, int val, Direction direction);
     void writeRange(Range range);
     void writeColor(Color color);
+    void writeDirection(Direction direction);
 };
 
 #endif /* _IO_H_ */

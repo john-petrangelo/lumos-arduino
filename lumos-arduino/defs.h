@@ -9,7 +9,7 @@
 #include <stdint.h>
 
 enum Direction {
-  LEFT, RIGHT
+  CLOCKWISE, COUNTER_CLOCKWISE
 };
 
 uint16_t const NUM_PIXELS = 60;

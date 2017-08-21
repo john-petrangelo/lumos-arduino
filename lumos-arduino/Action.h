@@ -29,6 +29,7 @@ class Action {
     void setNextUpdateMS(long val) { nextUpdateMS = val; }
 
     void setRange(int firstPixel, int lastPixel) { this->firstPixel = firstPixel; this->lastPixel = lastPixel; }
+    void setRange(Range &range) { this->firstPixel = range.first; this->lastPixel = range.last; }
     int getFirstPixel() { return firstPixel; }
     int getLastPixel() { return lastPixel; }
 };

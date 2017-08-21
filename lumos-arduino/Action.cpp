@@ -63,13 +63,13 @@ void Rotate::update() {
   Color firstColor = strip.getPixelColor(firstPixel);
   Color lastColor = strip.getPixelColor(lastPixel - 1);
   switch (op) {
-    case  LEFT:
+    case  COUNTER_CLOCKWISE:
       for (int i = firstPixel; i < lastPixel - 1; i++) {
         strip.setPixelColor(i, strip.getPixelColor(i + 1));
       }
       strip.setPixelColor(lastPixel - 1, firstColor);
       break;
-    case RIGHT:
+    case CLOCKWISE:
       for (int i = lastPixel - 1; i >= firstPixel; i--) {
         strip.setPixelColor(i, strip.getPixelColor(i - 1));
       }

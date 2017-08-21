@@ -26,8 +26,9 @@ PixelsArray pixels1;
 PixelsArray pixels2;
 PixelsArray pixels3;
 
+IO io;
+
 void loop() {
-  IO io;
   io.getCmd();
 }
 
@@ -58,13 +59,13 @@ void old_loop() {
   delay(500);
 
   // Rotate RGB.
-  Rotate rotate(20, LEFT);
+  Rotate rotate(20, COUNTER_CLOCKWISE);
   Runner::runForDurationMS(2000, &rotate);
-  rotate.setDirection(RIGHT);
+  rotate.setDirection(CLOCKWISE);
   Runner::runForDurationMS(2000, &rotate);
-  rotate.setDirection(LEFT);
+  rotate.setDirection(COUNTER_CLOCKWISE);
   Runner::runForDurationMS(750, &rotate);
-  rotate.setDirection(RIGHT);
+  rotate.setDirection(CLOCKWISE);
   Runner::runForDurationMS(3750, &rotate);
 
   delay(500);
@@ -95,12 +96,12 @@ void old_loop() {
   Runner::runForDurationMS(3000, &rotate);
 
   // Double rotate rainbow.
-  Rotate rotateLeft(0, 30, 60, RIGHT);
-  Rotate rotateRight(30, 60, 60, LEFT);
+  Rotate rotateLeft(0, 30, 60, CLOCKWISE);
+  Rotate rotateRight(30, 60, 60, COUNTER_CLOCKWISE);
   EffectGroup rotateGroup(2, &rotateLeft, &rotateRight);
   Runner::runForDurationMS(3000, &rotateGroup);
-  rotateLeft.setDirection(LEFT);
-  rotateRight.setDirection(RIGHT);
+  rotateLeft.setDirection(COUNTER_CLOCKWISE);
+  rotateRight.setDirection(CLOCKWISE);
   Runner::runForDurationMS(3000, &rotateGroup);
   rotateLeft.setPixelsPerSecond(120);
   rotateRight.setPixelsPerSecond(120);

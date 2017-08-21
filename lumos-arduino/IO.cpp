@@ -10,10 +10,11 @@ char buffer[64];
 
 void IO::getCmd() {
   Serial.println("RDY");
-  
+  Serial.print("currentAction=");
+  Serial.println((int)currentAction);
   // Wait for someting to arrive on the Serial bus.
   while (!Serial.available()) {
-    currentAction->update();
+    currentAction->loop();
   }
 
   // Keep looping while there is more to read.
@@ -21,10 +22,25 @@ void IO::getCmd() {
     Range range(0, 0);
     Color color1;
     Color color2;
+    int pixelsPerSecond;
+    Direction direction;
+    
     CommandType cmd = readCommand();
     switch(cmd) {
       case BLINK:
+        writeNotYetImplemented();
+        break;
       case ROTATE:
+        range = readRange();
+        pixelsPerSecond = Serial.parseInt();
+        direction = readDirection();
+        writeCmd(cmd, range, pixelsPerSecond, direction);
+        rotate.setRange(range);
+        rotate.setPixelsPerSecond(pixelsPerSecond);
+        rotate.setDirection(direction);
+        currentAction = &rotate;
+        break;
+        break;
       case FLICKER:
       case NOISE:
       case FLAME:
@@ -65,6 +81,8 @@ void IO::getCmd() {
 }
 
 IO::CommandType IO::readCommand() {
+  skipWhitespace();
+  
   // Read the first two bytes - commands are always two bytes.
   byte numRead = Serial.readBytes(buffer, 2);
   buffer[numRead] = '\0';
@@ -106,7 +124,35 @@ Color IO::readColor() {
   int green = Serial.parseInt();
   int blue = Serial.parseInt();
 
-return strip.Color(red, green, blue);
+  return strip.Color(red, green, blue);
+}
+
+Direction IO::readDirection() {
+  skipWhitespace();
+
+  // Read the first two bytes - directions are clockwise (CW) or counter_clockwise (CC).
+  byte numRead = Serial.readBytes(buffer, 2);
+
+  // On errors, just assume clockwise.
+  if (numRead < 2) {
+    return CLOCKWISE;
+  }
+
+  if (buffer[0] != 'C') {
+    return CLOCKWISE;
+  }
+
+  if (buffer[1] == 'C') {
+    return COUNTER_CLOCKWISE;
+  }
+  
+  return CLOCKWISE;
+}
+
+void IO::skipWhitespace() {
+  while (isWhitespace(Serial.peek())) {
+    Serial.read();
+  }
 }
 
 void IO::writeNotYetImplemented() {
@@ -132,6 +178,14 @@ void IO::writeCmd(CommandType cmd, Range range, Color color1, Color color2) {
   Serial.println();
 }
 
+void IO::writeCmd(CommandType cmd, Range range, int val, Direction direction) {
+  Log::logInt("cmd", cmd);
+  writeRange(range);
+  Log::logInt("val", val);
+  writeDirection(direction);
+  Serial.println();
+}
+
 void IO::writeRange(Range range) {
   Serial.print('(');
   Serial.print(range.first);
@@ -144,6 +198,16 @@ void IO::writeRange(Range range) {
 void IO::writeColor(Color color) {
   Serial.print("0x");
   Serial.print(color, HEX);
+  Serial.print(' ');
+}
+
+void IO::writeDirection(Direction direction) {
+    Serial.print("dir=");
+  if (direction == CLOCKWISE) {
+    Serial.print("CW");
+  } else {
+    Serial.print("CC");
+  }
   Serial.print(' ');
 }
 
