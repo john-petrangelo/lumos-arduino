@@ -74,7 +74,6 @@ void IO::getCmd() {
         break;
       case NONE:
       default:
-        writeInvalidCmd();
         break;
     }
   }
@@ -84,6 +83,10 @@ void IO::getCmd() {
 
 IO::CommandType IO::readCommand() {
   skipWhitespace();
+  if (!Serial.available()) {
+    // Only whitespace was available, just bail out.
+    return NONE;
+  }
   
   // Read the first two bytes - commands are always two bytes.
   byte numRead = Serial.readBytes(buffer, 2);
@@ -112,6 +115,8 @@ IO::CommandType IO::readCommand() {
   if (strcmp(buffer, "RS") == 0) return RESUME;
 
   // No match.
+  Serial.print(F("Invalid cmd: "));
+  Serial.println(buffer);
   return NONE;
 }
 
@@ -159,10 +164,6 @@ void IO::skipWhitespace() {
 
 void IO::writeNotYetImplemented() {
   Serial.println("\nCmd NYI");
-}
-
-void IO::writeInvalidCmd() {
-  Serial.println("\nCmd invalid");
 }
 
 void IO::writeCmd(CommandType cmd, Range range, Color color) {
