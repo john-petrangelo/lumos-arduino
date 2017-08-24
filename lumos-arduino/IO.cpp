@@ -25,7 +25,7 @@ void IO::getCmd() {
     Color color2;
     int pixelsPerSecond;
     Direction direction;
-    Rotate &rotate = rotatePool.getNext();
+    Rotate &rotate = rotatePool.getCurrent();
     
     CommandType cmd = readCommand();
     switch(cmd) {

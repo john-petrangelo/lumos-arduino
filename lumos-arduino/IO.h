@@ -23,6 +23,7 @@ private:
 
     public:
       Rotate &getNext();
+      Rotate &getCurrent() { return rotatePool[nextRotateIndex]; }
   };
 
   PixelsArray pixels1;
