@@ -148,3 +148,15 @@ bool EffectGroup::isDone() {
   return true;
 }
 
+void EffectGroup::clear() {
+  numEffects = 0;
+}
+
+void EffectGroup::add(Effect *effect) {
+  if (numEffects >= MAX_EFFECTS) {
+    return;
+  }
+
+  effects[numEffects++] = effect;
+}
+

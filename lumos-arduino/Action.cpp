@@ -98,3 +98,39 @@ void Flame::update() {
   setNextUpdateMS(millis() + 110);
 }
 
+ActionGroup::ActionGroup(int count, ...) : Action(0, strip.numPixels()), numActions(min(count, MAX_ACTIONS)) {
+  // Declare a va_list macro and initialize it with va_start.
+  va_list argList;
+  va_start(argList, count);
+
+  // Copy all of the input Effects.
+  int i = 0;
+  while (count-- > 0) {
+    actions[i++] = va_arg(argList, Action*);
+  }
+}
+
+void ActionGroup::reset() {
+  for (int i = 0; i < numActions; i++) {
+    actions[i]->reset();
+  }
+}
+
+void ActionGroup::loop() {
+  for (int i = 0; i < numActions; i++) {
+    actions[i]->loop();
+  }
+}
+
+void ActionGroup::clear() {
+  numActions = 0;
+}
+
+void ActionGroup::add(Action *action) {
+  if (numActions >= MAX_ACTIONS) {
+    return;
+  }
+
+  actions[numActions++] = action;
+}
+

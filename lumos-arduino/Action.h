@@ -56,6 +56,7 @@ class Rotate : public Action {
     Direction op;
     
   public:
+    Rotate() : Rotate(0, strip.numPixels(), 1, CLOCKWISE) { }
     Rotate(int pixelsPerSecond, Direction op) : Rotate(0, strip.numPixels(), pixelsPerSecond, op) { }
     Rotate(int firstPixel, int lastPixel, int pixelsPerSecond, Direction op)
         : Action(firstPixel, lastPixel), pixelsPerSecond(pixelsPerSecond), op(op) { }
@@ -100,6 +101,22 @@ class Flame : public Action {
     Flame(Pixels pixels) : Flame(pixels, 0, strip.numPixels()) { }
     void reset() { }
     void update();
+};
+
+class ActionGroup : public Action {
+  private:
+    static int const MAX_ACTIONS = 5;
+    Action *actions[MAX_ACTIONS];
+    int numActions;
+
+  public:
+    ActionGroup(int count, ...);
+    void reset();
+    void loop();
+    void update() { }
+
+    void clear();
+    void add(Action *action);
 };
 
 #endif // _ACTION_H_

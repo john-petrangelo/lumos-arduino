@@ -10,12 +10,13 @@ char buffer[64];
 
 void IO::getCmd() {
   Serial.println("RDY");
-  Serial.print("currentAction=");
-  Serial.println((int)currentAction);
+
   // Wait for someting to arrive on the Serial bus.
   while (!Serial.available()) {
-    currentAction->loop();
+    actions.loop();
   }
+
+  actions.clear();
 
   // Keep looping while there is more to read.
   while (Serial.available()) {
@@ -24,6 +25,7 @@ void IO::getCmd() {
     Color color2;
     int pixelsPerSecond;
     Direction direction;
+    Rotate &rotate = rotatePool.getNext();
     
     CommandType cmd = readCommand();
     switch(cmd) {
@@ -35,11 +37,11 @@ void IO::getCmd() {
         pixelsPerSecond = Serial.parseInt();
         direction = readDirection();
         writeCmd(cmd, range, pixelsPerSecond, direction);
+        rotate = rotatePool.getNext();
         rotate.setRange(range);
         rotate.setPixelsPerSecond(pixelsPerSecond);
         rotate.setDirection(direction);
-        currentAction = &rotate;
-        break;
+        actions.add(&rotate);
         break;
       case FLICKER:
       case NOISE:
@@ -209,5 +211,11 @@ void IO::writeDirection(Direction direction) {
     Serial.print("CC");
   }
   Serial.print(' ');
+}
+
+Rotate &IO::RotatePool::getNext() {
+  Rotate &newRotate = rotatePool[nextRotateIndex++];
+  nextRotateIndex %= NUM_ROTATES;
+  return newRotate;
 }
 

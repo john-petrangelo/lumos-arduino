@@ -2,6 +2,7 @@
 #define _IO_H_
 
 #include "Action.h"
+#include "Effect.h"
 #include "Log.h"
 
 class IO {
@@ -14,14 +15,25 @@ private:
     NONE
   };
 
+  class RotatePool {
+    private:
+      static int const NUM_ROTATES = 4;
+      Rotate rotatePool[NUM_ROTATES];
+      int nextRotateIndex = 0;
+
+    public:
+      Rotate &getNext();
+  };
+
   PixelsArray pixels1;
 
   NullEffect nullEffect;
-  Rotate rotate;
-  Action *currentAction = &nullEffect;
+  ActionGroup actions;
+
+  RotatePool rotatePool;
 
   public:
-    IO() : rotate(1, CLOCKWISE) { }
+    IO() : actions(0) { }
   
     void getCmd();
 

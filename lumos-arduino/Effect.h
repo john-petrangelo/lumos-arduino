@@ -118,7 +118,7 @@ class EffectGroup : public Effect {
   private:
     static int const MAX_EFFECTS = 5;
     Effect *effects[MAX_EFFECTS];
-    int const numEffects;
+    int numEffects;
 
   public:
     EffectGroup(int count, ...);
@@ -126,6 +126,9 @@ class EffectGroup : public Effect {
     void loop();
     void update() { }
     bool isDone();
+
+    void clear();
+    void add(Effect *effect);
 };
 
 #endif // _EFFECT_H_
