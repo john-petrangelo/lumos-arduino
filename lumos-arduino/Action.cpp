@@ -12,8 +12,8 @@ void Action::loop() {
   }
 }
 
-Blink::Blink(Pixels pixels, int periodMS, int firstPixel, int lastPixel, Color c1, Color c2)
-  : Action(firstPixel, lastPixel), pixels(pixels), periodMS(periodMS)
+Blink::Blink(int firstPixel, int lastPixel, int periodMS, Color c1, Color c2)
+  : Action(firstPixel, lastPixel), periodMS(periodMS)
 {
   this->colors[0] = c1;
   this->colors[1] = c2;
@@ -27,8 +27,7 @@ void Blink::reset() {
 
 void Blink::update() {
   colorIndex = (colorIndex + 1) % 2;
-  Patterns::setSolidColor(pixels, firstPixel, lastPixel, colors[colorIndex]);
-  Patterns::applyPixels(pixels, firstPixel, lastPixel);
+  Patterns::setSolidColor(firstPixel, lastPixel, colors[colorIndex]);
   setNextUpdateMS(millis() + periodMS / 2);
 }
 
@@ -84,16 +83,14 @@ void Flame::update() {
   int const delayMS = 120;
 
   // Paint the background all black.
-  Patterns::setSolidColor(pixels, firstPixel, lastPixel, BLACK);
-  Patterns::applyPixels(pixels, firstPixel, lastPixel);
+  Patterns::setSolidColor(firstPixel, lastPixel, BLACK);
 
   int const range = lastPixel - firstPixel;
   int const myFirstPixel = firstPixel + random(0, range / 5);
   int const myLastPixel = lastPixel - random(0, range / 5);
   Color const FIRE_RED = Colors::blend(RED, YELLOW, 10);
   Color const FIRE_RED2 = Colors::blend(RED, YELLOW, 20);
-  Patterns::setGradient(pixels, myFirstPixel, myLastPixel, 7, BLACK, FIRE_RED, FIRE_RED2, ORANGE, FIRE_RED2, FIRE_RED, BLACK);
-  Patterns::applyPixels(pixels, myFirstPixel, myLastPixel);
+  Patterns::setGradient(myFirstPixel, myLastPixel, 7, BLACK, FIRE_RED, FIRE_RED2, ORANGE, FIRE_RED2, FIRE_RED, BLACK);
 
   setNextUpdateMS(millis() + 110);
 }

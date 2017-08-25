@@ -81,8 +81,7 @@ void old_loop() {
   delay(1000);
   
   // Show rainbow.
-  Patterns::setGradient(pixels1, 0, strip.numPixels(), 7, VIOLET, INDIGO, BLUE, GREEN, YELLOW, ORANGE, RED);
-  Patterns::applyPixels(pixels1);
+  Patterns::setGradient(0, strip.numPixels(), 7, VIOLET, INDIGO, BLUE, GREEN, YELLOW, ORANGE, RED);
   strip.show();
 
   delay(2000);
@@ -119,29 +118,28 @@ void old_loop() {
 
 void demo_noise() {
   Noise noise(Colors::fade(WHITE, 10));
-  Patterns::setSolidColor(pixels1, BLACK);
 
   Runner::runForDurationMS(3000, &noise);
 
-  Patterns::applyPixels(pixels1);
+  Patterns::setSolidColor(BLACK);
   strip.show();
   delay(500);
 
   Runner::runForDurationMS(800, &noise);
 
-  Patterns::applyPixels(pixels1);
+  Patterns::setSolidColor(BLACK);
   strip.show();
   delay(800);
 
   Runner::runForDurationMS(300, &noise);
 
-  Patterns::applyPixels(pixels1);
+  Patterns::setSolidColor(BLACK);
   strip.show();
   delay(700);
 
   Runner::runForDurationMS(300, &noise);
 
-  Patterns::applyPixels(pixels1);
+  Patterns::setSolidColor(BLACK);
   strip.show();
 }
 
@@ -154,8 +152,7 @@ void demo_quadGrow() {
   DelayedStart delayed3(3000, &grow3);
   DelayedStart delayed4(4000, &grow4);
 
-  Patterns::setSolidColor(pixels1, BLACK);
-  Patterns::applyPixels(pixels1);
+  Patterns::setSolidColor(BLACK);
   strip.show();
 
   EffectGroup effectGroup(4, &grow1, &delayed2, &delayed3, &delayed4);

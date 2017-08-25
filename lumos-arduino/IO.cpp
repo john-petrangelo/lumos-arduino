@@ -24,13 +24,25 @@ void IO::getCmd() {
     Color color1;
     Color color2;
     int pixelsPerSecond;
+    int periodMS;
     Direction direction;
     Rotate &rotate = rotatePool.getCurrent();
+    Blink &blink = blinkPool.getCurrent();
     
     CommandType cmd = readCommand();
     switch(cmd) {
       case BLINK:
-        writeNotYetImplemented();
+        range = readRange();
+        periodMS = Serial.parseInt();
+        color1 = readColor();
+        color2 = readColor();
+        writeCmd(cmd, range, periodMS, color1, color2);
+        blink = blinkPool.getNext();
+        blink.setRange(range);
+        blink.setPeriodMS(periodMS);
+        blink.setColor(0, color1);
+        blink.setColor(1, color2);
+        actions.add(&blink);
         break;
       case ROTATE:
         range = readRange();
@@ -56,16 +68,14 @@ void IO::getCmd() {
         range = readRange();
         color1 = readColor();
         writeCmd(cmd, range, color1);
-        Patterns::setSolidColor(pixels1, range.first, range.last, color1);
-        Patterns::applyPixels(pixels1, range.first, range.last);
+        Patterns::setSolidColor(range.first, range.last, color1);
         break;
       case SET_GRADIENT:
         range = readRange();
         color1 = readColor();
         color2 = readColor();
         writeCmd(cmd, range, color1, color2);
-        Patterns::setGradient(pixels1, range.first, range.last, 2, color1, color2);
-        Patterns::applyPixels(pixels1, range.first, range.last);
+        Patterns::setGradient(range.first, range.last, 2, color1, color2);
         break;
       case SET_SINE_WAVE:
       case PAUSE:
@@ -189,6 +199,17 @@ void IO::writeCmd(CommandType cmd, Range range, int val, Direction direction) {
   Serial.println();
 }
 
+void IO::writeCmd(CommandType cmd, Range range, int periodMS, Color color1, Color color2) {
+  Log::logInt("cmd", cmd);
+  writeRange(range);
+  Log::logInt("periodMS", periodMS);
+  writeColor(color1);
+  writeColor(color2);
+  Serial.println();
+  
+}
+
+
 void IO::writeRange(Range range) {
   Serial.print('(');
   Serial.print(range.first);
@@ -214,9 +235,10 @@ void IO::writeDirection(Direction direction) {
   Serial.print(' ');
 }
 
-Rotate &IO::RotatePool::getNext() {
-  Rotate &newRotate = rotatePool[nextRotateIndex++];
-  nextRotateIndex %= NUM_ROTATES;
-  return newRotate;
+template <class T, int NUM_ACTIONS>
+T &IO::ActionPool<T, NUM_ACTIONS>::getNext() {
+  T &newAction = actionPool[nextIndex++];
+  nextIndex %= NUM_ACTIONS;
+  return newAction;
 }
 

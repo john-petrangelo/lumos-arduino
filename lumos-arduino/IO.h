@@ -15,23 +15,22 @@ private:
     NONE
   };
 
-  class RotatePool {
+  template <class T, int NUM_ACTIONS>
+  class ActionPool {
     private:
-      static int const NUM_ROTATES = 4;
-      Rotate rotatePool[NUM_ROTATES];
-      int nextRotateIndex = 0;
+      T actionPool[NUM_ACTIONS];
+      int nextIndex = 0;
 
     public:
-      Rotate &getNext();
-      Rotate &getCurrent() { return rotatePool[nextRotateIndex]; }
+      T &getNext();
+      T &getCurrent() { return actionPool[nextIndex]; }
   };
-
-  PixelsArray pixels1;
 
   NullEffect nullEffect;
   ActionGroup actions;
 
-  RotatePool rotatePool;
+  ActionPool<Rotate, 4> rotatePool;
+  ActionPool<Blink, 2> blinkPool;
 
   public:
     IO() : actions(0) { }
@@ -51,6 +50,7 @@ private:
     void writeCmd(CommandType cmd, Range range, Color color);
     void writeCmd(CommandType cmd, Range range, Color color1, Color color2);
     void writeCmd(CommandType cmd, Range range, int val, Direction direction);
+    void writeCmd(CommandType cmd, Range range, int periodMS, Color color1, Color color2);
     void writeRange(Range range);
     void writeColor(Color color);
     void writeDirection(Direction direction);

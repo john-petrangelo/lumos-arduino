@@ -45,11 +45,17 @@ void Patterns::reversePattern(Pixels out, Pixels in, int firstPixel, int lastPix
  * firstPixel   First pixel in range, inclusive
  * lastPixel    Last pixel in range, exclusive
  */
-void Patterns::setSolidColor(Pixels pixels, int firstPixel, int lastPixel, Color color) {
+void Patterns::setSolidColor(int firstPixel, int lastPixel, Color color) {
   for (int i = firstPixel; i < lastPixel; ++i) {
-    pixels[i] = color;
+    strip.setPixelColor(i, color);
   }
 }
+
+//void Patterns::setSolidColor(Pixels pixels, int firstPixel, int lastPixel, Color color) {
+//  for (int i = firstPixel; i < lastPixel; ++i) {
+//    pixels[i] = color;
+//  }
+//}
 
 /*
  * Set a gradient color pattern. The number of defined color points is variable.
@@ -57,9 +63,9 @@ void Patterns::setSolidColor(Pixels pixels, int firstPixel, int lastPixel, Color
  * Example: to run a gradient from red to yellow to blue:
  *     setGradient(pixels, 0, strip.numPixels(), 3, RED, YELLOW, BLUE);
  */
-void Patterns::setGradient(Pixels pixels, int firstPixel, int lastPixel, int count, ...) {
+void Patterns::setGradient(int firstPixel, int lastPixel, int count, ...) {
   int const MAX_COLORS = 10;
-  
+
   if (count < 2 || count > MAX_COLORS) {
     return;
   }
@@ -83,7 +89,8 @@ void Patterns::setGradient(Pixels pixels, int firstPixel, int lastPixel, int cou
     int const whichSegment = i / segmentSize;
     float const ratio = 100.0 * (i - (whichSegment * segmentSize)) / segmentSize;
     Color const newColor = Colors::blend(colors[whichSegment], colors[whichSegment+1], ratio);
-    pixels[i + firstPixel] = newColor;
+//    pixels[i + firstPixel] = newColor;
+    strip.setPixelColor(i + firstPixel, newColor);
   }
 }
 

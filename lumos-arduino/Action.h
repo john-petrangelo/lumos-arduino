@@ -37,16 +37,19 @@ class Action {
 // An Action that alternates between two colors with the given period.
 class Blink : public Action {
   private:
-    Pixels const pixels;
-    int const periodMS;
+    int periodMS;
     Color colors[2];
     int colorIndex;
 
     void update();
 
   public:
-    Blink(Pixels pixels, int periodMS, int firstPixel, int lastPixel, Color c1, Color c2);
+    Blink() : Blink(0, strip.numPixels(), 1000, BLACK, WHITE) { }
+    Blink(int firstPixel, int lastPixel, int periodMS, Color c1, Color c2);
     void reset();
+
+    void setPeriodMS(int periodMS) { this->periodMS = periodMS; }
+    void setColor(int i, Color c) { colors[i] = c; }
 };
 
 // An action that rotates or shifts lights to the left or right.
