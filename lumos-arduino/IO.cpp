@@ -8,15 +8,17 @@
 
 char buffer[64];
 
+bool IO::isRunning = true;
+
 void IO::getCmd() {
   Serial.println("RDY");
 
   // Wait for someting to arrive on the Serial bus.
   while (!Serial.available()) {
-    actions.loop();
+    if (isRunning) {
+      actions.loop();
+    }
   }
-
-  actions.clear();
 
   // Keep looping while there is more to read.
   while (Serial.available()) {
@@ -78,9 +80,19 @@ void IO::getCmd() {
         Patterns::setGradient(range.first, range.last, 2, color1, color2);
         break;
       case SET_SINE_WAVE:
-      case PAUSE:
-      case RESUME:
         writeNotYetImplemented();
+      case CLEAR:
+        writeCmd(cmd);
+        clear();
+        Patterns::setSolidColor(BLACK);
+        break;
+      case PAUSE:
+        writeCmd(cmd);
+        isRunning = false;
+        break;
+      case RESUME:
+        writeCmd(cmd);
+        isRunning = true;
         break;
       case NONE:
       default:
@@ -89,6 +101,10 @@ void IO::getCmd() {
   }
 
   strip.show();
+}
+
+void IO::clear() {
+  actions.clear();
 }
 
 IO::CommandType IO::readCommand() {
@@ -121,6 +137,7 @@ IO::CommandType IO::readCommand() {
   if (strcmp(buffer, "SN") == 0) return SET_SINE_WAVE;
   if (strcmp(buffer, "SG") == 0) return SET_GRADIENT;
 
+  if (strcmp(buffer, "CL") == 0) return CLEAR;
   if (strcmp(buffer, "PS") == 0) return PAUSE;
   if (strcmp(buffer, "RS") == 0) return RESUME;
 
@@ -174,6 +191,11 @@ void IO::skipWhitespace() {
 
 void IO::writeNotYetImplemented() {
   Serial.println("\nCmd NYI");
+}
+
+void IO::writeCmd(CommandType cmd) {
+  Log::logInt("cmd", cmd);
+  Serial.println();
 }
 
 void IO::writeCmd(CommandType cmd, Range range, Color color) {
