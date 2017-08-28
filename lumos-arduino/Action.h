@@ -41,12 +41,11 @@ class Blink : public Action {
     Color colors[2];
     int colorIndex;
 
-    void update();
-
   public:
     Blink() : Blink(0, strip.numPixels(), 1000, BLACK, WHITE) { }
     Blink(int firstPixel, int lastPixel, int periodMS, Color c1, Color c2);
     void reset();
+    void update();
 
     void setPeriodMS(int periodMS) { this->periodMS = periodMS; }
     void setColor(int i, Color c) { colors[i] = c; }
@@ -93,6 +92,8 @@ class Noise : public Action {
     Noise() : Noise(0, strip.numPixels(), WHITE) { }
     void reset();
     void update();
+
+    void setColor(Color color) { this->color = color; }
 };
 
 class Flame : public Action {

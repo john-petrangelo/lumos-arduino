@@ -31,6 +31,7 @@ private:
 
   ActionPool<Rotate, 4> rotatePool;
   ActionPool<Blink, 2> blinkPool;
+  ActionPool<Noise, 3> noisePool;
 
   static bool isRunning;
 

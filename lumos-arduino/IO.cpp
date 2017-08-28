@@ -30,6 +30,7 @@ void IO::getCmd() {
     Direction direction;
     Rotate &rotate = rotatePool.getCurrent();
     Blink &blink = blinkPool.getCurrent();
+    Noise &noise = noisePool.getCurrent();
     
     CommandType cmd = readCommand();
     switch(cmd) {
@@ -58,7 +59,17 @@ void IO::getCmd() {
         actions.add(&rotate);
         break;
       case FLICKER:
+        writeNotYetImplemented();
+        break;
       case NOISE:
+        range = readRange();
+        color1 = readColor();
+        writeCmd(cmd, range, color1);
+        noise = noisePool.getNext();
+        noise.setRange(range);
+        noise.setColor(color1);
+        actions.add(&noise);
+        break;
       case FLAME:
       case FADE_TO:
       case FUSE:
