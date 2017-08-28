@@ -77,8 +77,11 @@ class Flicker : public Action {
     Flicker(int firstPixel, int lastPixel, Color color) : Action(firstPixel, lastPixel), color(color) { }
     Flicker(int pixel, Color color) : Flicker(pixel, pixel + 1, color) { }
     Flicker(Color color) : Flicker(0, strip.numPixels(), color) { }
+    Flicker() : Flicker(0, strip.numPixels(), YELLOW) { }
     void reset();
     void update();
+
+    void setColor(Color color) { this->color = color; }
 };
 
 

@@ -30,8 +30,9 @@ private:
   ActionGroup actions;
 
   ActionPool<Rotate, 4> rotatePool;
-  ActionPool<Blink, 2> blinkPool;
-  ActionPool<Noise, 3> noisePool;
+  ActionPool<Blink, 4> blinkPool;
+  ActionPool<Noise, 4> noisePool;
+  ActionPool<Flicker, 4> flickerPool;
 
   static bool isRunning;
 

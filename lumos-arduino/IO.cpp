@@ -28,8 +28,9 @@ void IO::getCmd() {
     int pixelsPerSecond;
     int periodMS;
     Direction direction;
-    Rotate &rotate = rotatePool.getCurrent();
     Blink &blink = blinkPool.getCurrent();
+    Rotate &rotate = rotatePool.getCurrent();
+    Flicker &flicker = flickerPool.getCurrent();
     Noise &noise = noisePool.getCurrent();
     
     CommandType cmd = readCommand();
@@ -59,7 +60,14 @@ void IO::getCmd() {
         actions.add(&rotate);
         break;
       case FLICKER:
-        writeNotYetImplemented();
+        range = readRange();
+        color1 = readColor();
+        writeCmd(cmd, range, color1);
+        flicker = flickerPool.getNext();
+        flicker.setRange(range);
+        flicker.setColor(color1);
+        actions.add(&flicker);
+        break;
         break;
       case NOISE:
         range = readRange();
