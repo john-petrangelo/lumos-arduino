@@ -22,7 +22,7 @@ class FadeTo : public Effect {
     int firstPixel;
     int lastPixel;
     Color newColor;
-    long currentPercent = 0;
+    int currentPercent = 0;
     
   public:
     FadeTo(Pixels pixels, long durationMS, int firstPixel, int lastPixel, Color c);
@@ -129,4 +129,3 @@ class EffectGroup : public Effect {
 };
 
 #endif // _EFFECT_H_
-
