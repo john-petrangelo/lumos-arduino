@@ -6,10 +6,21 @@
 #include "Patterns.h"
 
 void Action::loop() {
-  if (millis() > getNextUpdateMS()) {
+  if (!isDone() && millis() > getNextUpdateMS()) {
     update();
     strip.show();
   }
+}
+
+String Action::describe() {
+  String msg = "ACTION\r\nNext update: ";
+  msg += getNextUpdateMS();
+  msg += "ms\r\nCurrent time: ";
+  msg += millis();
+  msg += "ms\r\n";
+  msg += "Action: <>";
+
+  return msg;
 }
 
 Blink::Blink(Pixels pixels, int periodMS, int firstPixel, int lastPixel, Color c1, Color c2)

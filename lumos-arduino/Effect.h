@@ -5,17 +5,8 @@
 #include "Colors.h"
 #include "Log.h"
 
-class Effect : public Action {
-  public:
-    Effect(int firstPixel, int lastPixel) : Action(firstPixel, lastPixel) { }
-    Effect() : Action() { }
-  
-    void loop();
-    virtual bool isDone() = 0;
-};
-
 /* Fades from the current colors to the specified color. */
-class FadeTo : public Effect {
+class FadeTo : public Action {
   private:
     Pixels const pixels;
     long durationMS;
@@ -35,7 +26,7 @@ class FadeTo : public Effect {
     void setColor(Color newColor) { this->newColor = newColor; }
 };
 
-class Fuse : public Effect {
+class Fuse : public Action {
   private:
     int const pixelsPerSecond;
     int const firstPixel;
@@ -53,7 +44,7 @@ class Fuse : public Effect {
     bool isDone() { return currentPixel < firstPixel; }
 };
 
-class Grow : public Effect {
+class Grow : public Action {
   private:
     int pixelsPerSecond;
     int const firstPixel;
@@ -69,7 +60,7 @@ class Grow : public Effect {
     bool isDone() { return currentPixel >= lastPixel; }
 };
 
-class Lightning : public Effect {
+class Lightning : public Action {
   private:
     int const firstPixel;
     int const lastPixel;
@@ -93,35 +84,35 @@ class Lightning : public Effect {
     bool isDone() { return index >= sizeof(patternMS)/sizeof(long); }
 };
 
-class NullEffect : public Effect {
+class NullAction : public Action {
   public:
     void reset() { }
     void update() { }
     bool isDone() { return true; }
 };
 
-class DelayedStart : public Effect {
+class DelayedStart : public Action {
   private:
     long delayMS;
-    Effect *effect;
+    Action *action;
     bool isStarted;
 
   public:
-    DelayedStart(long delayMS, Effect *effect) : delayMS(delayMS), effect(effect) { }
+    DelayedStart(long delayMS, Action *action) : delayMS(delayMS), action(action) { }
     void reset();
-    void update() { isStarted = true; effect->update(); }
-    long getNextUpdateMS() { return isStarted ? effect->getNextUpdateMS() : nextUpdateMS; }
-    bool isDone() { return isStarted && effect->isDone(); }
+    void update() { isStarted = true; action->update(); }
+    long getNextUpdateMS() { return isStarted ? action->getNextUpdateMS() : nextUpdateMS; }
+    bool isDone() { return isStarted && action->isDone(); }
 };
 
-class EffectGroup : public Effect {
+class ActionGroup : public Action {
   private:
-    static int const MAX_EFFECTS = 5;
-    Effect *effects[MAX_EFFECTS];
-    int const numEffects;
+    static int const MAX_ACTIONS = 5;
+    Action *actions[MAX_ACTIONS];
+    int const numActions;
 
   public:
-    EffectGroup(int count, ...);
+    ActionGroup(int count, ...);
     void reset();
     void loop();
     void update() { }

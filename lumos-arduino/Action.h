@@ -22,8 +22,15 @@ class Action {
     // Implementations mmust update nextUpdateMS to indicate when update() should be called again.
     virtual void update() = 0;
 
+    virtual String describe();
+
     // Runners should call loop periodically.
     virtual void loop();
+
+    // Actions that reach a done condition of some kind should implement this function to return true
+    // when the action is done. Actions that do not have any deterministic done condition can rely on
+    // the default implementation which is never done.
+    virtual bool isDone() { return false; }
 
     virtual long getNextUpdateMS() { return nextUpdateMS; }
     void setNextUpdateMS(long val) { nextUpdateMS = val; }

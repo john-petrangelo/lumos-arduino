@@ -1,17 +1,10 @@
 #include "Colors.h"
 #include "Effect.h"
 #include "Log.h"
-#include "Runner.h"
 
-long const TIME_STEP_MS = 30;
-
-void Effect::loop() {
-  if (!isDone() && millis() > getNextUpdateMS()) {
-    update();
-    strip.show();
-  }
-}
-
+/*******************
+ * FadeTo
+ *******************/
 FadeTo::FadeTo(Pixels pixels, long durationMS, int firstPixel, int lastPixel, Color c)
     : pixels(pixels), durationMS(durationMS), firstPixel(firstPixel), lastPixel(lastPixel), newColor(c) { }
 
@@ -35,12 +28,15 @@ void FadeTo::update() {
   setNextUpdateMS(millis() + durationMS / 100);
 }
 
+/*******************
+ * Fuse
+ *******************/
 Fuse::Fuse(int pixelsPerSecond, int firstPixel, int lastPixel, Color fuseColor, Color burnColor)
     : pixelsPerSecond(pixelsPerSecond), firstPixel(firstPixel), lastPixel(lastPixel), fuseColor(fuseColor), burnColor(burnColor)
 { }
 
 void Fuse::reset() {
-  // Initialize the length to fuseColor.
+  // Initialize the length to fuseColor.TIME
   for (int i = firstPixel; i < lastPixel - 1; i++) {
     strip.setPixelColor(i, fuseColor);
   }
@@ -52,12 +48,16 @@ void Fuse::reset() {
 
 void Fuse::update() {
   Flicker flicker(currentPixel, burnColor);
-  Runner::runForDurationMS(1000 / pixelsPerSecond, &flicker);
+  // TODO Need to do make the flicker happen without blocking.
+  // Runner::runForDurationMS(1000 / pixelsPerSecond, &flicker);
   strip.setPixelColor(currentPixel, BLACK);
   currentPixel--;
   setNextUpdateMS(millis());
 }
 
+/*******************
+ * Lightning
+ *******************/
 Lightning::Lightning(int firstPixel, int lastPixel, Color color)
     : firstPixel(firstPixel), lastPixel(lastPixel), color(color) { }
 
@@ -92,6 +92,9 @@ void Lightning::update() {
 
 // bool isDone() { return index >= sizeof(patternMS)/sizeof(long); }
 
+/*******************
+ * Grow
+ *******************/
 Grow::Grow(int pixelsPerSecond, int firstPixel, int lastPixel, Color color)
     : pixelsPerSecond(pixelsPerSecond), firstPixel(firstPixel), lastPixel(lastPixel), color(color)
 { }
@@ -107,44 +110,49 @@ void Grow::update() {
   setNextUpdateMS(millis() + 1000 / pixelsPerSecond);
 }
 
+/*******************
+ * DelayedStart
+ *******************/
 void DelayedStart::reset() {
   isStarted = false;
-  effect->reset();
+  action->reset();
   setNextUpdateMS(millis() + delayMS);
 }
 
-EffectGroup::EffectGroup(int count, ...) : Effect(0, strip.numPixels()), numEffects(min(count, MAX_EFFECTS)) {
+/*******************
+ * ActionGroup
+ *******************/
+ActionGroup::ActionGroup(int count, ...) : Action(0, strip.numPixels()), numActions(min(count, MAX_ACTIONS)) {
   // Declare a va_list macro and initialize it with va_start.
   va_list argList;
   va_start(argList, count);
 
-  // Copy all of the input Effects.
+  // Copy all of the input Actions.
   int i = 0;
   while (count-- > 0) {
-    effects[i++] = va_arg(argList, Effect*);
+    actions[i++] = va_arg(argList, Action*);
   }
 }
 
-void EffectGroup::reset() {
-  for (int i = 0; i < numEffects; i++) {
-    effects[i]->reset();
+void ActionGroup::reset() {
+  for (int i = 0; i < numActions; i++) {
+    actions[i]->reset();
   }
 }
 
-void EffectGroup::loop() {
+void ActionGroup::loop() {
   // TODO Can be modified to only strip.show() once after all actions loop.
-  for (int i = 0; i < numEffects; i++) {
-    effects[i]->loop();
+  for (int i = 0; i < numActions; i++) {
+    actions[i]->loop();
   }
 }
 
-bool EffectGroup::isDone() {
-  for (int i = 0; i < numEffects; i++) {
-    if (!effects[i]->isDone()) {
+bool ActionGroup::isDone() {
+  for (int i = 0; i < numActions; i++) {
+    if (!actions[i]->isDone()) {
       return false;
     }
   }
 
   return true;
 }
-

@@ -45,7 +45,7 @@ void loop() {
   FadeTo fade1(pixels1, 2000, 0, 20, RED);
   FadeTo fade2(pixels2, 2000, 20, 40, GREEN);
   FadeTo fade3(pixels3, 2000, 40, 60, BLUE);
-  EffectGroup fades(3, &fade1, &fade2, &fade3);
+  ActionGroup fades(3, &fade1, &fade2, &fade3);
   Runner::runUntilDone(&fades);
 
   delay(500);
@@ -90,7 +90,7 @@ void loop() {
   // Double rotate rainbow.
   Rotate rotateLeft(0, 30, 60, RIGHT);
   Rotate rotateRight(30, 60, 60, LEFT);
-  EffectGroup rotateGroup(2, &rotateLeft, &rotateRight);
+  ActionGroup rotateGroup(2, &rotateLeft, &rotateRight);
   Runner::runForDurationMS(3000, &rotateGroup);
   rotateLeft.setDirection(LEFT);
   rotateRight.setDirection(RIGHT);
@@ -150,8 +150,8 @@ void demo_quadGrow() {
   Patterns::applyPixels(pixels1);
   strip.show();
 
-  EffectGroup effectGroup(4, &grow1, &delayed2, &delayed3, &delayed4);
-  Runner::runUntilDone(&effectGroup);
+  ActionGroup actionGroup(4, &grow1, &delayed2, &delayed3, &delayed4);
+  Runner::runUntilDone(&actionGroup);
 }
 
 void demo_fade(FadeTo *fade) {

@@ -1,25 +1,26 @@
 #include "Runner.h"
 #include "Log.h"
 
-void Runner::runForever(Action *action) {
+Runner Runner::runUntilDone(Action *action) {
   action->reset();
-  while (1) {
+  if (!action->isDone()) {
     action->loop();
   }
 }
 
-void Runner::runForDurationMS(long durationMS, Action *action) {
-  action->reset();
-  long endTime = millis() + durationMS;
-  while (millis() < endTime) {
+void Runner::loop() {
+  if (endTimeMS == FOREVER || millis() < endTimeMS) {
     action->loop();
   }
 }
 
-void Runner::runUntilDone(Effect *effect) {
-  effect->reset();
-  while (!effect->isDone()) {
-    effect->loop();
-  }
+String Runner::describe() {
+  String msg = "RUNNER\r\nEnd time: ";
+  msg += endTimeMS;
+  msg += "ms\r\nCurrent time: ";
+  msg += millis();
+  msg += "ms\r\n";
+  msg += action->describe();
+  
+  return msg;
 }
-

@@ -2,18 +2,29 @@
 #define _RUNNER_
 
 #include "Action.h"
-#include "Effect.h"
+
+static const long FOREVER = 0;
 
 // Runner provides convenience methods for running Actions and EFfects.
 class Runner {
   private:
-    Runner() { }
+    Action *action;
+    long endTimeMS;
+  
+    Runner(Action *action, long durationMS) : action(action), endTimeMS(millis() + durationMS) { action->reset(); }
+    Runner(Action *action) : action(action), endTimeMS(FOREVER) { action->reset(); }
     
   public:
-    static void runForever(Action *action);
-    static void runForDurationMS(long durationMS, Action *action);
-    static void runUntilDone(Effect *effect);
+    static Runner runForever(Action *action) { return Runner(action); }
+    static Runner runForDurationMS(long durationMS, Action *action) { return Runner(action, durationMS); }
+
+    // DEPRECATED
+    // Only for use of legacy demo program. Caution: blocks until done.
+    // Causes software watchdog timer exceptions on ESP8266.
+    static Runner runUntilDone(Action *action);
+
+    void loop();
+    String describe();
 };
 
 #endif // _RUNNER_
-
