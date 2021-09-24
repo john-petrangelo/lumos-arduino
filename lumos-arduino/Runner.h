@@ -1,6 +1,7 @@
 #ifndef _RUNNER_
 #define _RUNNER_
 
+#include "Arduino.h"
 #include "Action.h"
 
 static const long FOREVER = 0;

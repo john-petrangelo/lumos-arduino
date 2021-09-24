@@ -1,7 +1,7 @@
 #include "defs.h"
 #include "Action.h"
+#include "Actions.h"
 #include "Colors.h"
-#include "Effect.h"
 #include "Log.h"
 #include "Runner.h"
 
@@ -186,4 +186,3 @@ void demo_fade(FadeTo *fade) {
   fade->setColor(BLACK);
   Runner::runUntilDone(fade);
 }
-

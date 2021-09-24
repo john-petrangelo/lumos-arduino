@@ -1,9 +1,9 @@
 #ifndef _ACTION_H_
 #define _ACTION_H_
 
-#include "Patterns.h"
+#include "defs.h"
 
-// A generic superclass for actions.
+// A generic base class for actions.
 class Action {
   protected:
     long nextUpdateMS = 0;
@@ -24,88 +24,20 @@ class Action {
 
     virtual String describe();
 
-    // Runners should call loop periodically.
-    virtual void loop();
-
     // Actions that reach a done condition of some kind should implement this function to return true
     // when the action is done. Actions that do not have any deterministic done condition can rely on
     // the default implementation which is never done.
     virtual bool isDone() { return false; }
 
-    virtual long getNextUpdateMS() { return nextUpdateMS; }
+    // Runners should call loop periodically.
+    void loop();
+
+    long getNextUpdateMS() { return nextUpdateMS; }
     void setNextUpdateMS(long val) { nextUpdateMS = val; }
 
     void setRange(int firstPixel, int lastPixel) { this->firstPixel = firstPixel; this->lastPixel = lastPixel; }
     int getFirstPixel() { return firstPixel; }
     int getLastPixel() { return lastPixel; }
-};
-
-// An Action that alternates between two colors with the given period.
-class Blink : public Action {
-  private:
-    Pixels const pixels;
-    int const periodMS;
-    Color colors[2];
-    int colorIndex;
-
-    void update();
-
-  public:
-    Blink(Pixels pixels, int periodMS, int firstPixel, int lastPixel, Color c1, Color c2);
-    void reset();
-};
-
-// An action that rotates or shifts lights to the left or right.
-class Rotate : public Action {
-  private:
-    int pixelsPerSecond;
-    Direction op;
-    
-  public:
-    Rotate(int pixelsPerSecond, Direction op) : Rotate(0, strip.numPixels(), pixelsPerSecond, op) { }
-    Rotate(int firstPixel, int lastPixel, int pixelsPerSecond, Direction op)
-        : Action(firstPixel, lastPixel), pixelsPerSecond(pixelsPerSecond), op(op) { }
-    void reset() { }
-    void update();
-
-    void setPixelsPerSecond(int pixelsPerSecond) { this->pixelsPerSecond = pixelsPerSecond; }
-    void setDirection(Direction op) { this->op = op; }
-};
-
-class Flicker : public Action {
-  private:
-    Color color;
-
-  public:
-    Flicker(int firstPixel, int lastPixel, Color color) : Action(firstPixel, lastPixel), color(color) { }
-    Flicker(int pixel, Color color) : Flicker(pixel, pixel + 1, color) { }
-    Flicker(Color color) : Flicker(0, strip.numPixels(), color) { }
-    void reset();
-    void update();
-};
-
-
-class Noise : public Action {
-  private:
-    Color color;
-
-  public:
-    Noise(int firstPixel, int lastPixel, Color color) : Action(firstPixel, lastPixel), color(color) { }
-    Noise(Color color) : Noise(0, strip.numPixels(), color) { }
-    Noise() : Noise(0, strip.numPixels(), WHITE) { }
-    void reset();
-    void update();
-};
-
-class Flame : public Action {
-  private:
-    Pixels const pixels;
-
-  public:
-    Flame(Pixels pixels, int firstPixel, int lastPixel) : Action(firstPixel, lastPixel), pixels(pixels) { }
-    Flame(Pixels pixels) : Flame(pixels, 0, strip.numPixels()) { }
-    void reset() { }
-    void update();
 };
 
 #endif // _ACTION_H_
