@@ -4,17 +4,16 @@
 void Action::loop() {
   if (!isDone() && millis() > getNextUpdateMS()) {
     update();
-    strip.show();
+//    strip.show();
   }
 }
 
 String Action::describe() {
-  String msg = "ACTION\r\nNext update: ";
+  String msg = "ACTION\r\nName: ";
+  msg += name;
+  msg += "\r\nNext update: ";
   msg += getNextUpdateMS();
-  msg += "ms\r\nCurrent time: ";
-  msg += millis();
   msg += "ms\r\n";
-  msg += "Action: <>";
 
   return msg;
 }

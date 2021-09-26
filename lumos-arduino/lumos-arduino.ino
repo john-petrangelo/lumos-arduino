@@ -4,6 +4,7 @@
 #include "Colors.h"
 #include "Log.h"
 #include "Runner.h"
+#include "Lumos.h"
 
 int8_t const PIN = 13;
 neoPixelType const STRIP_FLAGS = (NEO_GRB + NEO_KHZ800);
@@ -106,7 +107,7 @@ void loop() {
 
   long stopTime = millis();
   Log::logFloat((char*)"elapsed=", (stopTime - startTime) / 1000.0, 3);
-  Log::logLn();
+  Log::logMsgLn("");
 }
 
 void demo_noise() {

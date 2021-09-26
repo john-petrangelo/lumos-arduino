@@ -36,10 +36,6 @@ void Log::logFloat(char const *name, float value, int precision) {
   Serial.print(" ");
 }
 
-void Log::logLn() {
-  Serial.println();
-}
-
 void Log::logName(char const *name) {
   Serial.print(name);
   Serial.print("=");  
@@ -53,4 +49,3 @@ void Log::logAvailableMemory()
   free(buf);
   logInt("availableMem", size);
 } 
-

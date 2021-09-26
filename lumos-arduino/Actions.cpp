@@ -2,6 +2,42 @@
 #include "Colors.h"
 #include "Log.h"
 
+/***** ACTIONGROUP *****/
+
+ActionGroup::ActionGroup(int count, ...) : Action(0, strip.numPixels()), numActions(min(count, MAX_ACTIONS)) {
+  // Declare a va_list macro and initialize it with va_start.
+  va_list argList;
+  va_start(argList, count);
+
+  // Copy all of the input Actions.
+  int i = 0;
+  while (count-- > 0) {
+    actions[i++] = va_arg(argList, Action*);
+  }
+}
+
+void ActionGroup::reset() {
+  for (int i = 0; i < numActions; i++) {
+    actions[i]->reset();
+  }
+}
+
+void ActionGroup::loop() {
+  // TODO Can be modified to only strip.show() once after all actions loop.
+  for (int i = 0; i < numActions; i++) {
+    actions[i]->loop();
+  }
+}
+
+bool ActionGroup::isDone() {
+  for (int i = 0; i < numActions; i++) {
+    if (!actions[i]->isDone()) {
+      return false;
+    }
+  }
+
+  return true;
+}
 /***** BLINK *****/
 
 Blink::Blink(Pixels pixels, int periodMS, int firstPixel, int lastPixel, Color c1, Color c2)
@@ -24,78 +60,12 @@ void Blink::update() {
   setNextUpdateMS(millis() + periodMS / 2);
 }
 
-/***** FLICKER *****/
+/***** DELAYEDSTART *****/
 
-void Flicker::reset() {
-  setNextUpdateMS(0);
-}
-
-void Flicker::update() {
-  Color const nowColor = Colors::fade(color, random(20, 101));
-  for (int i = firstPixel; i < lastPixel; i++) {
-    strip.setPixelColor(i, nowColor);
-  }
-
-  // Randomize the sleep time a bit.
-  setNextUpdateMS(millis() + 60 + random(0, 40));
-}
-
-/***** NOISE *****/
-
-void Noise::reset() {
-  setNextUpdateMS(0);
-}
-
-void Noise::update() {
-  Color const nowColor = Colors::fade(color, random(20, 101));
-  for (int i = firstPixel; i < lastPixel; i++) {
-    strip.setPixelColor(i, Colors::fade(color, random(25, 150)));
-  }
-
-  setNextUpdateMS(millis() + 30);
-}
-
-/***** ROTATE *****/
-
-void Rotate::update() {
-  Color firstColor = strip.getPixelColor(firstPixel);
-  Color lastColor = strip.getPixelColor(lastPixel - 1);
-  switch (op) {
-    case  LEFT:
-      for (int i = firstPixel; i < lastPixel - 1; i++) {
-        strip.setPixelColor(i, strip.getPixelColor(i + 1));
-      }
-      strip.setPixelColor(lastPixel - 1, firstColor);
-      break;
-    case RIGHT:
-      for (int i = lastPixel - 1; i >= firstPixel; i--) {
-        strip.setPixelColor(i, strip.getPixelColor(i - 1));
-      }
-      strip.setPixelColor(firstPixel, lastColor);
-      break;
-  }
-
-  setNextUpdateMS(millis() + 1000.0 / pixelsPerSecond);
-}
-
-/***** FLAME *****/
-
-void Flame::update() {
-  int const delayMS = 120;
-
-  // Paint the background all black.
-  Patterns::setSolidColor(pixels, firstPixel, lastPixel, BLACK);
-  Patterns::applyPixels(pixels, firstPixel, lastPixel);
-
-  int const range = lastPixel - firstPixel;
-  int const myFirstPixel = firstPixel + random(0, range / 5);
-  int const myLastPixel = lastPixel - random(0, range / 5);
-  Color const FIRE_RED = Colors::blend(RED, YELLOW, 10);
-  Color const FIRE_RED2 = Colors::blend(RED, YELLOW, 20);
-  Patterns::setGradient(pixels, myFirstPixel, myLastPixel, 7, BLACK, FIRE_RED, FIRE_RED2, ORANGE, FIRE_RED2, FIRE_RED, BLACK);
-  Patterns::applyPixels(pixels, myFirstPixel, myLastPixel);
-
-  setNextUpdateMS(millis() + 110);
+void DelayedStart::reset() {
+  isStarted = false;
+  action->reset();
+  setNextUpdateMS(millis() + delayMS);
 }
 
 /***** FADTO *****/
@@ -123,6 +93,42 @@ void FadeTo::update() {
   setNextUpdateMS(millis() + durationMS / 100);
 }
 
+/***** FLAME *****/
+
+void Flame::update() {
+  int const delayMS = 120;
+
+  // Paint the background all black.
+  Patterns::setSolidColor(pixels, firstPixel, lastPixel, BLACK);
+  Patterns::applyPixels(pixels, firstPixel, lastPixel);
+
+  int const range = lastPixel - firstPixel;
+  int const myFirstPixel = firstPixel + random(0, range / 5);
+  int const myLastPixel = lastPixel - random(0, range / 5);
+  Color const FIRE_RED = Colors::blend(RED, YELLOW, 10);
+  Color const FIRE_RED2 = Colors::blend(RED, YELLOW, 20);
+  Patterns::setGradient(pixels, myFirstPixel, myLastPixel, 7, BLACK, FIRE_RED, FIRE_RED2, ORANGE, FIRE_RED2, FIRE_RED, BLACK);
+  Patterns::applyPixels(pixels, myFirstPixel, myLastPixel);
+
+  setNextUpdateMS(millis() + 110);
+}
+
+/***** FLICKER *****/
+
+void Flicker::reset() {
+  setNextUpdateMS(0);
+}
+
+void Flicker::update() {
+  Color const nowColor = Colors::fade(color, random(20, 101));
+  for (int i = firstPixel; i < lastPixel; i++) {
+    strip.setPixelColor(i, nowColor);
+  }
+
+  // Randomize the sleep time a bit.
+  setNextUpdateMS(millis() + 60 + random(0, 40));
+}
+
 /***** FUSE *****/
 
 Fuse::Fuse(int pixelsPerSecond, int firstPixel, int lastPixel, Color fuseColor, Color burnColor)
@@ -147,6 +153,23 @@ void Fuse::update() {
   strip.setPixelColor(currentPixel, BLACK);
   currentPixel--;
   setNextUpdateMS(millis());
+}
+
+/***** GROW *****/
+
+Grow::Grow(int pixelsPerSecond, int firstPixel, int lastPixel, Color color)
+    : pixelsPerSecond(pixelsPerSecond), firstPixel(firstPixel), lastPixel(lastPixel), color(color)
+{ }
+
+void Grow::reset() {
+  currentPixel = 0;
+  setNextUpdateMS(millis() + 1000 / pixelsPerSecond);
+}
+
+void Grow::update() {
+  strip.setPixelColor(currentPixel, color);
+  currentPixel++;
+  setNextUpdateMS(millis() + 1000 / pixelsPerSecond);
 }
 
 /***** LIGHTNING *****/
@@ -185,64 +208,40 @@ void Lightning::update() {
 
 // bool isDone() { return index >= sizeof(patternMS)/sizeof(long); }
 
-/***** GROW *****/
+/***** NOISE *****/
 
-Grow::Grow(int pixelsPerSecond, int firstPixel, int lastPixel, Color color)
-    : pixelsPerSecond(pixelsPerSecond), firstPixel(firstPixel), lastPixel(lastPixel), color(color)
-{ }
-
-void Grow::reset() {
-  currentPixel = 0;
-  setNextUpdateMS(millis() + 1000 / pixelsPerSecond);
+void Noise::reset() {
+  setNextUpdateMS(0);
 }
 
-void Grow::update() {
-  strip.setPixelColor(currentPixel, color);
-  currentPixel++;
-  setNextUpdateMS(millis() + 1000 / pixelsPerSecond);
-}
-
-/***** DELAYEDSTART *****/
-
-void DelayedStart::reset() {
-  isStarted = false;
-  action->reset();
-  setNextUpdateMS(millis() + delayMS);
-}
-
-/***** ACTIONGROUP *****/
-
-ActionGroup::ActionGroup(int count, ...) : Action(0, strip.numPixels()), numActions(min(count, MAX_ACTIONS)) {
-  // Declare a va_list macro and initialize it with va_start.
-  va_list argList;
-  va_start(argList, count);
-
-  // Copy all of the input Actions.
-  int i = 0;
-  while (count-- > 0) {
-    actions[i++] = va_arg(argList, Action*);
-  }
-}
-
-void ActionGroup::reset() {
-  for (int i = 0; i < numActions; i++) {
-    actions[i]->reset();
-  }
-}
-
-void ActionGroup::loop() {
-  // TODO Can be modified to only strip.show() once after all actions loop.
-  for (int i = 0; i < numActions; i++) {
-    actions[i]->loop();
-  }
-}
-
-bool ActionGroup::isDone() {
-  for (int i = 0; i < numActions; i++) {
-    if (!actions[i]->isDone()) {
-      return false;
-    }
+void Noise::update() {
+  Color const nowColor = Colors::fade(color, random(20, 101));
+  for (int i = firstPixel; i < lastPixel; i++) {
+    strip.setPixelColor(i, Colors::fade(color, random(25, 150)));
   }
 
-  return true;
+  setNextUpdateMS(millis() + 30);
+}
+
+/***** ROTATE *****/
+
+void Rotate::update() {
+  Color firstColor = strip.getPixelColor(firstPixel);
+  Color lastColor = strip.getPixelColor(lastPixel - 1);
+  switch (op) {
+    case  LEFT:
+      for (int i = firstPixel; i < lastPixel - 1; i++) {
+        strip.setPixelColor(i, strip.getPixelColor(i + 1));
+      }
+      strip.setPixelColor(lastPixel - 1, firstColor);
+      break;
+    case RIGHT:
+      for (int i = lastPixel - 1; i >= firstPixel; i--) {
+        strip.setPixelColor(i, strip.getPixelColor(i - 1));
+      }
+      strip.setPixelColor(firstPixel, lastColor);
+      break;
+  }
+
+  setNextUpdateMS(millis() + 1000.0 / pixelsPerSecond);
 }

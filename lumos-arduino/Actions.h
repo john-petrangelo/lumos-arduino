@@ -77,7 +77,7 @@ class Flame : public Action {
   public:
     Flame(Pixels pixels, int firstPixel, int lastPixel) : Action(firstPixel, lastPixel), pixels(pixels) { }
     Flame(Pixels pixels) : Flame(pixels, 0, strip.numPixels()) { }
-    void reset() { }
+    void reset() { name = "Flame"; }
     void update();
 };
 

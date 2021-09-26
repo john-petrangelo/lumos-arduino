@@ -9,7 +9,6 @@ class Log {
     static void logLong(char const *name, long value);
     static void logColor(char const *name, Color value);
     static void logFloat(char const *name, float value, int precision);
-    static void logLn();
     static void logAvailableMemory();
 
   private:

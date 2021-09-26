@@ -11,7 +11,7 @@ class Runner {
   private:
     Action *action;
     long endTimeMS;
-  
+
     Runner(Action *action, long durationMS) : action(action), endTimeMS(millis() + durationMS) { action->reset(); }
     Runner(Action *action) : action(action), endTimeMS(FOREVER) { action->reset(); }
     

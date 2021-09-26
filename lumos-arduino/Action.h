@@ -9,6 +9,7 @@ class Action {
     long nextUpdateMS = 0;
     int firstPixel;
     int lastPixel;
+    const char *name = "";
 
   public:
     Action(int firstPixel, int lastPixel) : firstPixel(firstPixel), lastPixel(lastPixel) { }
