@@ -1,5 +1,4 @@
 #include "Colors.h"
-#include "Log.h"
 #include "Patterns.h"
 
 /*
@@ -99,4 +98,3 @@ void Patterns::setSineWave(Pixels pixels, int firstPixel, int lastPixel, Color c
     pixels[i] = newColor;
   }
 }
-

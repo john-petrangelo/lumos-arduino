@@ -2,7 +2,7 @@
 #include "Action.h"
 #include "Actions.h"
 #include "Colors.h"
-#include "Log.h"
+#include "Logger.h"
 #include "Runner.h"
 #include "Lumos.h"
 
@@ -106,8 +106,8 @@ void loop() {
   delay(5000);
 
   long stopTime = millis();
-  Log::logFloat((char*)"elapsed=", (stopTime - startTime) / 1000.0, 3);
-  Log::logMsgLn("");
+  Logger::logFloat((char*)"elapsed=", (stopTime - startTime) / 1000.0, 3);
+  Logger::logMsgLn("");
 }
 
 void demo_noise() {

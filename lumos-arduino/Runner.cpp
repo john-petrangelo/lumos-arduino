@@ -1,5 +1,4 @@
 #include "Runner.h"
-#include "Log.h"
 
 Runner Runner::runUntilDone(Action *action) {
   action->reset();

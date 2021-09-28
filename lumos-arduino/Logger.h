@@ -1,7 +1,9 @@
 #ifndef _LOG_H_
 #define _LOG_H_
 
-class Log {
+#include "Colors.h"
+
+class Logger {
   public:
     static void logInt(char const *name, int value);
     static void logMsg(char const *msg);
@@ -10,6 +12,8 @@ class Log {
     static void logColor(char const *name, Color value);
     static void logFloat(char const *name, float value, int precision);
     static void logAvailableMemory();
+
+    static void setStream(Stream *newStream);
 
   private:
     static void logName(char const *name);

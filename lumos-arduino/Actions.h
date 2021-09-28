@@ -3,7 +3,6 @@
 
 #include "Action.h"
 #include "Colors.h"
-#include "Log.h"
 #include "Patterns.h"
 
 class ActionGroup : public Action {
