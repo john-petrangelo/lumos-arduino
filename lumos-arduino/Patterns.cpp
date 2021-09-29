@@ -4,7 +4,7 @@
 /*
  * Apply the provided pixels array (pattern) to the light strip.
  */
-void Patterns::applyPixels(Pixels pixels, int firstPixel, int lastPixel) {
+void Patterns::applyPixels(Adafruit_NeoPixel &strip, Pixels pixels, int firstPixel, int lastPixel) {
   for (int i = firstPixel; i < lastPixel; i++) {
     strip.setPixelColor(i, pixels[i]);
   }

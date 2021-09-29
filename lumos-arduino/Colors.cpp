@@ -21,7 +21,7 @@ Color Colors::blend(Color a, Color b, int ratio) {
     uint8_t green = blend(getGreen(a), getGreen(b), ratio);
     uint8_t blue = blend(getBlue(a), getBlue(b), ratio);
 
-    return strip.Color(red, green, blue);
+    return Adafruit_NeoPixel::Color(red, green, blue);
 }
 
 uint8_t Colors::blend(uint8_t a, uint8_t b, int ratio) {
@@ -33,7 +33,7 @@ Color Colors::fade(Color c, int ratio) {
 }
 
 Color Colors::add(Color a, Color b) {
-  return strip.Color(
+  return Adafruit_NeoPixel::Color(
       constrain(getRed(a)   + getRed(b),  0, 255), 
       constrain(getGreen(a) + getGreen(b), 0, 255), 
       constrain(getBlue(a)  + getBlue(b),  0, 255));
@@ -50,6 +50,3 @@ uint8_t Colors::getGreen(Color color) {
 uint8_t Colors::getBlue(Color color) {
   return (color & B_MASK) >> B_SHIFT;
 }
-
-
-

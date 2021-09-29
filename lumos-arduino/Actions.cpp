@@ -1,10 +1,9 @@
 #include "Actions.h"
 #include "Colors.h"
-#include "Logger.h"
 
 /***** ACTIONGROUP *****/
 
-ActionGroup::ActionGroup(int count, ...) : Action(0, strip.numPixels()), numActions(min(count, MAX_ACTIONS)) {
+ActionGroup::ActionGroup(Adafruit_NeoPixel &strip, int count, ...) : Action(strip, 0, strip.numPixels()), numActions(min(count, MAX_ACTIONS)) {
   // Declare a va_list macro and initialize it with va_start.
   va_list argList;
   va_start(argList, count);
@@ -40,8 +39,8 @@ bool ActionGroup::isDone() {
 }
 /***** BLINK *****/
 
-Blink::Blink(Pixels pixels, int periodMS, int firstPixel, int lastPixel, Color c1, Color c2)
-  : Action(firstPixel, lastPixel), pixels(pixels), periodMS(periodMS)
+Blink::Blink(Adafruit_NeoPixel &strip, Pixels pixels, int periodMS, int firstPixel, int lastPixel, Color c1, Color c2)
+  : Action(strip, firstPixel, lastPixel), pixels(pixels), periodMS(periodMS)
 {
   this->colors[0] = c1;
   this->colors[1] = c2;
@@ -56,7 +55,7 @@ void Blink::reset() {
 void Blink::update() {
   colorIndex = (colorIndex + 1) % 2;
   Patterns::setSolidColor(pixels, firstPixel, lastPixel, colors[colorIndex]);
-  Patterns::applyPixels(pixels, firstPixel, lastPixel);
+  Patterns::applyPixels(strip, pixels, firstPixel, lastPixel);
   setNextUpdateMS(millis() + periodMS / 2);
 }
 
@@ -70,8 +69,8 @@ void DelayedStart::reset() {
 
 /***** FADTO *****/
 
-FadeTo::FadeTo(Pixels pixels, long durationMS, int firstPixel, int lastPixel, Color c)
-    : pixels(pixels), durationMS(durationMS), firstPixel(firstPixel), lastPixel(lastPixel), newColor(c) { }
+FadeTo::FadeTo(Adafruit_NeoPixel &strip, Pixels pixels, long durationMS, int firstPixel, int lastPixel, Color c)
+    : Action(strip, firstPixel, lastPixel), pixels(pixels), durationMS(durationMS), newColor(c) { }
 
 void FadeTo::reset() {
   for (int i = firstPixel; i < lastPixel; i++) {
@@ -100,7 +99,7 @@ void Flame::update() {
 
   // Paint the background all black.
   Patterns::setSolidColor(pixels, firstPixel, lastPixel, BLACK);
-  Patterns::applyPixels(pixels, firstPixel, lastPixel);
+  Patterns::applyPixels(strip, pixels, firstPixel, lastPixel);
 
   int const range = lastPixel - firstPixel;
   int const myFirstPixel = firstPixel + random(0, range / 5);
@@ -108,7 +107,7 @@ void Flame::update() {
   Color const FIRE_RED = Colors::blend(RED, YELLOW, 10);
   Color const FIRE_RED2 = Colors::blend(RED, YELLOW, 20);
   Patterns::setGradient(pixels, myFirstPixel, myLastPixel, 7, BLACK, FIRE_RED, FIRE_RED2, ORANGE, FIRE_RED2, FIRE_RED, BLACK);
-  Patterns::applyPixels(pixels, myFirstPixel, myLastPixel);
+  Patterns::applyPixels(strip, pixels, myFirstPixel, myLastPixel);
 
   setNextUpdateMS(millis() + 110);
 }
@@ -131,8 +130,8 @@ void Flicker::update() {
 
 /***** FUSE *****/
 
-Fuse::Fuse(int pixelsPerSecond, int firstPixel, int lastPixel, Color fuseColor, Color burnColor)
-    : pixelsPerSecond(pixelsPerSecond), firstPixel(firstPixel), lastPixel(lastPixel), fuseColor(fuseColor), burnColor(burnColor)
+Fuse::Fuse(Adafruit_NeoPixel &strip, int pixelsPerSecond, int firstPixel, int lastPixel, Color fuseColor, Color burnColor)
+    : Action(strip, firstPixel, lastPixel), pixelsPerSecond(pixelsPerSecond), fuseColor(fuseColor), burnColor(burnColor)
 { }
 
 void Fuse::reset() {
@@ -147,7 +146,7 @@ void Fuse::reset() {
 }
 
 void Fuse::update() {
-  Flicker flicker(currentPixel, burnColor);
+  Flicker flicker(strip, currentPixel, burnColor);
   // TODO Need to do make the flicker happen without blocking.
   // Runner::runForDurationMS(1000 / pixelsPerSecond, &flicker);
   strip.setPixelColor(currentPixel, BLACK);
@@ -157,8 +156,8 @@ void Fuse::update() {
 
 /***** GROW *****/
 
-Grow::Grow(int pixelsPerSecond, int firstPixel, int lastPixel, Color color)
-    : pixelsPerSecond(pixelsPerSecond), firstPixel(firstPixel), lastPixel(lastPixel), color(color)
+Grow::Grow(Adafruit_NeoPixel &strip, int pixelsPerSecond, int firstPixel, int lastPixel, Color color)
+    : Action(strip, firstPixel, lastPixel), pixelsPerSecond(pixelsPerSecond), color(color)
 { }
 
 void Grow::reset() {
@@ -174,8 +173,8 @@ void Grow::update() {
 
 /***** LIGHTNING *****/
 
-Lightning::Lightning(int firstPixel, int lastPixel, Color color)
-    : firstPixel(firstPixel), lastPixel(lastPixel), color(color) { }
+Lightning::Lightning(Adafruit_NeoPixel &strip, int firstPixel, int lastPixel, Color color)
+    : Action(strip, firstPixel, lastPixel), color(color) { }
 
 void Lightning::reset() {
   index = 0;

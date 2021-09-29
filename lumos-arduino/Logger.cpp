@@ -42,6 +42,17 @@ void Logger::logName(char const *name) {
   stream->print("=");  
 }
 
+void Logger::logf(char *format,...)
+{
+  char buff[256];
+  va_list args;
+  va_start (args,format);
+  vsnprintf(buff,sizeof(buff),format,args);
+  va_end (args);
+  buff[sizeof(buff)/sizeof(buff[0])-1]='\0';
+  Logger::logMsg(buff);
+}
+
 void Logger::logAvailableMemory()
 {
   int size = 8192;

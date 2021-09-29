@@ -1,10 +1,13 @@
 #include "defs.h"
+#include "Logger.h"
 
 #include "Action.h"
 void Action::loop() {
-  if (!isDone() && millis() > getNextUpdateMS()) {
+  int now = millis();
+  Logger::logf("ACTION::LOOP isDone=%d now=%dms nextUpdate=%dms\n", isDone(), now, getNextUpdateMS());
+  if (!isDone() && now > getNextUpdateMS()) {
     update();
-//    strip.show();
+    strip.show();
   }
 }
 

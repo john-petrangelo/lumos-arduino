@@ -17,6 +17,7 @@ class Lumos {
 
   public:
     Lumos(uint16_t num_pixels, int8_t pin);
+    Adafruit_NeoPixel &getStrip() { return strip; }
     
     void runForever(Action *action);
     void runForDurationMS(long durationMS, Action *action);

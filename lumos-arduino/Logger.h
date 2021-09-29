@@ -11,6 +11,7 @@ class Logger {
     static void logLong(char const *name, long value);
     static void logColor(char const *name, Color value);
     static void logFloat(char const *name, float value, int precision);
+    static void logf(char *format,...);
     static void logAvailableMemory();
 
     static void setStream(Stream *newStream);

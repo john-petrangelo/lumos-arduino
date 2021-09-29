@@ -9,11 +9,12 @@ class Action {
     long nextUpdateMS = 0;
     int firstPixel;
     int lastPixel;
-
+    Adafruit_NeoPixel &strip;
+    
   public:
     const char *name = "";
-    Action(int firstPixel, int lastPixel) : firstPixel(firstPixel), lastPixel(lastPixel) { }
-    Action() : Action(0, strip.numPixels()) { }
+    Action(Adafruit_NeoPixel &strip, int firstPixel, int lastPixel) : strip(strip), firstPixel(firstPixel), lastPixel(lastPixel) { }
+    Action(Adafruit_NeoPixel &strip) : Action(strip, 0, strip.numPixels()) { }
   
     // Runners should call reset once before looping.
     virtual void reset() = 0;
