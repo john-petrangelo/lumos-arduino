@@ -9,6 +9,12 @@ Lumos::Lumos(uint16_t num_pixels, int8_t pin) : strip(num_pixels, pin, STRIP_FLA
 }
 
 void Lumos::loop() {
+  // Bail out if there is no action.
+  if (action == NULL) {
+    Logger::logMsg("No action");
+    return;
+  }
+  
   char buffer[256];
   snprintf(buffer, 256, "LUMOS action=%s isDone=%d endTimeMS=%d\n", action->name, action->isDone(), endTimeMS);
   buffer[255] = '\0';
@@ -26,13 +32,17 @@ void Lumos::loop() {
 void Lumos::runForever(Action *newAction) {
   action = newAction;
   endTimeMS = FOREVER;
-  action->reset(); 
+  if (action != NULL) {
+    action->reset();
+  }
 }
   
 void Lumos::runForDurationMS(long durationMS, Action *newAction) {
   action = newAction;
   endTimeMS = millis() + durationMS;
-  action->reset(); 
+  if (action != NULL) {
+    action->reset();
+  }
 }
 
 String Lumos::describe() {
@@ -41,7 +51,11 @@ String Lumos::describe() {
   msg += "ms\r\nCurrent time: ";
   msg += millis();
   msg += "ms\r\n";
-  msg += action->describe();
+  if (action != NULL) {
+    msg += action->describe();
+  } else {
+    msg += "No action";
+  }
   
   return msg;
 }

@@ -12,11 +12,9 @@ enum Direction {
   LEFT, RIGHT
 };
 
-uint16_t const NUM_PIXELS = 60;
+uint16_t const NUM_PIXELS = 24;
 typedef uint32_t Color;
 typedef Color* Pixels;
 typedef Color PixelsArray[NUM_PIXELS];
-
-extern Adafruit_NeoPixel strip;
 
 #endif // _DEFS_H_

@@ -3,7 +3,7 @@
 #include "Arduino.h"
 #include "Action.h"
 
-// Lumos manages a singel Neopixel series.
+// Lumos manages a single Neopixel series.
 class Lumos {
   private:
     neoPixelType const STRIP_FLAGS = (NEO_GRB + NEO_KHZ800);
