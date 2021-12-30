@@ -1,12 +1,13 @@
 #ifndef _COLORS_H_
 #define _COLORS_H_
 
-#include "defs.h"
+#include <stdint.h>
 
 typedef uint32_t Color;
 
 class Colors {
   public:
+    static Color makeColor(uint8_t red, uint8_t green, uint8_t blue);
     static Color blend(Color a, Color b, int ratio);
     static Color fade(Color c, int ratio);
     static Color add(Color a, Color b);

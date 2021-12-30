@@ -9,6 +9,10 @@
 #define G_MASK 0x0000FF00
 #define B_MASK 0x000000FF
 
+Color Colors::makeColor(uint8_t red, uint8_t green, uint8_t blue) {
+  return ((uint32_t)red << R_SHIFT) | ((uint32_t)green << G_SHIFT) | ((uint32_t)blue << B_SHIFT);
+}
+
 /**
  * Blend the two provided colors to make a new color.
  * 
@@ -20,8 +24,9 @@ Color Colors::blend(Color a, Color b, int ratio) {
     uint8_t red = blend(getRed(a), getRed(b), ratio);
     uint8_t green = blend(getGreen(a), getGreen(b), ratio);
     uint8_t blue = blend(getBlue(a), getBlue(b), ratio);
+//    printf("red=0x%X green=0x%X blue=0x%X\n", red, green, blue);
 
-    return Adafruit_NeoPixel::Color(red, green, blue);
+    return makeColor(red, green, blue);
 }
 
 uint8_t Colors::blend(uint8_t a, uint8_t b, int ratio) {
@@ -32,13 +37,13 @@ Color Colors::fade(Color c, int ratio) {
   return blend(BLACK, c, ratio);
 }
 
-Color Colors::add(Color a, Color b) {
-  return Adafruit_NeoPixel::Color(
-      constrain(getRed(a)   + getRed(b),  0, 255), 
-      constrain(getGreen(a) + getGreen(b), 0, 255), 
-      constrain(getBlue(a)  + getBlue(b),  0, 255));
-}
-
+//Color Colors::add(Color a, Color b) {
+//  return makeColor(
+//      constrain(getRed(a)   + getRed(b),  0, 255), 
+//      constrain(getGreen(a) + getGreen(b), 0, 255), 
+//      constrain(getBlue(a)  + getBlue(b),  0, 255));
+//}
+//
 uint8_t Colors::getRed(Color color) {
   return (color & R_MASK) >> R_SHIFT;
 }
