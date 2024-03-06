@@ -37,13 +37,13 @@ Color Colors::fade(Color c, int ratio) {
   return blend(BLACK, c, ratio);
 }
 
-//Color Colors::add(Color a, Color b) {
-//  return makeColor(
-//      constrain(getRed(a)   + getRed(b),  0, 255), 
-//      constrain(getGreen(a) + getGreen(b), 0, 255), 
-//      constrain(getBlue(a)  + getBlue(b),  0, 255));
-//}
-//
+Color Colors::add(Color a, Color b) {
+ return makeColor(
+     constrain(getRed(a)   + getRed(b),  0, 255), 
+     constrain(getGreen(a) + getGreen(b), 0, 255), 
+     constrain(getBlue(a)  + getBlue(b),  0, 255));
+}
+
 uint8_t Colors::getRed(Color color) {
   return (color & R_MASK) >> R_SHIFT;
 }

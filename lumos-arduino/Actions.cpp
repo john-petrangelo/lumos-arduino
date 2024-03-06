@@ -52,12 +52,13 @@ void Blink::reset() {
   update();
 }
 
-void Blink::update() {
-  colorIndex = (colorIndex + 1) % 2;
-  Patterns::setSolidColor(pixels, firstPixel, lastPixel, colors[colorIndex]);
-  Patterns::applyPixels(strip, pixels, firstPixel, lastPixel);
-  setNextUpdateMS(millis() + periodMS / 2);
-}
+// TODO
+//void Blink::update() {
+//  colorIndex = (colorIndex + 1) % 2;
+//  Patterns::setSolidColor(pixels, firstPixel, lastPixel, colors[colorIndex]);
+//  Patterns::applyPixels(strip, pixels, firstPixel, lastPixel);
+//  setNextUpdateMS(millis() + periodMS / 2);
+//}
 
 /***** DELAYEDSTART *****/
 
@@ -67,7 +68,7 @@ void DelayedStart::reset() {
   setNextUpdateMS(millis() + delayMS);
 }
 
-/***** FADTO *****/
+/***** FADETO *****/
 
 FadeTo::FadeTo(Adafruit_NeoPixel &strip, Pixels pixels, long durationMS, int firstPixel, int lastPixel, Color c)
     : Action(strip, firstPixel, lastPixel), pixels(pixels), durationMS(durationMS), newColor(c) { }
@@ -99,7 +100,9 @@ void Flame::update() {
 
   // Paint the background all black.
   Patterns::setSolidColor(pixels, firstPixel, lastPixel, BLACK);
-  Patterns::applyPixels(strip, pixels, firstPixel, lastPixel);
+
+  // TODO
+  // Patterns::applyPixels(strip, pixels, firstPixel, lastPixel);
 
   int const range = lastPixel - firstPixel;
   int const myFirstPixel = firstPixel + random(0, range / 5);
@@ -107,7 +110,9 @@ void Flame::update() {
   Color const FIRE_RED = Colors::blend(RED, YELLOW, 10);
   Color const FIRE_RED2 = Colors::blend(RED, YELLOW, 20);
   Patterns::setGradient(pixels, myFirstPixel, myLastPixel, 7, BLACK, FIRE_RED, FIRE_RED2, ORANGE, FIRE_RED2, FIRE_RED, BLACK);
-  Patterns::applyPixels(strip, pixels, myFirstPixel, myLastPixel);
+
+  // TODO
+  // Patterns::applyPixels(strip, pixels, myFirstPixel, myLastPixel);
 
   setNextUpdateMS(millis() + 110);
 }

@@ -1,6 +1,8 @@
 #ifndef _LOG_H_
 #define _LOG_H_
 
+#include <Stream.h>
+
 #include "Colors.h"
 
 class Logger {
@@ -11,7 +13,7 @@ class Logger {
     static void logLong(char const *name, long value);
     static void logColor(char const *name, Color value);
     static void logFloat(char const *name, float value, int precision);
-    static void logf(char *format,...);
+    static void logf(char const *format,...);
     static void logAvailableMemory();
 
     static void setStream(Stream *newStream);

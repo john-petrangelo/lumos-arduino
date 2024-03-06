@@ -42,7 +42,7 @@ void Logger::logName(char const *name) {
   stream->print("=");  
 }
 
-void Logger::logf(char *format,...)
+void Logger::logf(char const *format,...)
 {
   char buff[256];
   va_list args;

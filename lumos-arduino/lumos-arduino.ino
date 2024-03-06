@@ -6,7 +6,7 @@
 #include "Runner.h"
 #include "Lumos.h"
 
-int8_t const PIN = 13;
+int8_t const PIN = 2;
 neoPixelType const STRIP_FLAGS = (NEO_GRB + NEO_KHZ800);
 static Adafruit_NeoPixel strip;
 

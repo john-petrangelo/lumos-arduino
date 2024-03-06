@@ -12,11 +12,12 @@ class Colors {
     static Color fade(Color c, int ratio);
     static Color add(Color a, Color b);
 
-  private:
-    static uint8_t blend(uint8_t a, uint8_t b, int ratio);
     static uint8_t getRed(Color color);
     static uint8_t getGreen(Color color);
     static uint8_t getBlue(Color color);
+
+  private:
+    static uint8_t blend(uint8_t a, uint8_t b, int ratio);
 };
 
 Color const BLACK =  0x000000;

@@ -22,7 +22,7 @@ class Runner {
     // DEPRECATED
     // Only for use of legacy demo program. Caution: blocks until done.
     // Causes software watchdog timer exceptions on ESP8266.
-    static Runner runUntilDone(Action *action);
+    static void runUntilDone(Action *action);
 
     void loop();
     String describe();

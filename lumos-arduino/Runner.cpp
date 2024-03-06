@@ -1,6 +1,6 @@
 #include "Runner.h"
 
-Runner Runner::runUntilDone(Action *action) {
+void Runner::runUntilDone(Action *action) {
   action->reset();
   if (!action->isDone()) {
     action->loop();

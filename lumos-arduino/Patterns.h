@@ -6,7 +6,8 @@
 class Patterns {
   public:
     static void applyPixels(Adafruit_NeoPixel &strip, Pixels pixels, int firstPixel, int lastPixel);
-    static void applyPixels(Adafruit_NeoPixel &strip, Pixels pixels) { applyPixels(strip, pixels, 0, strip.numPixels()); }
+// TODO
+// static void applyPixels(Adafruit_NeoPixel &strip, Pixels pixels) { applyPixels(strip, pixels, 0, strip.numPixels()); }
     
     static void addPatterns(Pixels out, int firstPixel, int lastPixel, Pixels p1, Pixels p2);
     static void addPatterns(Adafruit_NeoPixel &strip, Pixels out, Pixels p1, Pixels p2) { addPatterns(out, 0, strip.numPixels(), p1, p2); }
