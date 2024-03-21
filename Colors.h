@@ -1,7 +1,6 @@
-#ifndef _COLORS_H_
-#define _COLORS_H_
+#pragma once
 
-#include <stdint.h>
+#include <cstdint>
 
 typedef uint32_t Color;
 
@@ -31,5 +30,3 @@ Color const WHITE =  0xFFFFFF;
 Color const ORANGE = 0xFF7F00;
 Color const INDIGO = 0x4B0082;
 Color const VIOLET = 0x8F00FF;
-
-#endif // _COLORS_H_
