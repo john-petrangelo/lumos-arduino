@@ -1,4 +1,5 @@
-#include "defs.h"
+#include <Arduino.h>
+
 #include "Colors.h"
 
 #define R_SHIFT 16
