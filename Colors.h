@@ -7,8 +7,9 @@ typedef uint32_t Color;
 class Colors {
   public:
     static Color makeColor(uint8_t red, uint8_t green, uint8_t blue);
-    static Color blend(Color a, Color b, int ratio);
-    static Color fade(Color c, int ratio);
+    static Color blend(Color a, Color b, float ratio);
+//    static Color blend_old(Color a, Color b, int ratio);
+    static Color fade(Color c, float ratio);
     static Color add(Color a, Color b);
 
     static uint8_t getRed(Color color);
@@ -16,7 +17,7 @@ class Colors {
     static uint8_t getBlue(Color color);
 
   private:
-    static uint8_t blend(uint8_t a, uint8_t b, int ratio);
+    static uint8_t blend_channel(uint8_t a, uint8_t b, float ratio);
 };
 
 Color const BLACK =  0x000000;

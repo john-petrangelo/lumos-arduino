@@ -19,22 +19,21 @@ Color Colors::makeColor(uint8_t red, uint8_t green, uint8_t blue) {
  * 
  * @param a First color
  * @param b Second color
- * @param ratio Ratio of the blend between a and b. 0 means all a, 100 means all b, 50 means 50% of each.
+ * @param ratio Ratio of the blend between a and b. 0.0 means all a, 1.0 means all b, 0.5 means 50% of each.
  */
-Color Colors::blend(Color a, Color b, int ratio) {
-    uint8_t red = blend(getRed(a), getRed(b), ratio);
-    uint8_t green = blend(getGreen(a), getGreen(b), ratio);
-    uint8_t blue = blend(getBlue(a), getBlue(b), ratio);
-//    printf("red=0x%X green=0x%X blue=0x%X\n", red, green, blue);
+Color Colors::blend(Color a, Color b, float ratio) {
+    uint8_t red = blend_channel(getRed(a), getRed(b), ratio);
+    uint8_t green = blend_channel(getGreen(a), getGreen(b), ratio);
+    uint8_t blue = blend_channel(getBlue(a), getBlue(b), ratio);
 
     return makeColor(red, green, blue);
 }
 
-uint8_t Colors::blend(uint8_t a, uint8_t b, int ratio) {
-  return a + (b - a) * ratio / 100;
+uint8_t Colors::blend_channel(uint8_t a, uint8_t b, float ratio) {
+  return a + uint8_t(float(b - a) * ratio);
 }
 
-Color Colors::fade(Color c, int ratio) {
+Color Colors::fade(Color c, float ratio) {
   return blend(BLACK, c, ratio);
 }
 
