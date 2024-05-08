@@ -8,7 +8,6 @@ class Colors {
   public:
     static Color makeColor(uint8_t red, uint8_t green, uint8_t blue);
     static Color blend(Color a, Color b, float ratio);
-//    static Color blend_old(Color a, Color b, int ratio);
     static Color fade(Color c, float ratio);
     static Color add(Color a, Color b);
 
