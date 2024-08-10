@@ -1,68 +1,63 @@
-#include "defs.h"
+#include <cstdarg>
+
 #include "Logger.h"
 
-Logger logger;
+ILogger *Logger::instance = nullptr;
 
-static Stream *stream = &Serial;
+void Logger::logInt(char const *name, int value) {
+  if (instance != nullptr) {
+    instance->logInt(name, value);
+  }
+}
 
 void Logger::logMsg(char const *msg) {
-  stream->print(msg);
+  if (instance != nullptr) {
+    instance->logMsg(msg);
+  }
 }
 
 void Logger::logMsgLn(char const *msg) {
-  stream->println(msg);
-}
-
-void Logger::logInt(char const *name, int value) {
-  logName(name);
-  stream->print(value);
-  stream->print(" ");
+  if (instance != nullptr) {
+    instance->logMsgLn(msg);
+  }
 }
 
 void Logger::logLong(char const *name, long value) {
-  logName(name);
-  stream->print(value);
-  stream->print(" ");
+  if (instance != nullptr) {
+    instance->logLong(name, value);
+  }
 }
 
 void Logger::logColor(char const *name, Color value) {
-  logName(name);
-  stream->print(value, HEX);
-  stream->print(" ");
+  if (instance != nullptr) {
+    instance->logColor(name, value);
+  }
 }
 
 void Logger::logFloat(char const *name, float value, int precision) {
-  logName(name);
-  stream->print(value, precision);
-  stream->print(" ");
+  if (instance != nullptr) {
+    instance->logFloat(name, value, precision);
+  }
 }
 
-void Logger::logName(char const *name) {
-  stream->print(name);
-  stream->print("=");  
+void Logger::logf(char const *format,...) {
+  if (instance != nullptr) {
+    va_list args;
+    va_start(args, format);
+    instance->logf(format, args);
+    va_end(args);
+  }
 }
 
-void Logger::logf(char const *format,...)
-{
-  char buff[256];
-  va_list args;
-  va_start (args,format);
-  vsnprintf(buff,sizeof(buff),format,args);
-  va_end (args);
-  buff[sizeof(buff)/sizeof(buff[0])-1]='\0';
-  Logger::logMsg(buff);
+void Logger::logAvailableMemory() {
+  if (instance != nullptr) {
+    instance->logAvailableMemory();
+  }
 }
 
-void Logger::logAvailableMemory()
-{
-  int size = 8192;
-  byte *buf;
-  while ((buf = (byte *) malloc(--size)) == NULL);
-  free(buf);
-  
-  logInt("availableMem", size);
-} 
-
-void Logger::setStream(Stream *newStream) {
-  stream = newStream;
+void Logger::set(ILogger *newInstance) {
+  if (instance != nullptr) {
+    delete instance;
+  }
+  instance = newInstance;
 }

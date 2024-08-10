@@ -1,12 +1,13 @@
-#ifndef _LOG_H_
-#define _LOG_H_
-
-#include <Stream.h>
+#pragma once
 
 #include "Colors.h"
+#include "ILogger.h"
 
 class Logger {
-  public:
+private:
+    static ILogger *instance;
+
+public:
     static void logInt(char const *name, int value);
     static void logMsg(char const *msg);
     static void logMsgLn(char const *msg);
@@ -16,10 +17,5 @@ class Logger {
     static void logf(char const *format,...);
     static void logAvailableMemory();
 
-    static void setStream(Stream *newStream);
-
-  private:
-    static void logName(char const *name);
+    static void set(ILogger *newInstance);
 };
-
-#endif // _LOG_H_
