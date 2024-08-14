@@ -16,7 +16,7 @@ void Logger::logf(char const *format, ...)
   char buff[256];
   va_list args;
   va_start (args,format);
-  vsnprintf(buff,sizeof(buff),format,args);
+  vsnprintf(buff,sizeof(buff)-1,format,args);
   va_end (args);
   buff[sizeof(buff)/sizeof(buff[0])-1]='\0';
   log(buff);
