@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Colors.h"
-
 class ILogger {
 public:
     virtual ~ILogger() = default;
