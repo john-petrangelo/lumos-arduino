@@ -1,11 +1,9 @@
 #include <cstdarg>
 #include <cstdio>
-#include <sstream>
 
 #include "Logger.h"
 
 ILogger *Logger::instance = nullptr;
-std::ostringstream Logger::buffer;
 
 Logger Logger::loggerInstance;
 Logger& logger = Logger::getInstance();
@@ -23,9 +21,22 @@ void Logger::logf(char const *format, ...)
   va_start (args,format);
   vsnprintf(buff,sizeof(buff)-1,format,args);
   va_end (args);
-  buff[std::size(buff)-1]='\0';
+  buff[sizeof(buff)-1]='\0';
   log(buff);
 }
+
+void Logger::set(ILogger *newInstance) {
+  if (instance != nullptr) {
+    delete instance;
+  }
+  instance = newInstance;
+}
+
+// The ESP8266 with 1MB of flash storage doesn't have enough room to
+// also include the C++ stream library.
+#ifndef ARDUINO_ARCH_ESP8266
+
+std::ostringstream Logger::buffer;
 
 Logger& Logger::operator<<(std::ostream& (*manip)(std::ostream&)) {
   buffer << manip;
@@ -36,10 +47,4 @@ Logger& Logger::operator<<(std::ostream& (*manip)(std::ostream&)) {
   }
   return *this;
 }
-
-void Logger::set(ILogger *newInstance) {
-  if (instance != nullptr) {
-    delete instance;
-  }
-  instance = newInstance;
-}
+#endif
