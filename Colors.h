@@ -19,14 +19,14 @@ class Colors {
     static uint8_t blend_channel(uint8_t a, uint8_t b, float ratio);
 };
 
-Color const BLACK =  0x000000;
-Color const BLUE =   0x0000FF;
-Color const GREEN =  0x00FF00;
-Color const CYAN =   0x00FFFF;
-Color const RED =    0xFF0000;
-Color const PURPLE = 0xFF00FF;
-Color const YELLOW = 0xFFFF00;
-Color const WHITE =  0xFFFFFF;
-Color const ORANGE = 0xFF7F00;
-Color const INDIGO = 0x4B0082;
-Color const VIOLET = 0x8F00FF;
+Color constexpr BLACK =  0x000000;
+Color constexpr BLUE =   0x0000FF;
+Color constexpr GREEN =  0x00FF00;
+Color constexpr CYAN =   0x00FFFF;
+Color constexpr RED =    0xFF0000;
+Color constexpr PURPLE = 0xFF00FF;
+Color constexpr YELLOW = 0xFFFF00;
+Color constexpr WHITE =  0xFFFFFF;
+Color constexpr ORANGE = 0xFF7F00;
+Color constexpr INDIGO = 0x4B0082;
+Color constexpr VIOLET = 0x8F00FF;
