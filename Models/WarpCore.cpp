@@ -1,14 +1,14 @@
 #include "Map.h"
-#include "Shift.h"
 #include "Solid.h"
-#include "WarpCore.h"
-#include "Triangle.h"
-#include "Sum.h"
+#include "Shift.h"
 #include "Reverse.h"
+#include "Sum.h"
+#include "Triangle.h"
+#include "WarpCore.h"
 
 Color const WarpCore::defaultColor =  Colors::makeColor(95, 95, 255);
 
-WarpCore::WarpCore(float size, float frequency, float dutyCycle, Color color, bool dual)
+WarpCore::WarpCore(float const size, float const frequency, float const dutyCycle, Color const color, bool const dual)
   : Model("WarpCore"), size(size), frequency(frequency), dutyCycle(dutyCycle), color(color),
     dual(dual)
 {
@@ -68,7 +68,7 @@ void WarpCore::handleDual() {
   }
 }
 
-void WarpCore::set(float newFrequency, float newSize, float newDutyCycle, Color newColor, bool newDual) {
+void WarpCore::set(float const newFrequency, float const newSize, float const newDutyCycle, Color const newColor, bool const newDual) {
   frequency = newFrequency;
   size = newSize;
   dutyCycle = newDutyCycle;
@@ -78,7 +78,7 @@ void WarpCore::set(float newFrequency, float newSize, float newDutyCycle, Color 
   init();
 }
 
-void WarpCore::update(float timeStamp) {
+void WarpCore::update(float const timeStamp) {
   switch (mode) {
     case MODE_IN:
       if (timeStamp - lastModeChangeTime >= std::abs(durationIn)) {
@@ -108,11 +108,11 @@ void WarpCore::update(float timeStamp) {
   model->update(timeStamp);
 }
 
-Color WarpCore::render(float pos) {
+Color WarpCore::render(float const pos) {
   return model->render(pos);
 }
 
-void WarpCore::asJson(JsonObject obj) const {
+void WarpCore::asJson(JsonObject const obj) const {
   Model::asJson(obj);
   obj["size"] = size;
   obj["frequency"] = frequency;

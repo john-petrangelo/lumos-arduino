@@ -3,9 +3,9 @@
 #include "Sum.h"
 #include "Triangle.h"
 
-Crystal::Crystal(Color upperColor, float upperPeriodSec,
-                 Color middleColor, float middlePeriodSec,
-                 Color lowerColor, float lowerPeriodSec)
+Crystal::Crystal(Color const upperColor, float const upperPeriodSec,
+                 Color const middleColor, float const middlePeriodSec,
+                 Color const lowerColor, float const lowerPeriodSec)
         : Model("Crystal") {
   model = makeCrystal(upperColor, upperPeriodSec, middleColor, middlePeriodSec, lowerColor, lowerPeriodSec);
 }

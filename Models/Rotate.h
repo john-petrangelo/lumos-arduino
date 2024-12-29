@@ -1,7 +1,5 @@
 #pragma once
 
-#include <utility>
-
 #include "Model.h"
 
 class Rotate;
@@ -18,7 +16,7 @@ class Rotate : public Model {
     void update(float timeStamp) override;
     Color render(float pos) override;
     void asJson(JsonObject obj) const override;
-    void setSpeed(float newSpeed) { speed = newSpeed; }
+    void setSpeed(float const newSpeed) { speed = newSpeed; }
     void setModel(std::shared_ptr<Model> newModel) { model = std::move(newModel); }
 
     static RotatePtr make(float speed, const ModelPtr& model) {

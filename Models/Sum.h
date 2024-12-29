@@ -14,9 +14,9 @@ typedef std::shared_ptr<Sum> SumPtr;
 
 class Sum : public Model {
   public:
-    Sum(std::vector<ModelPtr>::const_iterator modelsBegin, std::vector<ModelPtr>::const_iterator modelsEnd)
+    Sum(std::vector<ModelPtr>::const_iterator const modelsBegin, std::vector<ModelPtr>::const_iterator const modelsEnd)
       : Model("Sum"), models(modelsBegin, modelsEnd) {}
-    Sum(std::initializer_list<ModelPtr> modelArgs) : Model("Sum"), models(modelArgs) {}
+    Sum(std::initializer_list<ModelPtr> const modelArgs) : Model("Sum"), models(modelArgs) {}
     void update(float timeStamp) override;
     Color render(float pos) override;
     void asJson(JsonObject obj) const override;

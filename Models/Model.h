@@ -1,7 +1,8 @@
 #pragma once
 
-#include <ArduinoJson.h>
 #include <memory>
+
+#include <ArduinoJson.h>
 
 #include "lumos-arduino/Colors.h"
 
@@ -22,7 +23,7 @@ class Model {
     char const * getName() const { return name; }
 
     // Adds a description of the model to a JSON object, default behavior just adds the name
-    virtual void asJson(JsonObject obj) const {
+    virtual void asJson(JsonObject const obj) const {
       if (!obj["name"].set(getName())) {
         obj["name"] = "<noname>";
       }

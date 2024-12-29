@@ -2,7 +2,7 @@
 
 #include "Rotate.h"
 
-void Rotate::update(float timeStamp) {
+void Rotate::update(float const timeStamp) {
   // New timestamp, calculate the new offset.
   float deltaTime = timeStamp - prevTimeStamp;
   prevTimeStamp = timeStamp;
@@ -19,7 +19,7 @@ void Rotate::update(float timeStamp) {
   model->update(timeStamp);
 }
 
-Color Rotate::render(float pos) {
+Color Rotate::render(float const pos) {
   // If there's no predecessor, then there's nothing to rotate. Bail out.
   if (model == nullptr) {
     return BLACK;
@@ -34,7 +34,7 @@ Color Rotate::render(float pos) {
   return model->render(rotatedPos);
 }
 
-void Rotate::asJson(JsonObject obj) const {
+void Rotate::asJson(JsonObject const obj) const {
   Model::asJson(obj);
   obj["speed"] = speed;
   model->asJson(obj["model"].to<JsonObject>());

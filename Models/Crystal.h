@@ -14,8 +14,8 @@ public:
     // Special constructor to make "The Dark Crystal"
     Crystal();
 
-    void update(float timeStamp) override { model->update(timeStamp); }
-    Color render(float pos) override { return model->render(pos); };
+    void update(float const timeStamp) override { model->update(timeStamp); }
+    Color render(float const pos) override { return model->render(pos); };
     void asJson(JsonObject obj) const override;
 
   static CrystalPtr make() { return std::make_shared<Crystal>(); }

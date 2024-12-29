@@ -1,9 +1,7 @@
 #include <algorithm>
 
 #include "ModelUtils.h"
-
 #include "JacobsLadder.h"
-
 #include "Map.h"
 #include "Shift.h"
 #include "Triangle.h"

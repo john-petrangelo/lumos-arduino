@@ -25,14 +25,14 @@ class Shift : public Model {
      *              - Negative values indicate high-to-low
      * @param model The model to shift in or out
      */
-     Shift(SHIFT_MODE shiftMode, float shiftDuration, ModelPtr model) :
-             Model("Shift"), shiftMode(shiftMode), shiftDuration(shiftDuration), model(std::move(model)),
-             shiftOffset(1.0f), startTime(0.0f), endTime(0.0f), updateTime(0.0f) {}
+     Shift(SHIFT_MODE const shiftMode, float const shiftDuration, ModelPtr model) :
+             Model("Shift"), shiftMode(shiftMode), shiftDuration(shiftDuration), startTime(0.0f),
+             endTime(0.0f), updateTime(0.0f), shiftOffset(1.0f), model(std::move(model)) {}
     void update(float timeStamp) override;
     Color render(float pos) override;
     void asJson(JsonObject obj) const override;
 
-    void setSpeed(float newSpeed) { shiftDuration = newSpeed; }
+    void setSpeed(float const newSpeed) { shiftDuration = newSpeed; }
     void setModel(std::shared_ptr<Model> newModel) { model = std::move(newModel); }
 
     // Start the shifting all over again

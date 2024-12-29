@@ -1,29 +1,29 @@
 #include <cmath>
 
+#include "ModelUtils.h"
 #include "Pulsate.h"
-#include "lumos-arduino/Models/ModelUtils.h"
 
-void Pulsate::update(float timeStamp) {
-  timeStamp = std::fmod(timeStamp, periodSecs);
-  if (timeStamp < brightenSecs) {
+void Pulsate::update(float const timeStamp) {
+  float const modTimeStamp = std::fmod(timeStamp, periodSecs);
+  if (modTimeStamp < brightenSecs) {
     // We're getting brighter
-    dimness = fmap(timeStamp, 0.0, brightenSecs, brightest, dimmest);
+    dimness = fmap(modTimeStamp, 0.0, brightenSecs, brightest, dimmest);
   } else {
     // We're getting dimmer
-    dimness = fmap(timeStamp, brightenSecs, periodSecs, dimmest, brightest);
+    dimness = fmap(modTimeStamp, brightenSecs, periodSecs, dimmest, brightest);
   }
 
   // Update the wrapped model as well.
-  model->update(timeStamp);
+  model->update(modTimeStamp);
 }
 
-Color Pulsate::render(float pos) {
-  Color oldColor = model->render(pos);
-  Color newColor = Colors::fade(oldColor, dimness);
+Color Pulsate::render(float const pos) {
+  Color const oldColor = model->render(pos);
+  Color const newColor = Colors::fade(oldColor, dimness);
   return newColor;
 }
 
-void Pulsate::asJson(JsonObject obj) const {
+void Pulsate::asJson(JsonObject const obj) const {
   Model::asJson(obj);
   obj["dimmest"] = dimmest;
   obj["brightest"] = brightest;

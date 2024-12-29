@@ -1,10 +1,9 @@
-#include "lumos-arduino/Models/ModelUtils.h"
-
+#include "ModelUtils.h"
 #include "Map.h"
 
-Color Map::render(float pos) {
+Color Map::render(float const pos) {
   if ((inRangeMin <= pos) && (pos <= inRangeMax)) {
-    float outPos = fmap(pos, inRangeMin, inRangeMax, outRangeMin, outRangeMax);
+    float const outPos = fmap(pos, inRangeMin, inRangeMax, outRangeMin, outRangeMax);
     return model->render(outPos);
   }
 
@@ -12,7 +11,7 @@ Color Map::render(float pos) {
   return BLACK;
 }
 
-void Map::asJson(JsonObject obj) const {
+void Map::asJson(JsonObject const obj) const {
   Model::asJson(obj);
   obj["inRangeMin"] = inRangeMin;
   obj["inRangeMax"] = inRangeMax;

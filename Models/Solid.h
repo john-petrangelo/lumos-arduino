@@ -9,9 +9,9 @@ class Solid;
 typedef std::shared_ptr<Solid> SolidPtr;
 class Solid : public Model {
   public:
-    explicit Solid(Color color) : Model("Solid"), color(color) {}
+    explicit Solid(Color const color) : Model("Solid"), color(color) {}
     Color render(float pos) override { return color; }
-    void asJson(JsonObject obj) const override {
+    void asJson(JsonObject const obj) const override {
       Model::asJson(obj);
       colorAsJson(obj["color"].to<JsonObject>(), color);
     };

@@ -13,9 +13,9 @@ class WarpCore : public Model {
     void update(float timeStamp) override;
     Color render(float pos) override;
     void asJson(JsonObject obj) const override;
-    void set(float newFrequency, float newSize, float newDutyCycle, Color color, bool dual);
+    void set(float newFrequency, float newSize, float newDutyCycle, Color newColor, bool newDual);
 
-    static WarpCorePtr make(float size, float frequency, float dutyCycle, Color color, bool dual)
+    static WarpCorePtr make(float const size, float const frequency, float const dutyCycle, Color const color, bool const dual)
       { return std::make_shared<WarpCore>(size, frequency, dutyCycle, color, dual); }
 
     static Color const defaultColor;

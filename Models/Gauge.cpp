@@ -1,8 +1,10 @@
+#include <cmath>
+
 #include "Gauge.h"
 
 void Gauge::setValue(float valueIn) {
   value = valueIn;
-  fullColorPixels = floor(value * pixelsCount);
+  fullColorPixels = std::floor(value * pixelsCount);
   remainder = value - fullColorPixels / pixelsCount;
   colorRatio = remainder * pixelsCount;
   partialColor = Colors::fade(color, colorRatio);
@@ -10,7 +12,7 @@ void Gauge::setValue(float valueIn) {
 
 Color Gauge::render(float pos) {
   // Figure out which is the last pixel we should light.
-  float posPixel = floor(pos * pixelsCount);
+  float posPixel = std::floor(pos * pixelsCount);
 
   // If this isn't the last pixel, just return the full color.
   if (posPixel < fullColorPixels) {

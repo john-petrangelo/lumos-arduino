@@ -1,8 +1,7 @@
-#include "lumos-arduino/Models/ModelUtils.h"
-
+#include "ModelUtils.h"
 #include "Shift.h"
 
-void Shift::update(float timeStamp) {
+void Shift::update(float const timeStamp) {
   // The first time we call update() we need to set the initial startTime
   if (startTime == 0.0) {
     startTime = timeStamp;
@@ -41,7 +40,7 @@ void Shift::update(float timeStamp) {
   model->update(timeStamp);
 }
 
-Color Shift::render(float pos) {
+Color Shift::render(float const pos) {
   // If there's no predecessor, then there's nothing to shift. Bail out.
   if (model == nullptr) {
     return BLACK;
@@ -58,7 +57,7 @@ Color Shift::render(float pos) {
   return model->render(shiftedPos);
 }
 
-void Shift::asJson(JsonObject obj) const {
+void Shift::asJson(JsonObject const obj) const {
   Model::asJson(obj);
   obj["duration"] = shiftDuration;
   obj["shiftMode"] = shiftMode;

@@ -21,9 +21,9 @@
  */
 class Pulsate : public Model {
   public:
-    Pulsate(float dimmest, float brightest, float dimSecs, float brightenSecs, std::shared_ptr<Model> model)
-      : Model("Pulsate"), model(std::move(model)), dimmest(dimmest), brightest(brightest),
-        dimSecs(dimSecs), brightenSecs(brightenSecs), periodSecs(dimSecs + brightenSecs) {}
+    Pulsate(float const dimmest, float const brightest, float const dimSecs, float const brightenSecs, std::shared_ptr<Model> model)
+      : Model("Pulsate"), dimmest(dimmest), brightest(brightest), dimSecs(dimSecs),
+        brightenSecs(brightenSecs), periodSecs(dimSecs + brightenSecs), model(std::move(model)) {}
     void update(float timeStamp) override;
     Color render(float pos) override;
     void asJson(JsonObject obj) const override;

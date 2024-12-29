@@ -12,15 +12,15 @@ typedef std::shared_ptr<Map> MapPtr;
 
 class Map : public Model {
   public:
-    Map(float inRangeMin, float inRangeMax, float outRangeMin, float outRangeMax,
+    Map(float const inRangeMin, float const inRangeMax, float const outRangeMin, float const outRangeMax,
         ModelPtr model)
-      : Model("Map"), inRangeMin(inRangeMin), inRangeMax(inRangeMax),
-        outRangeMin(outRangeMin), outRangeMax(outRangeMax), model(std::move(model)) { }
+      : Model("Map"), model(std::move(model)), inRangeMin(inRangeMin),
+        inRangeMax(inRangeMax), outRangeMin(outRangeMin), outRangeMax(outRangeMax) { }
     void update(float timeStamp) override { model->update(timeStamp); }
     Color render(float pos) override;
     void asJson(JsonObject obj) const override;
 
-    void setInRange(float newInRangeMin, float newInRangeMax) {
+    void setInRange(float const newInRangeMin, float const newInRangeMax) {
       this->inRangeMin = newInRangeMin;
       this->inRangeMax = newInRangeMax;
     }

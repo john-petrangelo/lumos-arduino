@@ -1,6 +1,6 @@
 #include "Window.h"
 
-Color Window::render(float pos) {
+Color Window::render(float const pos) {
   if ((rangeMin <= pos) && (pos <= rangeMax)) {
     return insideModel->render(pos);
   }
@@ -9,7 +9,7 @@ Color Window::render(float pos) {
   return outsideModel->render(pos);
 }
 
-void Window::asJson(JsonObject obj) const {
+void Window::asJson(JsonObject const obj) const {
   Model::asJson(obj);
   obj["rangeMin"] = rangeMin;
   obj["rangeMax"] = rangeMax;
